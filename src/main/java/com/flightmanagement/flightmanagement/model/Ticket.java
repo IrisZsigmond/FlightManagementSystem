@@ -2,7 +2,8 @@ package com.flightmanagement.flightmanagement.model;
 
 import java.util.List;
 
-
+/*Represents a ticket in the management system.
+* Contains details such as passenger, flight ID, category, price, seat number, and luggage */
 public class Ticket {
 
 
@@ -27,7 +28,7 @@ public class Ticket {
         this.luggages = luggages;
     }
 
-    // Getters & Setters
+    //getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -49,6 +50,7 @@ public class Ticket {
     public List<Luggage> getLuggages() { return luggages; }
     public void setLuggages(List<Luggage> luggages) { this.luggages = luggages; }
 
+    //returns a string representation of the Ticket object
     @Override
     public String toString() {
         return "Ticket{" +

@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.model;
 
+/*FlightAssignment class represents a mapping between a flight and a staff.
+* Contains details such as flight ID and staff ID.*/
 public class FlightAssignment {
     String id;
     String flightId;
@@ -11,6 +13,7 @@ public class FlightAssignment {
         this.staffId = staffId;
     }
 
+    //getters and setters
     public String getId() {
         return id;
     }
@@ -35,6 +38,7 @@ public class FlightAssignment {
         this.staffId = staffId;
     }
 
+    //returns a string representation of the FlightAssignment object
     @Override
     public String toString() {
         return "FlightAssignment {flightId=" + flightId + ", staffId=" + staffId + "}";

@@ -2,7 +2,8 @@ package com.flightmanagement.flightmanagement.model;
 
 import java.util.List;
 
-
+/* Represents an airplane used in the flight management system.
+ * Contains details such as model, capacity, and related flights */
 public class Airplane {
 
 
@@ -36,6 +37,7 @@ public class Airplane {
     public List<String> getFlights() { return flights; }
     public void setFlights(List<String> flights) { this.flights = flights; }
 
+    //returns a string representation of the Airplane object
     @Override
     public String toString() {
         return "Airplane{" +

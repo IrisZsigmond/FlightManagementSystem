@@ -3,6 +3,8 @@ package com.flightmanagement.flightmanagement.model;
 import java.time.LocalTime;
 import java.util.List;
 
+/* Represents a flight in the management system.
+* Contains details such as name, departure time, feedback score, notice board ID, and airplane ID*/
 public class Flight {
     private String id;
     private String name;
@@ -22,6 +24,7 @@ public class Flight {
         this.airplaneId = airplaneId;
     }
 
+    //getters and setters
     public String getId() {
         return id;
     }
@@ -86,6 +89,7 @@ public class Flight {
         this.flightAssignments = flightAssignments;
     }
 
+    //returns a string representation of the Flight object
     @Override
     public String toString() {
         return "Flight{" +

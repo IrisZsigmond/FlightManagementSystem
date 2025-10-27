@@ -1,6 +1,7 @@
 package com.flightmanagement.flightmanagement.model;
 
-
+/* Represents a luggage in the flight management system.
+ * Contains details such as ticket, status, and size */
 public class Luggage {
 
     private String id;
@@ -17,7 +18,7 @@ public class Luggage {
         this.size = size;
     }
 
-    // Getters & Setters
+    //getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -30,6 +31,7 @@ public class Luggage {
     public LuggageSize getSize() { return size; }
     public void setSize(LuggageSize size) { this.size = size; }
 
+    //returns a string representation of the Luggage object
     @Override
     public String toString() {
         return "Luggage{" +
