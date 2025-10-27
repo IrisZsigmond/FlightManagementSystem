@@ -3,16 +3,9 @@ package com.flightmanagement.flightmanagement.model;
 
 public class Luggage {
 
-
     private String id;
-
-
     private Ticket ticket;
-
-
     private LuggageStatus status;
-
-
     private LuggageSize size;
 
     public Luggage() {}

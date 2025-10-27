@@ -22,7 +22,6 @@ public class Flight {
         this.airplaneId = airplaneId;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -90,7 +89,7 @@ public class Flight {
     @Override
     public String toString() {
         return "Flight{" +
-                ", name='" + name + '\'' +
+                " name='" + name + '\'' +
                 ", departureTime=" + departureTime +
                 ", feedbackScore=" + feedbackScore +
                 ", noticeBoardId='" + noticeBoardId + '\'' +

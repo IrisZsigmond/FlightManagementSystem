@@ -6,17 +6,13 @@ import java.util.List;
 
 public class NoticeBoard {
 
-
     private String id;
-
     private LocalDate date;
-
-
-    private List<String> flightsOfTheDay;
+    private List<Flight> flightsOfTheDay;
 
     public NoticeBoard() {}
 
-    public NoticeBoard(String id, LocalDate date, List<String> flightsOfTheDay) {
+    public NoticeBoard(String id, LocalDate date, List<Flight> flightsOfTheDay) {
         this.id = id;
         this.date = date;
         this.flightsOfTheDay = flightsOfTheDay;
@@ -29,8 +25,8 @@ public class NoticeBoard {
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
 
-    public List<String> getFlightsOfTheDay() { return flightsOfTheDay; }
-    public void setFlightsOfTheDay(List<String> flightsOfTheDay) { this.flightsOfTheDay = flightsOfTheDay; }
+    public List<Flight> getFlightsOfTheDay() { return flightsOfTheDay; }
+    public void setFlightsOfTheDay(List<Flight> flightsOfTheDay) { this.flightsOfTheDay = flightsOfTheDay; }
 
     @Override
     public String toString() {

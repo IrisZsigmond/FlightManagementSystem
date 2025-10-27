@@ -13,14 +13,14 @@ public class AirportEmplyees extends Staff {
     public String getDesignation() {
         return designation;
     }
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
 
     public String getdepartment() {
         return department;
     }
 
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
 
     public void setdepartment(String department) {
         this.department = department;
@@ -29,7 +29,7 @@ public class AirportEmplyees extends Staff {
     @Override
     public String toString() {
         return "AirportEmplyees{" +
-                ", name='" + getName() + '\'' +
+                " name='" + getName() + '\'' +
                 ", designation='" + designation + '\'' +
                 ", department='" + department + '\'' +
                 '}';

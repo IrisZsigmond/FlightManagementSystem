@@ -11,7 +11,6 @@ public class FlightAssignment {
         this.staffId = staffId;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }

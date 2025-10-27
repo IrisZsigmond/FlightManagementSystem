@@ -7,19 +7,11 @@ public class Ticket {
 
 
     private String id;
-
-
     private Passenger passenger;
-
     private String flightId;
-
-
     private TicketCategory category;
-
     private double price;
     private String seatNumber;
-
-
     private List<Luggage> luggages;
 
     public Ticket() {}
