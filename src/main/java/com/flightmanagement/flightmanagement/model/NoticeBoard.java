@@ -31,4 +31,12 @@ public class NoticeBoard {
 
     public List<String> getFlightsOfTheDay() { return flightsOfTheDay; }
     public void setFlightsOfTheDay(List<String> flightsOfTheDay) { this.flightsOfTheDay = flightsOfTheDay; }
+
+    @Override
+    public String toString() {
+        return "NoticeBoard{" +
+                "date=" + date +
+                ", flightsOfTheDay=" + flightsOfTheDay +
+                '}';
+    }
 }

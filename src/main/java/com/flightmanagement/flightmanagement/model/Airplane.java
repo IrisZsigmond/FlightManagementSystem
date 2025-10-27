@@ -35,4 +35,13 @@ public class Airplane {
 
     public List<String> getFlights() { return flights; }
     public void setFlights(List<String> flights) { this.flights = flights; }
+
+    @Override
+    public String toString() {
+        return "Airplane{" +
+                "flights=" + flights +
+                ", number=" + number +
+                ", capacity=" + capacity +
+                '}';
+    }
 }
