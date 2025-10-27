@@ -1,0 +1,37 @@
+package com.flightmanagement.flightmanagement.model;
+
+public class AirportEmplyees extends Staff {
+    private String designation;
+    private String department;
+
+    public AirportEmplyees(String Id, String name, String designation, String department) {
+        super(Id, name);
+        this.designation = designation;
+        this.department = department;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public String getdepartment() {
+        return department;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public void setdepartment(String department) {
+        this.department = department;
+    }
+
+    @Override
+    public String toString() {
+        return "AirportEmplyees{" +
+                ", name='" + getName() + '\'' +
+                ", designation='" + designation + '\'' +
+                ", department='" + department + '\'' +
+                '}';
+    }
+}
