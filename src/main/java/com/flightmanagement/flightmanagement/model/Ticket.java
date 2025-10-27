@@ -56,4 +56,16 @@ public class Ticket {
 
     public List<Luggage> getLuggages() { return luggages; }
     public void setLuggages(List<Luggage> luggages) { this.luggages = luggages; }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "passenger=" + passenger +
+                ", flightId='" + flightId + '\'' +
+                ", category=" + category +
+                ", price=" + price +
+                ", seatNumber='" + seatNumber + '\'' +
+                ", luggages=" + luggages +
+                '}';
+    }
 }

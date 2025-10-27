@@ -36,4 +36,13 @@ public class Luggage {
 
     public LuggageSize getSize() { return size; }
     public void setSize(LuggageSize size) { this.size = size; }
+
+    @Override
+    public String toString() {
+        return "Luggage{" +
+                "ticket=" + ticket +
+                ", status=" + status +
+                ", size=" + size +
+                '}';
+    }
 }
