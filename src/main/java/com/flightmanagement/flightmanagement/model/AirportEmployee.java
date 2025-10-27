@@ -1,10 +1,10 @@
 package com.flightmanagement.flightmanagement.model;
 
-public class AirportEmplyees extends Staff {
+public class AirportEmployee extends Staff {
     private String designation;
     private String department;
 
-    public AirportEmplyees(String Id, String name, String designation, String department) {
+    public AirportEmployee(String Id, String name, String designation, String department) {
         super(Id, name);
         this.designation = designation;
         this.department = department;

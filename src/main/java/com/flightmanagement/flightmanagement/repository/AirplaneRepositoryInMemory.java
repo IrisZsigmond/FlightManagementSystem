@@ -1,46 +1,15 @@
 package com.flightmanagement.flightmanagement.repository;
 
 import com.flightmanagement.flightmanagement.model.Airplane;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
-public class AirplaneRepositoryInMemory implements AbstractRepository<Airplane> {
+@Repository
+@Primary // optional: prefer this impl when multiple beans match the interface
+public class AirplaneRepositoryInMemory
+        extends BaseRepositoryInMemory<Airplane, String> {
 
-    private final List<Airplane> airplanes = new ArrayList<>();
-
-    @Override
-    public void save(Airplane airplane) {
-        airplanes.add(airplane);
+    public AirplaneRepositoryInMemory() {
+        super(Airplane::getId); // tell the base how to read the ID
     }
-
-    @Override
-    public List<Airplane> findAll() {
-        return airplanes;
-    }
-
-    @Override
-    public Optional<Airplane> findById(String id) {
-        return airplanes.stream()
-                .filter(a -> a.getId().equals(id))
-                .findFirst();
-    }
-
-    @Override
-    public void delete(String id) {
-        airplanes.removeIf(a -> a.getId().equals(id));
-    }
-
-    @Override
-    public void update(String id, Airplane updatedAirplane) {
-        for (Airplane airplane : airplanes) {
-            if (airplane.getId().equals(id)) {
-                airplane.setNumber(updatedAirplane.getNumber());
-                airplane.setCapacity(updatedAirplane.getCapacity());
-                airplane.setFlights(updatedAirplane.getFlights());
-                break;
-            }
-        }
-    }
-
 }
