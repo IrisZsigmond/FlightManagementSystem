@@ -32,14 +32,6 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
     }
 
     @Override
-    public void saveOrUpdate(T entity) {
-        if (entity == null) throw new IllegalArgumentException("entity cannot be null");
-        ID id = idExtractor.apply(entity);
-        if (id == null) throw new IllegalArgumentException("entity ID cannot be null");
-        store.put(id, entity);
-    }
-
-    @Override
     public List<T> findAll() {
         return new ArrayList<>(store.values()); // defensive copy
     }

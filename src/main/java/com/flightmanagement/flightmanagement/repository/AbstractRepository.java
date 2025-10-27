@@ -9,7 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AbstractRepository<T, ID> {
     void save(T entity);                               //saves a new entity if it doesn't exist
-    void saveOrUpdate(T entity);                       //saves or updates an entity. Replaces existing one if the same ID is found.
     List<T> findAll();                                 //retrieves all entities in the repository
     Optional<T> findById(ID id);                       //finds an entity by its ID
     boolean delete(ID id);                             //deletes an entity by its ID
