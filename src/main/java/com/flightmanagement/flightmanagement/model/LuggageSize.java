@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.Model;
+package com.flightmanagement.flightmanagement.model;
 
 public enum LuggageSize {
     SMALL,

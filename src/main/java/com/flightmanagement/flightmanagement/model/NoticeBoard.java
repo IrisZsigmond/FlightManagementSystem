@@ -1,18 +1,17 @@
-package com.flightmanagement.flightmanagement.Model;
+package com.flightmanagement.flightmanagement.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+
 public class NoticeBoard {
 
-    @Id
+
     private String id;
 
     private LocalDate date;
 
-    @ElementCollection
+
     private List<String> flightsOfTheDay;
 
     public NoticeBoard() {}

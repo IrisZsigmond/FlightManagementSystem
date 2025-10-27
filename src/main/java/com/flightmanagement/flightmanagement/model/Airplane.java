@@ -1,18 +1,17 @@
-package com.flightmanagement.flightmanagement.Model;
+package com.flightmanagement.flightmanagement.model;
 
-import jakarta.persistence.*;
 import java.util.List;
 
-@Entity
+
 public class Airplane {
 
-    @Id
+
     private String id;
 
     private int number;
     private int capacity;
 
-    @ElementCollection
+
     private List<String> flights;
 
     public Airplane() {}

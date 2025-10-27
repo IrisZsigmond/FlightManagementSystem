@@ -1,27 +1,25 @@
-package com.flightmanagement.flightmanagement.Model;
+package com.flightmanagement.flightmanagement.model;
 
-import jakarta.persistence.*;
 import java.util.List;
 
-@Entity
+
 public class Ticket {
 
-    @Id
+
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "passenger_id")
+
     private Passenger passenger;
 
     private String flightId;
 
-    @Enumerated(EnumType.STRING)
+
     private TicketCategory category;
 
     private double price;
     private String seatNumber;
 
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+
     private List<Luggage> luggages;
 
     public Ticket() {}

@@ -1,21 +1,18 @@
-package com.flightmanagement.flightmanagement.Model;
+package com.flightmanagement.flightmanagement.model;
 
-import jakarta.persistence.*;
 
-@Entity
 public class Luggage {
 
-    @Id
+
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "ticket_id")
+
     private Ticket ticket;
 
-    @Enumerated(EnumType.STRING)
+
     private LuggageStatus status;
 
-    @Enumerated(EnumType.STRING)
+
     private LuggageSize size;
 
     public Luggage() {}
