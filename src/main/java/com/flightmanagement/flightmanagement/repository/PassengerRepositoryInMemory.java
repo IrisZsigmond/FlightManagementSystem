@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/*In-memory repository for managing Passenger entities.
+ * This class extends the generic BaseRepositoryInMemory and provides CRUD operations
+ * specifically for Passenger objects*/
 @Repository
 public class PassengerRepositoryInMemory extends BaseRepositoryInMemory<Passenger, String> {
 

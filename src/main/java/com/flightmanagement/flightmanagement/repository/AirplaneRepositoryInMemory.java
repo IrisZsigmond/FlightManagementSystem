@@ -4,6 +4,9 @@ import com.flightmanagement.flightmanagement.model.Airplane;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+/*In-memory repository for managing Airplane entities.
+* This class extends the generic BaseRepositoryInMemory and provides CRUD operations
+* specifically for Airplane objects*/
 @Repository
 @Primary // optional: prefer this impl when multiple beans match the interface
 public class AirplaneRepositoryInMemory
