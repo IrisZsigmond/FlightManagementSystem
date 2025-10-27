@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InMemoryLuggageRepository extends AbstractRepository<Luggage> {
+public class LuggageRepositoryInMemory implements AbstractRepository<Luggage> {
 
     private final List<Luggage> luggages = new ArrayList<>();
 

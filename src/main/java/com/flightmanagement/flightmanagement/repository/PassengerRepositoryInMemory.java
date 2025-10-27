@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InMemoryPassengerRepository extends AbstractRepository<Passenger> {
+public class PassengerRepositoryInMemory implements AbstractRepository<Passenger> {
 
     private final List<Passenger> passengers = new ArrayList<>();
 

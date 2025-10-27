@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InMemoryNoticeBoardRepository extends AbstractRepository<NoticeBoard> {
+public class NoticeBoardRepositoryInMemory implements AbstractRepository<NoticeBoard> {
 
     private final List<NoticeBoard> noticeBoards = new ArrayList<>();
 
