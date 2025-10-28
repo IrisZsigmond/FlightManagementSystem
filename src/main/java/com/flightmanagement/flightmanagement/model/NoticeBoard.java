@@ -5,6 +5,7 @@ import java.util.List;
 
 /* Represents a notice board in the management system.
 * Contains details such as date and flights of the day*/
+
 public class NoticeBoard {
 
     private String id;
@@ -19,7 +20,6 @@ public class NoticeBoard {
         this.flightsOfTheDay = flightsOfTheDay;
     }
 
-    //getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -29,7 +29,6 @@ public class NoticeBoard {
     public List<Flight> getFlightsOfTheDay() { return flightsOfTheDay; }
     public void setFlightsOfTheDay(List<Flight> flightsOfTheDay) { this.flightsOfTheDay = flightsOfTheDay; }
 
-    //returns a string representation of the NoticeBoard object
     @Override
     public String toString() {
         return "NoticeBoard{" +

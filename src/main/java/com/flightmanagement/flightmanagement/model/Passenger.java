@@ -4,6 +4,7 @@ import java.util.List;
 
 /* Represents a passenger in the management system.
 * Contains details such as name, currency, and tickets*/
+
 public class Passenger {
 
     private String id;
@@ -33,7 +34,7 @@ public class Passenger {
     public List<Ticket> getTickets() { return tickets; }
     public void setTickets(List<Ticket> tickets) { this.tickets = tickets; }
 
-    //returns a string representation of the Passenger object
+
     @Override
     public String toString() {
         return "Passenger{" +
@@ -42,4 +43,5 @@ public class Passenger {
                 ", name='" + name + '\'' +
                 '}';
     }
+
 }

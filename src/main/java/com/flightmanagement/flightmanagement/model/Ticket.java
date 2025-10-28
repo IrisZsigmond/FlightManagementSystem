@@ -4,6 +4,7 @@ import java.util.List;
 
 /*Represents a ticket in the management system.
 * Contains details such as passenger, flight ID, category, price, seat number, and luggage */
+
 public class Ticket {
 
 
@@ -28,7 +29,6 @@ public class Ticket {
         this.luggages = luggages;
     }
 
-    //getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

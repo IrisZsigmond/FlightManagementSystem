@@ -4,15 +4,12 @@ import java.util.List;
 
 /* Represents an airplane used in the flight management system.
  * Contains details such as model, capacity, and related flights */
+
 public class Airplane {
 
-
     private String id;
-
     private int number;
     private int capacity;
-
-
     private List<String> flights;
 
     public Airplane() {}
@@ -24,7 +21,6 @@ public class Airplane {
         this.flights = flights;
     }
 
-    // Getters & Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -37,7 +33,6 @@ public class Airplane {
     public List<String> getFlights() { return flights; }
     public void setFlights(List<String> flights) { this.flights = flights; }
 
-    //returns a string representation of the Airplane object
     @Override
     public String toString() {
         return "Airplane{" +

@@ -5,6 +5,7 @@ import java.util.List;
 
 /* Represents a flight in the management system.
 * Contains details such as name, departure time, feedback score, notice board ID, and airplane ID*/
+
 public class Flight {
     private String id;
     private String name;
@@ -24,11 +25,10 @@ public class Flight {
         this.airplaneId = airplaneId;
     }
 
-    //getters and setters
+
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -36,7 +36,6 @@ public class Flight {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -44,7 +43,6 @@ public class Flight {
     public LocalTime getDepartureTime() {
         return departureTime;
     }
-
     public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
@@ -52,7 +50,6 @@ public class Flight {
     public int getFeedbackScore() {
         return feedbackScore;
     }
-
     public void setFeedbackScore(int feedbackScore) {
         this.feedbackScore = feedbackScore;
     }
@@ -60,7 +57,6 @@ public class Flight {
     public String getNoticeBoardId() {
         return noticeBoardId;
     }
-
     public void setNoticeBoardId(String noticeBoardId) {
         this.noticeBoardId = noticeBoardId;
     }
@@ -68,7 +64,6 @@ public class Flight {
     public String getAirplaneId() {
         return airplaneId;
     }
-
     public void setAirplaneId(String airplaneId) {
         this.airplaneId = airplaneId;
     }
@@ -76,7 +71,6 @@ public class Flight {
     public List<Ticket> getTickets() {
         return tickets;
     }
-
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
@@ -84,12 +78,11 @@ public class Flight {
     public List<FlightAssignment> getFlightAssignments() {
         return flightAssignments;
     }
-
     public void setFlightAssignments(List<FlightAssignment> flightAssignments) {
         this.flightAssignments = flightAssignments;
     }
 
-    //returns a string representation of the Flight object
+
     @Override
     public String toString() {
         return "Flight{" +

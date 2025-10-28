@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.repository;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/*In-memory repository implementation of AbstractRepository using a ConcurrentHashMap to store entities.
-* Using concurrent operations to ensure thread safety.*/
+/*In-memory repository implementation of AbstractRepository
+  using a ConcurrentHashMap to store entities.
+  Using concurrent operations to ensure thread safety.*/
+
 public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> {
 
     //used "final" to ensure that the store reference cannot be changed after initialization
