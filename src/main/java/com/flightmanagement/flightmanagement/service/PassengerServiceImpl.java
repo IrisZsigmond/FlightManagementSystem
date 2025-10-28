@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of PassengerService that provides business logic
@@ -22,9 +23,6 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Passenger save(Passenger entity) {
-        if (entity == null || entity.getId() == null) {
-            throw new IllegalArgumentException("Passenger and its ID must not be null");
-        }
         repository.save(entity);
         return entity;
     }
@@ -41,10 +39,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Passenger update(String id, Passenger updatedEntity) {
-        boolean success = repository.update(id, updatedEntity);
-        if (!success) {
-            throw new IllegalArgumentException("Passenger not found: " + id);
-        }
+        repository.update(id, updatedEntity);
         return updatedEntity;
     }
 
@@ -66,5 +61,29 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public void clear() {
         repository.clear();
+    }
+
+    // Finds all passengers that have the given name
+    @Override
+    public List<Passenger> findByName(String name) {
+        return repository.findAll().stream()
+                .filter(p -> name != null && name.equalsIgnoreCase(p.getName()))
+                .collect(Collectors.toList());
+    }
+
+    // Finds all passengers that use the specified currency
+    @Override
+    public List<Passenger> findByCurrency(String currency) {
+        return repository.findAll().stream()
+                .filter(p -> currency != null && currency.equalsIgnoreCase(p.getCurrency()))
+                .collect(Collectors.toList());
+    }
+
+    // Returns the number of tickets associated with a given passenger
+    @Override
+    public int countTickets(String passengerId) {
+        return repository.findById(passengerId)
+                .map(p -> p.getTickets() != null ? p.getTickets().size() : 0)
+                .orElse(0);
     }
 }

@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.model.NoticeBoard;
 import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of NoticeBoardService that provides business logic
@@ -22,9 +24,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
     @Override
     public NoticeBoard save(NoticeBoard entity) {
-        if (entity == null || entity.getId() == null) {
-            throw new IllegalArgumentException("NoticeBoard and its ID must not be null");
-        }
         repository.save(entity);
         return entity;
     }
@@ -41,10 +40,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
     @Override
     public NoticeBoard update(String id, NoticeBoard updatedEntity) {
-        boolean success = repository.update(id, updatedEntity);
-        if (!success) {
-            throw new IllegalArgumentException("NoticeBoard not found: " + id);
-        }
+        repository.update(id, updatedEntity);
         return updatedEntity;
     }
 
@@ -66,5 +62,23 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     @Override
     public void clear() {
         repository.clear();
+    }
+
+    // Finds all notice boards that match the specified date
+    @Override
+    public List<NoticeBoard> findByDate(LocalDate date) {
+        return repository.findAll().stream()
+                .filter(board -> date != null && date.equals(board.getDate()))
+                .collect(Collectors.toList());
+    }
+
+    // Returns the notice board for the current day
+    @Override
+    public NoticeBoard getCurrentDayBoard() {
+        LocalDate today = LocalDate.now();
+        return repository.findAll().stream()
+                .filter(board -> today.equals(board.getDate()))
+                .findFirst()
+                .orElse(null);
     }
 }
