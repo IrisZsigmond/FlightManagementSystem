@@ -20,7 +20,8 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
 
     @Override
     public AirportEmployee save(AirportEmployee entity) {
-        return null;
+        repository.save(entity);
+        return entity;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
 
     @Override
     public boolean existsById(String s) {
-        return false;
+        return repository.existsById(s);
     }
 
     @Override

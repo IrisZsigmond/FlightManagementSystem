@@ -17,10 +17,10 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         this.repository = repository;
     }
 
-
     @Override
     public FlightAssignment save(FlightAssignment entity) {
-        return null;
+        repository.save(entity);
+        return entity;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
 
     @Override
     public boolean existsById(String s) {
-        return false;
+        return repository.existsById(s);
     }
 
 

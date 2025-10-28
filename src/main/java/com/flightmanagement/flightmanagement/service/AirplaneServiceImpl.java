@@ -20,7 +20,8 @@ public class AirplaneServiceImpl implements AirplaneService {
 
     @Override
     public Airplane save(Airplane entity) {
-        return null;
+        repository.save(entity);
+        return entity;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class AirplaneServiceImpl implements AirplaneService {
 
     @Override
     public boolean existsById(String s) {
-        return false;
+        return repository.existsById(s);
     }
 
 
