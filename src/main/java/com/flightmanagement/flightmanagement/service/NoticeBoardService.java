@@ -1,12 +1,17 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Service interface for managing NoticeBoard entities.
- * Extends the generic BaseService interface to provide CRUD operations.
  */
 public interface NoticeBoardService extends BaseService<NoticeBoard, String> {
-    // You can add NoticeBoard-specific methods here later, e.g.:
-    // List<NoticeBoard> findByDate(LocalDate date);
+
+    // Finds all notice boards that match the specified date.
+    List<NoticeBoard> findByDate(LocalDate date);
+
+    // Returns the notice board for the current day.
+    NoticeBoard getCurrentDayBoard();
 }
