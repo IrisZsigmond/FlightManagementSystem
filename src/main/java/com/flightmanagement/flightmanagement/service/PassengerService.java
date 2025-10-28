@@ -1,12 +1,19 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
+import java.util.List;
 
 /**
  * Service interface for managing Passenger entities.
- * Extends the generic BaseService interface to provide CRUD operations.
  */
 public interface PassengerService extends BaseService<Passenger, String> {
-    // You can add Passenger-specific service methods here later, e.g.:
-    // List<Passenger> findByCurrency(String currency);
+
+    // Finds all passengers that have the given name.
+    List<Passenger> findByName(String name);
+
+    // Finds all passengers that use the specified currency.
+    List<Passenger> findByCurrency(String currency);
+
+    // Returns the number of tickets associated with a given passenger.
+    int countTickets(String passengerId);
 }
