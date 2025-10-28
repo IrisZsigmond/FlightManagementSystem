@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AirportEmployeeServiceImpl implements AirportEmployeeService {
@@ -32,7 +33,6 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
         return repository.findById(id);
     }
 
-
     @Override
     public AirportEmployee update(String id, AirportEmployee updatedEntity) {
         boolean success = repository.update(id, updatedEntity);
@@ -56,7 +56,6 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
         return false;
     }
 
-
     @Override
     public long count() {
         return repository.count();
@@ -65,5 +64,25 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
     @Override
     public void clear() {
         repository.clear();
+    }
+
+    @Override
+    public List<AirportEmployee> findByDepartment(String department) {
+        if (department == null || department.isBlank()) {
+            throw new IllegalArgumentException("Department cannot be null or empty");
+        }
+        return repository.findAll().stream()
+                .filter(e -> department.equalsIgnoreCase(e.getdepartment()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AirportEmployee> findByDesignation(String designation) {
+        if (designation == null || designation.isBlank()) {
+            throw new IllegalArgumentException("Designation cannot be null or empty");
+        }
+        return repository.findAll().stream()
+                .filter(e -> designation.equalsIgnoreCase(e.getDesignation()))
+                .collect(Collectors.toList());
     }
 }

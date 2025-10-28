@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FlightAssignmentServiceImpl implements FlightAssignmentService {
@@ -65,5 +66,25 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
     @Override
     public void clear() {
         repository.clear();
+    }
+
+    @Override
+    public List<FlightAssignment> findByFlightId(String flightId) {
+        if (flightId == null || flightId.isBlank()) {
+            throw new IllegalArgumentException("Flight ID cannot be null or empty");
+        }
+        return repository.findAll().stream()
+                .filter(a -> flightId.equalsIgnoreCase(a.getFlightId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FlightAssignment> findByStaffId(String staffId) {
+        if (staffId == null || staffId.isBlank()) {
+            throw new IllegalArgumentException("Staff ID cannot be null or empty");
+        }
+        return repository.findAll().stream()
+                .filter(a -> staffId.equalsIgnoreCase(a.getStaffId()))
+                .collect(Collectors.toList());
     }
 }
