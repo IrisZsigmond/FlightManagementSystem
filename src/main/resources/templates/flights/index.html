@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flights List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>All Flights</h1>
+
+<!-- Link to the new flight form -->
+<a th:href="@{/flights/new}">Add New Flight</a>
+
+<!-- Table of existing flights -->
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Departure Time</th>
+        <th>Feedback Score</th>
+        <th>Airplane ID</th>
+        <th>Notice Board ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop through each flight object -->
+    <tr th:each="flight : ${flights}">
+        <td th:text="${flight.id}">ID</td>
+        <td th:text="${flight.name}">Name</td>
+        <td th:text="${flight.departureTime}">Departure Time</td>
+        <td th:text="${flight.feedbackScore}">Feedback Score</td>
+        <td th:text="${flight.airplaneId}">Airplane ID</td>
+        <td th:text="${flight.noticeBoardId}">Notice Board ID</td>
+        <td>
+            <!-- Delete form -->
+            <form th:action="@{'/flights/' + ${flight.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
