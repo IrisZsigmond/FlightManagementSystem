@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Airplane</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Create a New Airplane</h1>
+
+<form th:action="@{/templates.airplanes}" th:object="${airplane}" method="post">
+
+    <label>ID:</label><br>
+    <input type="text" th:field="*{id}" required /><br><br>
+
+    <label>Number:</label><br>
+    <input type="number" th:field="*{number}" required /><br><br>
+
+    <label>Capacity:</label><br>
+    <input type="number" th:field="*{capacity}" required /><br><br>
+
+    <label>Flights (comma-separated IDs):</label><br>
+    <input type="text" th:field="*{flights}" placeholder="e.g., F001, F002" /><br><br>
+
+    <button type="submit">Create Airplane</button>
+</form>
+
+<!-- Back link -->
+<p><a th:href="@{/templates.airplanes}">Back to List</a></p>
+
+</body>
+</html>
