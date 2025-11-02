@@ -1,6 +1,5 @@
 package com.flightmanagement.flightmanagement.repository;
 
-import com.flightmanagement.flightmanagement.model.Flight;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -9,8 +8,8 @@ import org.springframework.stereotype.Repository;
  * specifically for Flight objects*/
 @Repository
 @Primary
-public class FlightRepositoryInMemory extends BaseRepositoryInMemory<Flight, String> {
-    public FlightRepositoryInMemory() {
-        super(Flight::getId);
+public class Flight extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Flight, String> {
+    public Flight() {
+        super(com.flightmanagement.flightmanagement.model.Flight::getId);
     }
 }

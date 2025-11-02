@@ -1,6 +1,5 @@
 package com.flightmanagement.flightmanagement.repository;
 
-import com.flightmanagement.flightmanagement.model.AirportEmployee;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -9,8 +8,8 @@ import org.springframework.stereotype.Repository;
  * specifically for AirportEmployee objects*/
 @Repository
 @Primary
-public class AirportEmployeeRepositoryInMemory extends BaseRepositoryInMemory<AirportEmployee, String> {
-    public AirportEmployeeRepositoryInMemory() {
-        super(AirportEmployee::getId);
+public class AirportEmployee extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.AirportEmployee, String> {
+    public AirportEmployee() {
+        super(com.flightmanagement.flightmanagement.model.AirportEmployee::getId);
     }
 }

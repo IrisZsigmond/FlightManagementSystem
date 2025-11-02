@@ -1,6 +1,5 @@
 package com.flightmanagement.flightmanagement.repository;
 
-import com.flightmanagement.flightmanagement.model.FlightAssignment;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository // Spring Boot registration (discoverable and injectable)
             // Layer identification     (data acces layer component)
 @Primary
-public class FlightAssignmentRepositoryInMemory extends BaseRepositoryInMemory<FlightAssignment, String> {
-    public FlightAssignmentRepositoryInMemory() {
-        super(FlightAssignment::getId);
+public class FlightAssignment extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.FlightAssignment, String> {
+    public FlightAssignment() {
+        super(com.flightmanagement.flightmanagement.model.FlightAssignment::getId);
     }
 }
