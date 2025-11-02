@@ -63,3 +63,32 @@ Each subclass (e.g., AirplaneRepositoryInMemory, LuggageRepositoryInMemory) prov
 •	Concrete type arguments for T and ID
 •	A method reference (idExtractor) defining how to obtain an entity’s ID
 This allows Spring to correctly recognize and instantiate only the concrete repository beans, while keeping the base class purely abstract and reusable
+
+Service Layer: Structure and Rationale
+The service layer provides a clean boundary between controllers (HTTP/API) and repositories (data access). It is designed around a generic core for common CRUD behavior and thin, entity-focused extensions for domain logic. This keeps the codebase consistent, testable, and easy to evolve.
+Architectural Overview
+The layer follows a four-piece pattern:
+1.	Generic service contract — BaseService<T, ID> defines the canonical CRUD surface (save, find, update, delete, existence checks, counting, clearing). It is purely an interface: no framework annotations and no implementation details.
+2.	Abstract generic implementation — BasicServiceImpl<T, ID> provides the default implementation of the BaseService contract once, for all entities. It delegates to a generic repository abstraction and centralizes guardrails such as null checks and “not found” behavior. This class is abstract and uses generics so it can be reused broadly without copy/paste.
+3.	Entity-specific service interfaces — e.g., FlightService, AirplaneService, AirlineEmployeeService. Each extends BaseService<T, ID> to inherit CRUD, then declares domain-specific capabilities (for example, “find by airplane id”, “find by role”, “find by capacity”). These interfaces define the public API for each domain area without committing to how it’s implemented.
+4.	Entity-specific service implementations — e.g., FlightServiceImpl, AirplaneServiceImpl. Each extends BasicServiceImpl<T, ID> to inherit the shared CRUD implementation and implements its entity interface to provide the domain-specific methods. These are the only service classes marked with @Service, making them Spring-managed beans and the units injected into controllers.
+Why this design
+•	Eliminates duplication: CRUD logic is implemented once in BasicServiceImpl. All entities benefit from the same correctness, validation, and semantics.
+•	Strong separation of concerns: Generic persistence behavior lives in the base implementation; entity rules and queries live in the entity services; HTTP concerns remain in controllers.
+•	Type safety with generics: T (entity) and ID (identifier) parameters ensure compile-time safety and a single pattern across the codebase.
+•	Swap-friendly repositories: Services depend on a repository abstraction rather than a concrete storage. Moving from in-memory to a database-backed repository later does not affect service or controller code.
+•	Maintainability and readability: A predictable, uniform layout (interface → abstract base implementation → entity interface → entity implementation) makes navigation and onboarding straightforward.
+•	Testability: Each service can be unit-tested by mocking the repository abstraction. Domain-specific methods remain small and focused, simplifying test scenarios.
+Dependency boundaries
+Services depend on a repository abstraction that exposes CRUD primitives. BasicServiceImpl holds that dependency and exposes a protected accessor so entity services can perform domain filtering without breaking encapsulation. Controllers depend only on service interfaces, never directly on repositories, reinforcing a clean layering.
+Error handling and validation
+The base implementation centralizes basic validations (e.g., non-null arguments) and consistent “not found” behavior. Entity services add domain-specific checks (for example, validating search parameters or enforcing ID consistency on updates). This keeps error semantics uniform across resources while allowing each domain to express its rules clearly.
+Extensibility
+Adding a new entity involves:
+•	Creating or reusing a repository implementation.
+•	Defining an entity-specific service interface that extends BaseService<T, ID>.
+•	Implementing the interface by extending BasicServiceImpl<T, ID> and adding any domain-specific queries.
+Because the CRUD implementation is already provided, new services focus almost entirely on domain concerns.
+Spring integration
+Only the concrete entity service implementations are annotated as beans. The generic interface and abstract base are intentionally not annotated to avoid ambiguous or uninstantiable beans. Constructor injection is used throughout for clarity and testability. If multiple repository implementations exist for the same entity, Spring selection is managed using @Primary or qualifiers at the repository layer, without changing the service API.
+
