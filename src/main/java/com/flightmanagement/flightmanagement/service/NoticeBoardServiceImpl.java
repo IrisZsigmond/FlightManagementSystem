@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * and interacts with the NoticeBoard repository to perform CRUD operations.
  */
 @Service
-public class NoticeBoardServiceImplImpl extends BaseServiceImpl<NoticeBoard, String> implements NoticeBoardService {
+public class NoticeBoardServiceImpl extends BaseServiceImpl<NoticeBoard, String> implements NoticeBoardService {
 
-    public NoticeBoardServiceImplImpl(AbstractRepository<NoticeBoard, String> repository) {
+    public NoticeBoardServiceImpl(AbstractRepository<NoticeBoard, String> repository) {
         super(repository);
     }
 

@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class AirlineEmployeeServiceImplImpl extends BaseServiceImpl<AirlineEmployee, String> implements AirlineEmployeeService {
+public class AirlineEmployeeServiceImpl extends BaseServiceImpl<AirlineEmployee, String> implements AirlineEmployeeService {
 
-    public AirlineEmployeeServiceImplImpl(AbstractRepository<AirlineEmployee, String> repository) {
+    public AirlineEmployeeServiceImpl(AbstractRepository<AirlineEmployee, String> repository) {
         super(repository);
     }
     

@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
  * and interacts with the Passenger repository to perform CRUD operations.
  */
 @Service
-public class PassengerServiceImplImpl extends BaseServiceImpl<Passenger, String> implements PassengerService {
+public class PassengerServiceImpl extends BaseServiceImpl<Passenger, String> implements PassengerService {
 
-    public PassengerServiceImplImpl(AbstractRepository<Passenger, String> repository) {
+    public PassengerServiceImpl(AbstractRepository<Passenger, String> repository) {
         super(repository);
     }
 

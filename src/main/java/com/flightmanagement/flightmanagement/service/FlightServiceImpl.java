@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FlightServiceImplImpl extends BaseServiceImpl<Flight, String> implements FlightService {
+public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implements FlightService {
 
-    public FlightServiceImplImpl(AbstractRepository<Flight, String> repository) {
+    public FlightServiceImpl(AbstractRepository<Flight, String> repository) {
         super(repository);
     }
     /// -------- Flight-specific methods --------

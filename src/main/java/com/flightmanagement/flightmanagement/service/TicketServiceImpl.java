@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * and interacts with the Ticket repository to perform CRUD operations.
  */
 @Service
-public class TicketServiceImplImpl extends BaseServiceImpl<Ticket, String> implements TicketService {
+public class TicketServiceImpl extends BaseServiceImpl<Ticket, String> implements TicketService {
 
-    public TicketServiceImplImpl(AbstractRepository<Ticket, String> repository) {
+    public TicketServiceImpl(AbstractRepository<Ticket, String> repository) {
         super(repository);
     }
 

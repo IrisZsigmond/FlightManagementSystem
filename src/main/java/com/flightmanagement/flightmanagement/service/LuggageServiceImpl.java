@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
  * and interacts with the Luggage repository to perform CRUD operations.
  */
 @Service
-public class LuggageServiceImplImpl extends BaseServiceImpl<Luggage, String> implements LuggageService {
+public class LuggageServiceImpl extends BaseServiceImpl<Luggage, String> implements LuggageService {
 
-    public LuggageServiceImplImpl(AbstractRepository<Luggage, String> repository) {
+    public LuggageServiceImpl(AbstractRepository<Luggage, String> repository) {
         super(repository);
     }
 

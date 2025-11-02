@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AirportEmployeeServiceImplImpl extends BaseServiceImpl<AirportEmployee, String> implements AirportEmployeeService {
+public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee, String> implements AirportEmployeeService {
 
-    public AirportEmployeeServiceImplImpl(AbstractRepository<AirportEmployee, String> repository) {
+    public AirportEmployeeServiceImpl(AbstractRepository<AirportEmployee, String> repository) {
         super(repository);
     }
     /// -------- AirportEmployee-specific methods --------
