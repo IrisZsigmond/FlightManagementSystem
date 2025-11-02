@@ -1,22 +1,76 @@
 package com.flightmanagement.flightmanagement.repository;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
-/*Generic repository interface that defines basic CRUD operations for any data type.*/
+/**
+ * Generic repository interface that defines
+ * basic CRUD operations for any data type
+ * and some additional auxiliary methods.
+ */
 public interface AbstractRepository<T, ID> {
-    void save(T entity);                               //saves a new entity if it doesn't exist
-    List<T> findAll();                                 //retrieves all entities in the repository
-    Optional<T> findById(ID id);                       //finds an entity by its ID
-    boolean delete(ID id);                             //deletes an entity by its ID
-    boolean update(ID id, T updated);                  //must keep same ID
-    boolean existsById(ID id);                         //checks if an entity with the given ID exists
-    long count();                                      //returns the number of entities in the repository
-    void clear();                                      //clears all entities from the repository
+    /**
+     * Saves a new entity if it doesn't exist
+     * C = create
+     */
+    void save(T entity);
 
-    default List<T> findAll(int offset, int limit) {   //returns a sublist of entities for pagination
+    /**
+     * Retrieves all entities in the repository
+     * @return a list of all entities
+     * R = read (get all)
+     */
+    List<T> findAll();
+
+    /**
+     * Finds an entity by its ID
+     * @param id - the id by which the search occurs
+     * @return the found object if such an object exists / nothing
+     */
+    Optional<T> findById(ID id);
+
+    /**
+     * Deletes an entity by its ID
+     * @param id - the id by which the deletion occurs
+     * @return true if the entity was found and deleted / false otherwise
+     * D = Delete
+     */
+    boolean delete(ID id);
+
+    /**
+     * Updates an entity by its id
+     * @param id - helps identify the entity, must be kept
+     * @param updated - the updated entity
+     * @return true if the entity was found and updated / false otherwise
+     * U = Update
+     */
+    boolean update(ID id, T updated);
+
+    /**
+     * Checks if an entity with the given ID exists
+     * @param id - the id by which the search occurs
+     * @return true if it exists / false otherwise
+     */
+    boolean existsById(ID id);
+
+    /**
+     * Counts the number of entities in the repository
+     * @return the count number
+     */
+    long count();
+
+    /**
+     * Deletes all entities from the repository
+     */
+    void clear();
+
+    /**
+     * Returns a sublist of entities for pagination
+     * @param offset - starting point
+     * @param limit - endpoint
+     * @return a sublist of all entities between the given offset and limit
+     */
+    default List<T> findAll(int offset, int limit) {
         List<T> all = findAll();
         int from = Math.max(0, Math.min(offset, all.size()));
         int to = Math.max(from, Math.min(from + limit, all.size()));

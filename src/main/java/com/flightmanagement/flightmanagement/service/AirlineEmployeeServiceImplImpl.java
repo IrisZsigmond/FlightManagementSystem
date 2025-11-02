@@ -8,75 +8,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
+public class AirlineEmployeeServiceImplImpl extends BaseServiceImpl<AirlineEmployee, String> implements AirlineEmployeeService {
 
-    private final AbstractRepository<AirlineEmployee, String> repository;
-
-    public AirlineEmployeeServiceImpl(AbstractRepository<AirlineEmployee, String> repository) {
-        this.repository = repository;
+    public AirlineEmployeeServiceImplImpl(AbstractRepository<AirlineEmployee, String> repository) {
+        super(repository);
     }
-
-
-    @Override
-    public AirlineEmployee save(AirlineEmployee entity) {
-        repository.save(entity);
-        return entity;
-    }
-
-    @Override
-    public List<AirlineEmployee> findAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public Optional<AirlineEmployee> findById(String id) {
-        return repository.findById(id);
-    }
-
-
-    @Override
-    public AirlineEmployee update(String id, AirlineEmployee updatedEntity) {
-        boolean success = repository.update(id, updatedEntity);
-        if (!success) {
-            try {
-                throw new Exception("AirlineEmployee not found: " + id);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return updatedEntity;
-    }
-
-    @Override
-    public boolean delete(String id) {
-        return repository.delete(id);
-    }
-
-    @Override
-    public boolean existsById(String s) {
-        return repository.existsById(s);
-    }
-
-
-    @Override
-    public long count() {
-        return repository.count();
-    }
-
-    @Override
-    public void clear() {
-        repository.clear();
-    }
-
+    
     @Override
     public List<AirlineEmployee> findByRole(AirlineRole role) {
         if (role == null) return List.of();
-        return repository.findAll().stream()
+        return repo().findAll().stream()
                 .filter(e -> e.getRole() == role)
                 .collect(Collectors.toList());
     }
@@ -88,7 +33,7 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
         EnumSet<AirlineRole> set = (roles instanceof EnumSet<AirlineRole> es)
                 ? es
                 : EnumSet.copyOf(roles);
-        return repository.findAll().stream()
+        return repo().findAll().stream()
                 .filter(e -> e.getRole() != null && set.contains(e.getRole()))
                 .collect(Collectors.toList());
     }
@@ -96,7 +41,7 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
     @Override
     public List<AirlineEmployee> findByAssignmentId(String assignmentId) {
         if (assignmentId == null || assignmentId.isBlank()) return List.of();
-        return repository.findAll().stream()
+        return repo().findAll().stream()
                 .filter(e -> e.getAssignments() != null
                         && e.getAssignments().stream()
                         .map(FlightAssignment::getId)
