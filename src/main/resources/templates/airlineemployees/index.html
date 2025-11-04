@@ -21,18 +21,28 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="e : ${employees}">
-        <td th:text="${e.id}">ID</td>
-        <td th:text="${e.name}">Name</td>
-        <td th:text="${e.role}">Role</td>
-        <td th:text="${e.assignments}">Assignments</td>
+    <!-- ⚙️ iterăm prin lista de employees (verifică numele din controller) -->
+    <tr th:each="emp : ${employees}">
+        <td th:text="${emp.id}">ID</td>
+        <td th:text="${emp.name}">Name</td>
+        <td th:text="${emp.role}">Role</td>
+
+        <!-- ✅ afișăm doar ID-urile assign-urilor, separate prin virgulă -->
         <td>
-            <form th:action="@{'/airlineemployees/' + ${e.id} + '/delete'}" method="post">
+            <span th:if="${emp.assignments == null or #lists.isEmpty(emp.assignments)}"> </span>
+            <span th:each="a, iterStat : ${emp.assignments}"
+                  th:text="${a.id}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
+
+        <td>
+            <form th:action="@{'/airlineemployees/' + ${emp.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
