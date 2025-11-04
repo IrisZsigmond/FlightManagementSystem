@@ -25,7 +25,12 @@
         <td th:text="${passenger.id}">ID</td>
         <td th:text="${passenger.name}">Name</td>
         <td th:text="${passenger.currency}">Currency</td>
-        <td th:text="${passenger.tickets}">Tickets</td>
+        <td>
+            <span th:if="${passenger.tickets == null or #lists.isEmpty(passenger.tickets)}"> </span>
+            <span th:each="t, iterStat : ${passenger.tickets}"
+                  th:text="${t.id}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
         <td>
             <form th:action="@{'/passengers/' + ${passenger.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
@@ -34,5 +39,6 @@
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

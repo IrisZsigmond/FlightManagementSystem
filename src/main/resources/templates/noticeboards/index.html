@@ -23,7 +23,12 @@
     <tr th:each="board : ${noticeboards}">
         <td th:text="${board.id}">ID</td>
         <td th:text="${board.date}">Date</td>
-        <td th:text="${board.flightsOfTheDay}">Flights</td>
+        <td>
+            <span th:if="${board.flightsOfTheDay == null or #lists.isEmpty(board.flightsOfTheDay)}"> </span>
+            <span th:each="f, iterStat : ${board.flightsOfTheDay}"
+                  th:text="${f.id}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
         <td>
             <form th:action="@{'/noticeboards/' + ${board.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
@@ -32,5 +37,6 @@
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

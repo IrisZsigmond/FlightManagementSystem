@@ -8,10 +8,8 @@
 <body>
 <h1>All Airplanes</h1>
 
-<!-- Link to create a new airplane -->
 <a th:href="@{/airplanes/new}">Add New Airplane</a>
 
-<!-- Table with all airplanes -->
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
@@ -23,14 +21,17 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Iterate through all airplanes -->
     <tr th:each="airplane : ${airplanes}">
         <td th:text="${airplane.id}">ID</td>
         <td th:text="${airplane.number}">Number</td>
         <td th:text="${airplane.capacity}">Capacity</td>
-        <td th:text="${airplane.flights}">Flights</td>
         <td>
-            <!-- Delete button -->
+            <span th:if="${airplane.flights == null or #lists.isEmpty(airplane.flights)}"> </span>
+            <span th:each="f, iterStat : ${airplane.flights}"
+                  th:text="${f}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
+        <td>
             <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
