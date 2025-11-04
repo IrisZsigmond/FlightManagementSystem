@@ -26,12 +26,23 @@
     <tbody>
     <tr th:each="ticket : ${tickets}">
         <td th:text="${ticket.id}">ID</td>
-        <td th:text="${ticket.passenger != null ? ticket.passenger.name : 'N/A'}">Passenger</td>
+
+        <!-- ✅ afișează ID-ul pasagerului -->
+        <td th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}">Passenger</td>
+
         <td th:text="${ticket.flightId}">Flight ID</td>
         <td th:text="${ticket.category}">Category</td>
         <td th:text="${ticket.price}">Price</td>
         <td th:text="${ticket.seatNumber}">Seat Number</td>
-        <td th:text="${ticket.luggages}">Luggages</td>
+
+        <!-- ✅ afișează id-urile bagajelor separate prin virgulă -->
+        <td>
+            <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}"> </span>
+            <span th:each="l,iterStat : ${ticket.luggages}"
+                  th:text="${l.id}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
+
         <td>
             <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
