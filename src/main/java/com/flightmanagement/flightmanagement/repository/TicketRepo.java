@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
  * This class extends the generic BaseRepositoryInMemory and provides CRUD operations
  * specifically for Ticket objects*/
 @Repository
-public class Ticket extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Ticket, String> {
+public class TicketRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Ticket, String> {
 
-    public Ticket() {
+    public TicketRepo() {
         super(com.flightmanagement.flightmanagement.model.Ticket::getId);
     }
 }

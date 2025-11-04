@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
  * This class extends the generic BaseRepositoryInMemory and provides CRUD operations
  * specifically for NoticeBoard objects*/
 @Repository
-public class NoticeBoard extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.NoticeBoard, String> {
+public class NoticeBoardRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.NoticeBoard, String> {
 
-    public NoticeBoard() {
+    public NoticeBoardRepo() {
         super(com.flightmanagement.flightmanagement.model.NoticeBoard::getId);
     }
 }

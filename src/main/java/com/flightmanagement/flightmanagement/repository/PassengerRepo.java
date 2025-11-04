@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
  * This class extends the generic BaseRepositoryInMemory and provides CRUD operations
  * specifically for Passenger objects*/
 @Repository
-public class Passenger extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Passenger, String> {
+public class PassengerRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Passenger, String> {
 
-    public Passenger() {
+    public PassengerRepo() {
         super(com.flightmanagement.flightmanagement.model.Passenger::getId);
     }
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
  * specifically for Flight objects*/
 @Repository
 @Primary
-public class Flight extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Flight, String> {
-    public Flight() {
+public class FlightRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Flight, String> {
+    public FlightRepo() {
         super(com.flightmanagement.flightmanagement.model.Flight::getId);
     }
 }

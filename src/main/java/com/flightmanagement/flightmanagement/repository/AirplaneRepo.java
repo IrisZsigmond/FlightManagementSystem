@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 * specifically for Airplane objects*/
 @Repository
 @Primary // optional: prefer this impl when multiple beans match the interface
-public class Airplane
+public class AirplaneRepo
         extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.Airplane, String> {
 
-    public Airplane() {
+    public AirplaneRepo() {
         super(com.flightmanagement.flightmanagement.model.Airplane::getId); // tell the base how to read the ID
     }
 }

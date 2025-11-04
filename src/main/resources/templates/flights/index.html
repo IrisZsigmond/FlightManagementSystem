@@ -1,20 +1,38 @@
 <!DOCTYPE html>
+<!-- The standard HTML5 document declaration -->
 <html xmlns:th="http://www.thymeleaf.org">
+<!-- "xmlns:th" defines the Thymeleaf XML namespace.
+     It allows us to use all Thymeleaf attributes starting with 'th:' (like th:text, th:each, th:href, etc.) -->
+
 <head>
     <meta charset="UTF-8">
     <title>Flights List</title>
+
+    <!-- Link to a CSS stylesheet located under: src/main/resources/static/css/style.css -->
+    <!-- The @{} syntax in th:href dynamically builds the correct path according to your application's context root -->
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
+
 <body>
 <h1>All Flights</h1>
 
-<!-- Link to the new flight form -->
+<!-- ========================================== -->
+<!-- 1. Link to create a new Flight -->
+<!-- ========================================== -->
+<!-- 'th:href' dynamically generates the correct link URL.
+     @{/flights/new} corresponds to the controller mapping @GetMapping("/new") in FlightController.form() -->
 <a th:href="@{/flights/new}">Add New Flight</a>
 
-<!-- Table of existing flights -->
+<!-- ========================================== -->
+<!-- 2. Table displaying all flights -->
+<!-- ========================================== -->
+<!-- The controller method 'index()' puts a list of Flight objects into the model with key "flights"
+     -> model.addAttribute("flights", flights.findAll());
+     Thymeleaf accesses this list using ${flights} -->
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
+        <!-- Table headers for each flight attribute -->
         <th>ID</th>
         <th>Name</th>
         <th>Departure Time</th>
@@ -24,22 +42,43 @@
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
-    <!-- Loop through each flight object -->
+    <!-- ========================================== -->
+    <!-- 3. th:each — The looping mechanism -->
+    <!-- ========================================== -->
+    <!-- This line means: "For each element in the list 'flights', assign it to a local variable named 'flight'." -->
+    <!-- It works like a Java for-each loop: for (Flight flight : flights) -->
     <tr th:each="flight : ${flights}">
+
+        <!-- ========================================== -->
+        <!-- 4. Displaying flight attributes -->
+        <!-- ========================================== -->
+        <!-- th:text replaces the inner text of this tag with the actual value -->
+        <!-- Example: th:text="${flight.id}" -> prints the value of flight.getId() -->
         <td th:text="${flight.id}">ID</td>
         <td th:text="${flight.name}">Name</td>
         <td th:text="${flight.departureTime}">Departure Time</td>
         <td th:text="${flight.feedbackScore}">Feedback Score</td>
         <td th:text="${flight.airplaneId}">Airplane ID</td>
         <td th:text="${flight.noticeBoardId}">Notice Board ID</td>
+
+        <!-- ========================================== -->
+        <!-- 5. Action column: Delete button -->
+        <!-- ========================================== -->
         <td>
-            <!-- Delete form -->
+            <!-- Small form for deleting a flight -->
+            <!-- 'th:action' dynamically generates the URL for each flight’s delete endpoint -->
+            <!-- It builds a URL like /flights/123/delete for a flight whose id = 123 -->
             <form th:action="@{'/flights/' + ${flight.id} + '/delete'}" method="post">
+                <!-- This form submits an HTTP POST to the delete() method in your controller:
+                     @PostMapping("/{id}/delete")
+                     The @PathVariable String id in the controller receives this flight.id -->
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    <!-- The <tr> block repeats once per flight in the list -->
     </tbody>
 </table>
 

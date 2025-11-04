@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
  * specifically for AirportEmployee objects*/
 @Repository
 @Primary
-public class AirportEmployee extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.AirportEmployee, String> {
-    public AirportEmployee() {
+public class AirportEmployeeRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.AirportEmployee, String> {
+    public AirportEmployeeRepo() {
         super(com.flightmanagement.flightmanagement.model.AirportEmployee::getId);
     }
 }

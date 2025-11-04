@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Primary
-public class AirlineEmployee extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.AirlineEmployee, String> {
-    public AirlineEmployee() {
+public class AirlineEmployeeRepo extends BaseRepositoryInMemory<com.flightmanagement.flightmanagement.model.AirlineEmployee, String> {
+    public AirlineEmployeeRepo() {
         super(com.flightmanagement.flightmanagement.model.AirlineEmployee::getId);
     }
 }
