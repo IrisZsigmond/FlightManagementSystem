@@ -1,4 +1,6 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InMemoryRepositories;
+
+import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 
 import java.util.ArrayList;
 import java.util.List;
