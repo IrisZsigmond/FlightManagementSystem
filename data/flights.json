@@ -1,0 +1,28 @@
+[ {
+  "id" : "F001",
+  "name" : "Morning Express",
+  "departureTime" : "06:30:00",
+  "feedbackScore" : 9,
+  "noticeBoardId" : "A01",
+  "airplaneId" : "NB01",
+  "tickets" : null,
+  "flightAssignments" : null
+}, {
+  "id" : "F002",
+  "name" : "Sunset Cruiser",
+  "departureTime" : "18:45:00",
+  "feedbackScore" : 8,
+  "noticeBoardId" : "A02",
+  "airplaneId" : "NB02",
+  "tickets" : null,
+  "flightAssignments" : null
+}, {
+  "id" : "F003",
+  "name" : "Night Owl",
+  "departureTime" : "22:00:00",
+  "feedbackScore" : 10,
+  "noticeBoardId" : "A03",
+  "airplaneId" : "NB03",
+  "tickets" : null,
+  "flightAssignments" : null
+} ]
