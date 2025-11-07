@@ -9,9 +9,18 @@ import java.util.List;
  */
 public interface NoticeBoardService extends BaseService<NoticeBoard, String> {
 
-    // Finds all notice boards that match the specified date.
+    /**
+     * Finds all notice boards that match the specified date.
+     *
+     * @param date the target date
+     * @return list of notice boards for that date
+     */
     List<NoticeBoard> findByDate(LocalDate date);
 
-    // Returns the notice board for the current day.
+    /**
+     * Returns the notice board for the current day.
+     *
+     * @return today's notice board
+     */
     NoticeBoard getCurrentDayBoard();
 }
