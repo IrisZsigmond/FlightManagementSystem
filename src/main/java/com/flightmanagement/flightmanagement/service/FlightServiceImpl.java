@@ -16,17 +16,6 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
         super(repository);
     }
 
-    /**
-     * Preloads sample Flight objects when the application starts.
-     * Runs automatically once after bean creation, thanks to @PostConstruct.
-     */
-    @PostConstruct
-    public void initData() {
-        repo().save(new Flight("F001", "Morning Express", LocalTime.of(6, 30), 9, "A01", "NB01"));
-        repo().save(new Flight("F002", "Sunset Cruiser", LocalTime.of(18, 45), 8, "A02", "NB02"));
-        repo().save(new Flight("F003", "Night Owl", LocalTime.of(22, 0), 10, "A03", "NB03"));
-    }
-
     /// -------- Flight-specific methods --------
 
     @Override

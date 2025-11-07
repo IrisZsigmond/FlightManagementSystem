@@ -5,7 +5,7 @@ import java.util.Optional;
 
 /**
  * Generic service interface defining CRUD operations.
- * Mirrors the methods from BaseRepositoryInMemory for use at the service layer.
+ * Mirrors the methods from AbstractRepository for use at the Service Layer.
  *
  * @param <T>  Entity type
  * @param <ID> Identifier type
@@ -24,13 +24,6 @@ public interface BaseService<T, ID> {
     List<T> findAll();
 
     /**
-     * Retrieves an entity by its ID.
-     * @return the entity if it was found / nothing
-     */
-    Optional<T> findById(ID id);
-
-
-    /**
      * Updates an existing entity identified by the given ID.
      * @return the upated entity
      */
@@ -41,6 +34,12 @@ public interface BaseService<T, ID> {
      * @return true if deleted / false if not found
      */
     boolean delete(ID id);
+
+    /**
+     * Retrieves an entity by its ID.
+     * @return the entity if it was found / nothing
+     */
+    Optional<T> findById(ID id);
 
     /**
      * Checks whether an entity with the given ID exists.
