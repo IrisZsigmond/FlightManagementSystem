@@ -1,8 +1,8 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Luggage;
-import com.flightmanagement.flightmanagement.model.LuggageStatus;
-import com.flightmanagement.flightmanagement.model.LuggageSize;
+import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
+import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import java.util.List;
 
 /**

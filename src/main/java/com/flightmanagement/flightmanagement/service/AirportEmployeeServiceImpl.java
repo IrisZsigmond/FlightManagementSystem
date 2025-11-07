@@ -21,7 +21,7 @@ public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee,
             throw new IllegalArgumentException("Department cannot be null or empty");
         }
         return repo().findAll().stream()
-                .filter(e -> department.equalsIgnoreCase(e.getdepartment()))
+                .filter(e -> department.equalsIgnoreCase(e.getDepartment()))
                 .collect(Collectors.toList());
     }
 
