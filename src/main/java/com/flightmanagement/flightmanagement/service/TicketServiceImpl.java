@@ -1,7 +1,7 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Ticket;
-import com.flightmanagement.flightmanagement.model.TicketCategory;
+import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 import org.springframework.stereotype.Service;
 

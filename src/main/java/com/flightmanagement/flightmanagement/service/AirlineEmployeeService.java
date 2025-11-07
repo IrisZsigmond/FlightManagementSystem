@@ -1,7 +1,7 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.AirlineEmployee;
-import com.flightmanagement.flightmanagement.model.AirlineRole;
+import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 
 import java.util.List;
 import java.util.Set;
