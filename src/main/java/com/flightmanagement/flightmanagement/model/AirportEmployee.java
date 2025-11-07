@@ -25,10 +25,10 @@ public class AirportEmployee extends Staff {
         this.designation = designation;
     }
 
-    public String getdepartment() {
+    public String getDepartment() {
         return department;
     }
-    public void setdepartment(String department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
