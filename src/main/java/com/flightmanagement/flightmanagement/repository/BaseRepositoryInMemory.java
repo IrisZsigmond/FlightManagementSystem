@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**In-memory repository implementation of AbstractRepository
-  using a ConcurrentHashMap to store entities.
-  Using concurrent operations to ensure thread safety.*/
+ * using a ConcurrentHashMap to store entities.
+ * Using concurrent operations to ensure thread safety.*/
 
 public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> {
 
@@ -42,16 +42,6 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
     }
 
     @Override
-    public Optional<T> findById(ID id) {
-        return Optional.ofNullable(store.get(id));
-    }
-
-    @Override
-    public boolean delete(ID id) {
-        return store.remove(id) != null;
-    }
-
-    @Override
     public boolean update(ID id, T updated) {
         if (updated == null)
             throw new IllegalArgumentException("updated entity cannot be null");
@@ -62,6 +52,16 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
             throw new IllegalArgumentException("Updated entity ID must match the path ID");
 
         return store.replace(id, updated) != null;
+    }
+
+    @Override
+    public boolean delete(ID id) {
+        return store.remove(id) != null;
+    }
+
+    @Override
+    public Optional<T> findById(ID id) {
+        return Optional.ofNullable(store.get(id));
     }
 
     @Override
