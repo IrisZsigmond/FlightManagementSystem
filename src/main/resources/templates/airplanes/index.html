@@ -25,12 +25,15 @@
         <td th:text="${airplane.id}">ID</td>
         <td th:text="${airplane.number}">Number</td>
         <td th:text="${airplane.capacity}">Capacity</td>
+
+        <!-- aici e modificarea -->
         <td>
             <span th:if="${airplane.flights == null or #lists.isEmpty(airplane.flights)}"> </span>
             <span th:each="f, iterStat : ${airplane.flights}"
-                  th:text="${f}"
+                  th:text="${f.id}"
                   th:append="${!iterStat.last ? ', ' : ''}"></span>
         </td>
+
         <td>
             <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>

@@ -26,7 +26,7 @@ public class GlobalBindingConfig {
         binder.registerCustomEditor(List.class, "assignments", new ListEditor<>(id -> new FlightAssignment(id, null, null)));
 
         // --- Airplane.flights ---
-        binder.registerCustomEditor(List.class, "flights", new ListEditor<>(id -> id)); // simple String list
+        binder.registerCustomEditor(List.class, "flights", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
 
         // --- NoticeBoard.flightsOfTheDay ---
         binder.registerCustomEditor(List.class, "flightsOfTheDay", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));

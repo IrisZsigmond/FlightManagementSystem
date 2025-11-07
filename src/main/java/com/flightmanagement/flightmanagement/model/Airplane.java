@@ -10,11 +10,11 @@ public class Airplane {
     private String id;
     private int number;
     private int capacity;
-    private List<String> flights;
+    private List<Flight> flights;
 
     public Airplane() {}
 
-    public Airplane(String id, int number, int capacity, List<String> flights) {
+    public Airplane(String id, int number, int capacity, List<Flight> flights) {
         this.id = id;
         this.number = number;
         this.capacity = capacity;
@@ -30,8 +30,8 @@ public class Airplane {
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
 
-    public List<String> getFlights() { return flights; }
-    public void setFlights(List<String> flights) { this.flights = flights; }
+    public List<Flight> getFlights() { return flights; }
+    public void setFlights(List<Flight> flights) { this.flights = flights; }
 
     @Override
     public String toString() {
