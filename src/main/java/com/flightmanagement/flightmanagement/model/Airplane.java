@@ -2,7 +2,7 @@ package com.flightmanagement.flightmanagement.model;
 
 import java.util.List;
 
-/* Represents an airplane used in the flight management system.
+/** Represents an airplane used in the flight management system.
  * Contains details such as model, capacity, and related flights */
 
 public class Airplane {

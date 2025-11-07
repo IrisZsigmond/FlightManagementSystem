@@ -2,8 +2,8 @@ package com.flightmanagement.flightmanagement.model;
 
 import java.util.List;
 
-/* Represents a passenger in the management system.
-* Contains details such as name, currency, and tickets*/
+/** Represents a passenger in the management system.
+ * Contains details such as name, currency, and tickets*/
 
 public class Passenger {
 
@@ -21,7 +21,6 @@ public class Passenger {
         this.tickets = tickets;
     }
 
-    //getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

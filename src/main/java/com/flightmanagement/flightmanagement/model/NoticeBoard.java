@@ -3,8 +3,8 @@ package com.flightmanagement.flightmanagement.model;
 import java.time.LocalDate;
 import java.util.List;
 
-/* Represents a notice board in the management system.
-* Contains details such as date and flights of the day*/
+/** Represents a notice board in the management system.
+ * Contains details such as date and flights of the day. */
 
 public class NoticeBoard {
 
