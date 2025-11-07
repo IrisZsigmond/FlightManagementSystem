@@ -1,7 +1,7 @@
 package com.flightmanagement.flightmanagement.controller;
 
 import com.flightmanagement.flightmanagement.model.AirlineEmployee;
-import com.flightmanagement.flightmanagement.model.AirlineRole;
+import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

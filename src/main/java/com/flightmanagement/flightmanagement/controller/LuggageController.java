@@ -1,8 +1,8 @@
 package com.flightmanagement.flightmanagement.controller;
 
 import com.flightmanagement.flightmanagement.model.Luggage;
-import com.flightmanagement.flightmanagement.model.LuggageSize;
-import com.flightmanagement.flightmanagement.model.LuggageStatus;
+import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
+import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
 import com.flightmanagement.flightmanagement.service.LuggageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
