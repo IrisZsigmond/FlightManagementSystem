@@ -1,12 +1,14 @@
 package com.flightmanagement.flightmanagement.model;
 
-/*FlightAssignment class represents a mapping between a flight and a staff.
-* Contains details such as flight ID and staff ID.*/
+/** FlightAssignment class represents a mapping between a flight and a staff.
+ * Contains details such as flight ID and staff ID.*/
 
 public class FlightAssignment {
     String id;
     String flightId;
     String staffId;
+
+    public FlightAssignment() {};
 
     public FlightAssignment(String id, String flightId, String staffId) {
         this.id = id;

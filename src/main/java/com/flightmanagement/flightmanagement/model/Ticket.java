@@ -1,12 +1,14 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
+
 import java.util.List;
 
-/*Represents a ticket in the management system.
-* Contains details such as passenger, flight ID, category, price, seat number, and luggage */
+/**Represents a ticket in the management system.
+ * Contains details such as passenger, flight ID,
+ * category, price, seat number, and luggage */
 
 public class Ticket {
-
 
     private String id;
     private Passenger passenger;
@@ -50,7 +52,6 @@ public class Ticket {
     public List<Luggage> getLuggages() { return luggages; }
     public void setLuggages(List<Luggage> luggages) { this.luggages = luggages; }
 
-    //returns a string representation of the Ticket object
     @Override
     public String toString() {
         return "Ticket{" +

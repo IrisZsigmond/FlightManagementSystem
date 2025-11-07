@@ -1,6 +1,9 @@
 package com.flightmanagement.flightmanagement.model;
 
-/* Represents a luggage in the flight management system.
+import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
+import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
+
+/** Represents a luggage in the flight management system.
  * Contains details such as ticket, status, and size */
 
 public class Luggage {

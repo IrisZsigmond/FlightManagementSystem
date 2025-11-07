@@ -1,12 +1,16 @@
 package com.flightmanagement.flightmanagement.model;
 
-/* Represents an airport employee in the flight management system.
+/** Represents an airport employee in the flight management system.
  * Inherits common attributes from Staff (such as ID and name)
- * and adds specific details like designation and department */
+ * and adds specific details like designation and department. */
 
 public class AirportEmployee extends Staff {
     private String designation;
     private String department;
+
+    public AirportEmployee() {
+        super();
+    }
 
     public AirportEmployee(String Id, String name, String designation, String department) {
         super(Id, name);
@@ -27,7 +31,6 @@ public class AirportEmployee extends Staff {
     public void setdepartment(String department) {
         this.department = department;
     }
-
 
     @Override
     public String toString() {

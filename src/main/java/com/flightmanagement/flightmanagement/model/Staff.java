@@ -1,11 +1,13 @@
 package com.flightmanagement.flightmanagement.model;
 
-/* Represents a staff member in the flight management system.
+/** Represents a staff member in the flight management system.
  * Contains details such as id and name */
 
 public abstract class Staff {
     private String id;
     private String name;
+
+    public Staff() {}
 
     public Staff(String Id, String name) {
         this.id = Id;

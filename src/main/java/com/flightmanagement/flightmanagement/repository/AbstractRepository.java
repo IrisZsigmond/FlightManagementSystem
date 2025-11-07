@@ -9,6 +9,8 @@ import java.util.Optional;
  * and some additional auxiliary methods.
  */
 public interface AbstractRepository<T, ID> {
+
+    /** ------------------- CRUD OPERATIONS ------------------ */
     /**
      * Saves a new entity if it doesn't exist
      * C = create
@@ -23,11 +25,13 @@ public interface AbstractRepository<T, ID> {
     List<T> findAll();
 
     /**
-     * Finds an entity by its ID
-     * @param id - the id by which the search occurs
-     * @return the found object if such an object exists / nothing
+     * Updates an entity by its id
+     * @param id - helps identify the entity, must be kept
+     * @param updated - the updated entity
+     * @return true if the entity was found and updated / false otherwise
+     * U = Update (CRUD)
      */
-    Optional<T> findById(ID id);
+    boolean update(ID id, T updated);
 
     /**
      * Deletes an entity by its ID
@@ -37,14 +41,14 @@ public interface AbstractRepository<T, ID> {
      */
     boolean delete(ID id);
 
+
+    /** ------------------- ADDITIONAL METHODS ------------------ */
     /**
-     * Updates an entity by its id
-     * @param id - helps identify the entity, must be kept
-     * @param updated - the updated entity
-     * @return true if the entity was found and updated / false otherwise
-     * U = Update
+     * Finds an entity by its ID
+     * @param id - the id by which the search occurs
+     * @return the found object if such an object exists / nothing
      */
-    boolean update(ID id, T updated);
+    Optional<T> findById(ID id);
 
     /**
      * Checks if an entity with the given ID exists

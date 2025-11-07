@@ -7,23 +7,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * In-memory repository implementation of AbstractRepository.
- *
- * Uses a ConcurrentHashMap to store entities to ensure thread safety.
- */
+/**In-memory repository implementation of AbstractRepository
+ * using a ConcurrentHashMap to store entities.
+ * Using concurrent operations to ensure thread safety.*/
+
 public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> {
 
-    /**
-     * Used "final" to ensure that the store reference cannot be changed
-     * after initialization.
-     */
+    ///used "final" to ensure that the store reference cannot be changed after initialization
     private final Map<ID, T> store = new ConcurrentHashMap<>();
-
-    /**
-     * Used "final" to ensure that the idExtractor reference cannot be changed
-     * after initialization.
-     */
+    ///used "final" to ensure that the idExtractor reference cannot be changed after initialization
     private final Function<T, ID> idExtractor;
 
     public BaseRepositoryInMemory(Function<T, ID> idExtractor) {
@@ -45,18 +37,8 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
 
     @Override
     public List<T> findAll() {
-        // defensive copy
+        /// defensive copy
         return new ArrayList<>(store.values());
-    }
-
-    @Override
-    public Optional<T> findById(ID id) {
-        return Optional.ofNullable(store.get(id));
-    }
-
-    @Override
-    public boolean delete(ID id) {
-        return store.remove(id) != null;
     }
 
     @Override
@@ -70,6 +52,16 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
             throw new IllegalArgumentException("Updated entity ID must match the path ID");
 
         return store.replace(id, updated) != null;
+    }
+
+    @Override
+    public boolean delete(ID id) {
+        return store.remove(id) != null;
+    }
+
+    @Override
+    public Optional<T> findById(ID id) {
+        return Optional.ofNullable(store.get(id));
     }
 
     @Override
