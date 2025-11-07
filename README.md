@@ -92,3 +92,12 @@ Because the CRUD implementation is already provided, new services focus almost e
 Spring integration
 Only the concrete entity service implementations are annotated as beans. The generic interface and abstract base are intentionally not annotated to avoid ambiguous or uninstantiable beans. Constructor injection is used throughout for clarity and testability. If multiple repository implementations exist for the same entity, Spring selection is managed using @Primary or qualifiers at the repository layer, without changing the service API.
 
+WHY GlobalBindingConfig IS USED:
+Some domain models contain Lists. HTML text inputs can only send strings. Spring does not know how to do this conversion automatically. Because of this, forms would normally break for all fields where the type is List<SomeModel>. The GlobalBindingConfig fixes this.
+How does it work?
+It uses Spring’s @ControllerAdvice + WebDataBinder to register type converters once, globally. These converters transform a comma-separated string like “A1, A2, A3” into a List<T> when saving form input, and convert a List<T> back into “A1, A2, A3” when rendering values back into forms.
+This centralizes all conversion logic in a single place, so:
+•controllers remain clean
+•forms can stay text-based
+•models can remain correctly typed (objects, not strings)
+•all list mappings work consistently across the whole application
