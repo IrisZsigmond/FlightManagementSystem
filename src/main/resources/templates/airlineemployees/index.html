@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Airline Employees</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>All Airline Employees</h1>
+
+<a th:href="@{/airlineemployees/new}">Add New Employee</a>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Assignments</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- ⚙️ iterăm prin lista de employees (verifică numele din controller) -->
+    <tr th:each="emp : ${employees}">
+        <td th:text="${emp.id}">ID</td>
+        <td th:text="${emp.name}">Name</td>
+        <td th:text="${emp.role}">Role</td>
+
+        <!-- ✅ afișăm doar ID-urile assign-urilor, separate prin virgulă -->
+        <td>
+            <span th:if="${emp.assignments == null or #lists.isEmpty(emp.assignments)}"> </span>
+            <span th:each="a, iterStat : ${emp.assignments}"
+                  th:text="${a.id}"
+                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+        </td>
+
+        <td>
+            <form th:action="@{'/airlineemployees/' + ${emp.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
