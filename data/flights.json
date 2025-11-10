@@ -25,4 +25,13 @@
   "airplaneId" : "NB03",
   "tickets" : null,
   "flightAssignments" : null
+}, {
+  "id" : "F006",
+  "name" : "MoningSun",
+  "departureTime" : "12:50:00",
+  "feedbackScore" : 10,
+  "noticeBoardId" : "N463",
+  "airplaneId" : "A276",
+  "tickets" : null,
+  "flightAssignments" : null
 } ]

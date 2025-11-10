@@ -1,0 +1,24 @@
+[ {
+  "id" : "A003",
+  "number" : 233,
+  "capacity" : 550,
+  "flights" : [ {
+    "id" : "F002",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  }, {
+    "id" : "F003",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+} ]
