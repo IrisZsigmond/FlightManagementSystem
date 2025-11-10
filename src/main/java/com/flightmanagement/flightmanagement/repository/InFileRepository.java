@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
+import com.flightmanagement.flightmanagement.model.Airplane;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -146,7 +147,7 @@ public class InFileRepository<T, ID> implements AbstractRepository<T, ID> {
     // ------------------- CRUD -------------------
 
     @Override
-    public synchronized void save(T entity) {
+    public synchronized Airplane save(T entity) {
         if (entity == null) throw new IllegalArgumentException("entity cannot be null");
         ID id = idGetter.apply(entity);
         if (id == null) throw new IllegalArgumentException("entity ID cannot be null");
@@ -156,6 +157,7 @@ public class InFileRepository<T, ID> implements AbstractRepository<T, ID> {
         items.add(entity);
         indexById.put(id, items.size() - 1);
         flushToDisk();
+        return null;
     }
 
     @Override

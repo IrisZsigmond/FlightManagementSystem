@@ -11,6 +11,7 @@ public class Airplane {
     private int number;
     private int capacity;
     private List<Flight> flights;
+    private transient String flightsCsv;
 
     public Airplane() {}
 
@@ -32,6 +33,9 @@ public class Airplane {
 
     public List<Flight> getFlights() { return flights; }
     public void setFlights(List<Flight> flights) { this.flights = flights; }
+
+    public String getFlightsCsv() { return flightsCsv; }
+    public void setFlightsCsv(String flightsCsv) { this.flightsCsv = flightsCsv; }
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.repository;
 
+import com.flightmanagement.flightmanagement.model.Airplane;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +16,10 @@ public interface AbstractRepository<T, ID> {
     /**
      * Saves a new entity if it doesn't exist
      * C = create
+     *
+     * @return
      */
-    void save(T entity);
+    Airplane save(T entity);
 
     /**
      * Retrieves all entities in the repository

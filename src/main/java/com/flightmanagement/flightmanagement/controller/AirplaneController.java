@@ -46,6 +46,15 @@ public class AirplaneController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
         Airplane airplane = airplaneService.findById(id).orElseThrow();
+
+        // Precompute CSV from existing flights
+        String csv = (airplane.getFlights() == null) ? "" :
+                airplane.getFlights().stream()
+                        .filter(f -> f != null && f.getId() != null)
+                        .map(f -> f.getId())
+                        .collect(java.util.stream.Collectors.joining(", "));
+
+        airplane.setFlightsCsv(csv);   // <= put it on the form-backing object
         model.addAttribute("airplane", airplane);
         return "airplanes/edit";
     }
