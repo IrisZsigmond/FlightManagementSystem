@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airplane</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Edit Airplane</h1>
+
+<form th:action="@{'/airplanes/' + ${airplane.id}}" th:object="${airplane}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Number:</label>
+    <input type="number" th:field="*{number}" required />
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" required />
+
+    <label>Flights (comma-separated IDs):</label>
+    <input type="text" th:field="*{flights}" placeholder="e.g., F001, F002" />
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/airplanes}" class="btn secondary">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

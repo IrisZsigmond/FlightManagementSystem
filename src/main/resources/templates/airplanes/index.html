@@ -6,42 +6,44 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>All Airplanes</h1>
 
-<a th:href="@{/airplanes/new}">Add New Airplane</a>
+<a th:href="@{/airplanes/new}" class="btn">Add New Airplane</a>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Number</th>
-        <th>Capacity</th>
-        <th>Flights</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="airplane : ${airplanes}">
-        <td th:text="${airplane.id}">ID</td>
-        <td th:text="${airplane.number}">Number</td>
-        <td th:text="${airplane.capacity}">Capacity</td>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Capacity</th>
+            <th>Flights</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="airplane : ${airplanes}">
+            <td th:text="${airplane.id}">ID</td>
+            <td th:text="${airplane.number}">Number</td>
+            <td th:text="${airplane.capacity}">Capacity</td>
 
-        <!-- aici e modificarea -->
-        <td>
-            <span th:if="${airplane.flights == null or #lists.isEmpty(airplane.flights)}"> </span>
-            <span th:each="f, iterStat : ${airplane.flights}"
-                  th:text="${f.id}"
-                  th:append="${!iterStat.last ? ', ' : ''}"></span>
-        </td>
+            <td>
+    <span th:each="f, iter : ${airplane.flights}"
+          th:utext="${f.id + (iter.last ? '' : ', ')}"></span>
+            </td>
 
-        <td>
-            <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+            <td>
+                <a th:href="@{'/airplanes/' + ${airplane.id} + '/edit'}" class="btn">Edit</a>
+                <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}" method="post" class="inline-form">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

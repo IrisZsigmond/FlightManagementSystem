@@ -27,8 +27,9 @@ public class AirplaneController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("airplane", new Airplane(null, 0, 0, new ArrayList<>()));
-        return "airplanes/form";
+        return "airplanes/new";
     }
+
 
     @PostMapping
     public String create(@ModelAttribute Airplane airplane) {
@@ -41,4 +42,20 @@ public class AirplaneController {
         airplaneService.delete(id);
         return "redirect:/airplanes";
     }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        Airplane airplane = airplaneService.findById(id).orElseThrow();
+        model.addAttribute("airplane", airplane);
+        return "airplanes/edit";
+    }
+
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id, @ModelAttribute Airplane airplane) {
+        airplaneService.update(id, airplane);
+        return "redirect:/airplanes";
+    }
 }
+
+
