@@ -5,7 +5,6 @@ import com.flightmanagement.flightmanagement.model.Airplane;
 import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.service.FlightService;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
