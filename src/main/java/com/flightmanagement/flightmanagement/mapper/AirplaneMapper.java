@@ -2,12 +2,8 @@ package com.flightmanagement.flightmanagement.mapper;
 
 import com.flightmanagement.flightmanagement.dto.AirplaneForm;
 import com.flightmanagement.flightmanagement.model.Airplane;
-import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.service.FlightService;
 import org.springframework.stereotype.Component;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class AirplaneMapper {
@@ -18,50 +14,37 @@ public class AirplaneMapper {
         this.flightService = flightService;
     }
 
+    /** Form -> Entity (no relationship mapping) */
     public Airplane toEntity(AirplaneForm form) {
         Airplane airplane = new Airplane();
         airplane.setId(form.getId());
         airplane.setNumber(form.getNumber());
         airplane.setCapacity(form.getCapacity());
-
-        List<Flight> flights = resolveFlights(form.getFlightIds());
-        airplane.setFlights(flights);
-
+        // DO NOT set flights here (projection only, @JsonIgnore)
         return airplane;
     }
 
+    /** Update existing entity from form (no relationship mapping) */
     public void updateEntityFromForm(Airplane airplane, AirplaneForm form) {
         airplane.setNumber(form.getNumber());
         airplane.setCapacity(form.getCapacity());
-
-        List<Flight> flights = resolveFlights(form.getFlightIds());
-        airplane.setFlights(flights);
+        // DO NOT set flights here
     }
 
+    /** Entity -> Form (only scalar fields) */
     public AirplaneForm toForm(Airplane airplane) {
         AirplaneForm form = new AirplaneForm();
         form.setId(airplane.getId());
         form.setNumber(airplane.getNumber());
         form.setCapacity(airplane.getCapacity());
-
-        if (airplane.getFlights() != null) {
-            List<String> ids = airplane.getFlights().stream()
-                    .filter(Objects::nonNull)
-                    .map(Flight::getId)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            form.setFlightIds(ids);
-        }
-
+        // No flightIds on the form anymore
         return form;
     }
 
-    private List<Flight> resolveFlights(List<String> flightIds) {
-        if (flightIds == null) return List.of();
-        return flightIds.stream()
-                .filter(id -> id != null && !id.isBlank())
-                .map(id -> flightService.findById(id).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+    /** Optional: projection helper if you want to enrich an airplane with its flights for views */
+    public Airplane withFlights(Airplane airplane) {
+        if (airplane == null) return null;
+        airplane.setFlights(flightService.findByAirplaneId(airplane.getId()));
+        return airplane;
     }
 }

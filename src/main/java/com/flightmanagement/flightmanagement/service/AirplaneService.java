@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.service;
 import com.flightmanagement.flightmanagement.model.Airplane;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AirplaneService extends BaseService<Airplane, String> {
     /**
@@ -19,5 +20,10 @@ public interface AirplaneService extends BaseService<Airplane, String> {
      * @param flightId the flight identifier
      * @return list of airplanes containing that flight
      */
-    List<Airplane> findByFlightId(String flightId);
+    List<Airplane> findAirplaneForFlight(String flightId);
+
+    /**
+     * Load airplane and attach its flights (read-only projection).
+     */
+    Optional<Airplane> findAirplaneWithFlights(String id);
 }

@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 /** Represents an airplane used in the flight management system.
@@ -10,6 +12,7 @@ public class Airplane {
     private String id;
     private int number;
     private int capacity;
+    @JsonIgnore
     private List<Flight> flights;
 
     public Airplane() {}

@@ -20,12 +20,12 @@
     <label>Capacity:</label>
     <input type="number" th:field="*{capacity}" required />
 
-    <label>Flights (select one or more):</label>
-    <select multiple th:field="*{flightIds}">
-        <option th:each="flight : ${allFlights}"
-                th:value="${flight.id}"
-                th:text="${flight.id + ' - ' + flight.name}">F001 - Example</option>
-    </select>
+    <h3>Assigned Flights</h3>
+    <ul>
+        <li th:each="f : ${airplane.flights}"
+            th:text="${f.id + ' - ' + f.name}">F001 - Example</li>
+        <li th:if="${#lists.isEmpty(airplane.flights)}">No flights assigned.</li>
+    </ul>
 
     <div class="form-actions">
         <button type="submit" class="btn">Save</button>

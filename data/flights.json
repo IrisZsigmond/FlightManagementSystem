@@ -30,4 +30,12 @@
   "airplaneId" : "A276",
   "tickets" : null,
   "flightAssignments" : null
+}, {
+  "id" : "F004",
+  "name" : "Morning Sunshine",
+  "departureTime" : "10:45:00",
+  "noticeBoardId" : "N463",
+  "airplaneId" : "A276",
+  "tickets" : null,
+  "flightAssignments" : null
 } ]

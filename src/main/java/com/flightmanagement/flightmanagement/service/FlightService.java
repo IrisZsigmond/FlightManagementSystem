@@ -17,6 +17,10 @@ public interface FlightService extends BaseService<Flight, String> {
     List<Flight> findByAirplaneId(String airplaneId);
 
     /**
+     * Find all flights that are not assigned to any airplane.
+     */
+    List<Flight> findUnassigned();
+    /**
      * Find all flights attached to a given notice board.
      */
     List<Flight> findByNoticeBoardId(String noticeBoardId);

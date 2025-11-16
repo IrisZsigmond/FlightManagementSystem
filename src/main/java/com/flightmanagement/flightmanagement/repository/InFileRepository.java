@@ -158,7 +158,7 @@ public class InFileRepository<T, ID> implements AbstractRepository<T, ID> {
         items.add(entity);
         indexById.put(id, items.size() - 1);
         flushToDisk();
-        return null;
+        return entity;
     }
 
     @Override

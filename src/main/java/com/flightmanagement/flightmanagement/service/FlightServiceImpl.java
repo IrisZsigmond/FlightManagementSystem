@@ -2,7 +2,6 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.repository.AbstractRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -16,7 +15,7 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
         super(repository);
     }
 
-    /// -------- Flight-specific methods --------
+    /// -------- Ownership-side read methods --------
 
     @Override
     public List<Flight> findByAirplaneId(String airplaneId) {
@@ -25,6 +24,15 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
                 .filter(f -> airplaneId.equalsIgnoreCase(f.getAirplaneId()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Flight> findUnassigned() {
+        return repo().findAll().stream()
+                .filter(f -> f.getAirplaneId() == null || f.getAirplaneId().isBlank())
+                .collect(Collectors.toList());
+    }
+
+    /// -------- Existing query methods --------
 
     @Override
     public List<Flight> findByNoticeBoardId(String noticeBoardId) {

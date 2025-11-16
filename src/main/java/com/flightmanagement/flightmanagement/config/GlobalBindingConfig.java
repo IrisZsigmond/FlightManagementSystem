@@ -26,10 +26,10 @@ public class GlobalBindingConfig {
         binder.registerCustomEditor(List.class, "assignments", new ListEditor<>(id -> new FlightAssignment(id, null, null)));
 
         // --- Airplane.flights ---
-        binder.registerCustomEditor(List.class, "flights", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
+        binder.registerCustomEditor(List.class, "flights", new ListEditor<>(id -> new Flight(id, null, null, null, null)));
 
         // --- NoticeBoard.flightsOfTheDay ---
-        binder.registerCustomEditor(List.class, "flightsOfTheDay", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
+        binder.registerCustomEditor(List.class, "flightsOfTheDay", new ListEditor<>(id -> new Flight(id, null, null, null, null)));
 
         // --- Passenger.tickets ---
         binder.registerCustomEditor(List.class, "tickets", new ListEditor<>(id -> new Ticket(id, null, null, null, 0, null, null)));

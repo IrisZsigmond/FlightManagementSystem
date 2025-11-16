@@ -2,12 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Airplanes List</title>
+    <title>Airplanes</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
 <h1>All Airplanes</h1>
+
+<!-- Flash messages -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
 <a th:href="@{/airplanes/new}" class="btn">Add New Airplane</a>
 
@@ -29,17 +33,25 @@
             <td th:text="${airplane.capacity}">Capacity</td>
 
             <td>
-    <span th:each="f, iter : ${airplane.flights}"
-          th:utext="${f.id + (iter.last ? '' : ', ')}"></span>
+                <span th:if="${#lists.isEmpty(airplane.flights)}">—</span>
+                <span th:if="${!#lists.isEmpty(airplane.flights)}"
+                      th:each="f, iter : ${airplane.flights}"
+                      th:text="${(f.id != null ? f.id : 'N/A') + (f.name != null ? ' - ' + f.name : '') + (iter.last ? '' : ', ')}">
+                    F001 - Example
+                </span>
             </td>
 
-
-            <td>
+            <td class="actions">
                 <a th:href="@{'/airplanes/' + ${airplane.id} + '/edit'}" class="btn">Edit</a>
-                <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}" method="post" class="inline-form">
+                <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}"
+                      method="post" class="inline-form"
+                      onsubmit="return confirm('Delete this airplane?');">
                     <button type="submit" class="btn danger">Delete</button>
                 </form>
             </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(airplanes)}">
+            <td colspan="5">No airplanes yet.</td>
         </tr>
         </tbody>
     </table>
