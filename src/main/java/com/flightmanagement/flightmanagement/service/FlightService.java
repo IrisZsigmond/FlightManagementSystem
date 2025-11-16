@@ -32,11 +32,6 @@ public interface FlightService extends BaseService<Flight, String> {
     List<Flight> findByDepartureBetween(LocalTime from, LocalTime to);
 
     /**
-     * Find flights with feedbackScore >= minScore.
-     */
-    List<Flight> topRated(int minScore);
-
-    /**
      * Find all flights that include a ticket with the given ticketId.
      */
     List<Flight> findByTicketId(String ticketId);

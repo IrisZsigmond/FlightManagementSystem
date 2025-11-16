@@ -5,13 +5,12 @@ import java.util.List;
 
 /** Represents a flight in the management system.
  * Contains details such as name, departure time,
- * feedback score, notice board ID, and airplane ID.*/
+ * notice board ID, and airplane ID.*/
 
 public class Flight {
     private String id;
     private String name;
     private LocalTime departureTime;
-    private int feedbackScore;
     private String noticeBoardId;
     private String airplaneId;
     List<Ticket> tickets;
@@ -19,11 +18,10 @@ public class Flight {
 
     public Flight() {};
 
-    public Flight(String id, String name, LocalTime departureTime, int feedbackScore, String noticeBoardId, String airplaneId) {
+    public Flight(String id, String name, LocalTime departureTime, String noticeBoardId, String airplaneId) {
         this.id = id;
         this.name = name;
         this.departureTime = departureTime;
-        this.feedbackScore = feedbackScore;
         this.noticeBoardId = noticeBoardId;
         this.airplaneId = airplaneId;
     }
@@ -48,13 +46,6 @@ public class Flight {
     }
     public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
-    }
-
-    public int getFeedbackScore() {
-        return feedbackScore;
-    }
-    public void setFeedbackScore(int feedbackScore) {
-        this.feedbackScore = feedbackScore;
     }
 
     public String getNoticeBoardId() {
@@ -91,7 +82,6 @@ public class Flight {
         return "Flight{" +
                 " name='" + name + '\'' +
                 ", departureTime=" + departureTime +
-                ", feedbackScore=" + feedbackScore +
                 ", noticeBoardId='" + noticeBoardId + '\'' +
                 ", airplaneId='" + airplaneId + '\'' +
                 '}';

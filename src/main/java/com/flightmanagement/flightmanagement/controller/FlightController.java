@@ -63,7 +63,7 @@ public class FlightController {
     public String form(Model model) {
         // Create an empty Flight object with default (null or 0) values.
         // This allows Thymeleaf to bind form fields like th:field="*{name}" without errors.
-        model.addAttribute("flight", new Flight(null, null, null, 0, null, null));
+        model.addAttribute("flight", new Flight(null, null, null, null, null));
 
         // Return the logical view name: templates/flights/form.html
         return "flights/form";

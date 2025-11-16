@@ -54,13 +54,6 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
     }
 
     @Override
-    public List<Flight> topRated(int minScore) {
-        return repo().findAll().stream()
-                .filter(f -> f.getFeedbackScore() >= minScore)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<Flight> findByTicketId(String ticketId) {
         if (ticketId == null || ticketId.isBlank()) return List.of();
         return repo().findAll().stream()
