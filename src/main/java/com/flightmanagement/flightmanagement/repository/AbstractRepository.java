@@ -17,9 +17,9 @@ public interface AbstractRepository<T, ID> {
      * Saves a new entity if it doesn't exist
      * C = create
      *
-     * @return
+     * @return the stored entity
      */
-    Airplane save(T entity);
+    T save(T entity);
 
     /**
      * Retrieves all entities in the repository

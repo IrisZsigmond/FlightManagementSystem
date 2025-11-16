@@ -1,29 +1,5 @@
 [ {
-  "id" : "A003",
-  "number" : 233,
-  "capacity" : 550,
-  "flights" : [ {
-    "id" : "F002",
-    "name" : null,
-    "departureTime" : null,
-    "feedbackScore" : 0,
-    "noticeBoardId" : null,
-    "airplaneId" : null,
-    "tickets" : null,
-    "flightAssignments" : null
-  }, {
-    "id" : "F003",
-    "name" : null,
-    "departureTime" : null,
-    "feedbackScore" : 0,
-    "noticeBoardId" : null,
-    "airplaneId" : null,
-    "tickets" : null,
-    "flightAssignments" : null
-  } ],
-  "flightsCsv" : null
-}, {
-  "id" : "A004",
+  "id" : "A276",
   "number" : 10,
   "capacity" : 10000,
   "flights" : [ {
@@ -31,16 +7,92 @@
     "name" : "MoningSun",
     "departureTime" : "12:50:00",
     "feedbackScore" : 10,
-    "noticeBoardId" : "N463",
+    "noticeBoardId" : "NB463",
     "airplaneId" : "A276",
     "tickets" : null,
     "flightAssignments" : null
-  } ],
-  "flightsCsv" : "F006"
+  } ]
 }, {
   "id" : "A005",
   "number" : 120,
   "capacity" : 10000,
-  "flights" : [ ],
-  "flightsCsv" : "F007"
+  "flights" : [ {
+    "id" : "F001",
+    "name" : "Morning Express",
+    "departureTime" : "06:30:00",
+    "feedbackScore" : 9,
+    "noticeBoardId" : "NB01",
+    "airplaneId" : "A005",
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A002",
+  "number" : 17,
+  "capacity" : 1000,
+  "flights" : [ {
+    "id" : "F002",
+    "name" : "Sunset Cruiser",
+    "departureTime" : "18:45:00",
+    "feedbackScore" : 8,
+    "noticeBoardId" : "NB02",
+    "airplaneId" : "A002",
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A003",
+  "number" : 50,
+  "capacity" : 5000,
+  "flights" : [ {
+    "id" : "F003",
+    "name" : "Night Owl",
+    "departureTime" : "22:00:00",
+    "feedbackScore" : 10,
+    "noticeBoardId" : "NB03",
+    "airplaneId" : "A003",
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A006",
+  "number" : 0,
+  "capacity" : 40,
+  "flights" : [ {
+    "id" : "F001",
+    "name" : "Morning Express",
+    "departureTime" : "06:30:00",
+    "feedbackScore" : 9,
+    "noticeBoardId" : "NB01",
+    "airplaneId" : "A005",
+    "tickets" : null,
+    "flightAssignments" : null
+  }, {
+    "id" : "F002",
+    "name" : "Sunset Cruiser",
+    "departureTime" : "18:45:00",
+    "feedbackScore" : 8,
+    "noticeBoardId" : "NB02",
+    "airplaneId" : "A002",
+    "tickets" : null,
+    "flightAssignments" : null
+  }, {
+    "id" : "F003",
+    "name" : "Night Owl",
+    "departureTime" : "22:00:00",
+    "feedbackScore" : 10,
+    "noticeBoardId" : "NB03",
+    "airplaneId" : "A003",
+    "tickets" : null,
+    "flightAssignments" : null
+  }, {
+    "id" : "F006",
+    "name" : "MoningSun",
+    "departureTime" : "12:50:00",
+    "feedbackScore" : 10,
+    "noticeBoardId" : "NB463",
+    "airplaneId" : "A276",
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
 } ]

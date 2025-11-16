@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "fms")
 public class AppDataProperties {
     /**
-     * Writable runtime data directory (e.g., ./data or /var/lib/fms/data).
+     * Writable runtime data directory (./data).
      */
     private String dataDir = "./data";
 

@@ -1,21 +1,28 @@
 package com.flightmanagement.flightmanagement.controller;
 
+import com.flightmanagement.flightmanagement.dto.AirplaneForm;
+import com.flightmanagement.flightmanagement.mapper.AirplaneMapper;
 import com.flightmanagement.flightmanagement.model.Airplane;
 import com.flightmanagement.flightmanagement.service.AirplaneService;
+import com.flightmanagement.flightmanagement.service.FlightService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/airplanes")
 public class AirplaneController {
 
     private final AirplaneService airplaneService;
+    private final FlightService flightService;
+    private final AirplaneMapper airplaneMapper;
 
-    public AirplaneController(AirplaneService airplaneService) {
+    public AirplaneController(AirplaneService airplaneService,
+                              FlightService flightService,
+                              AirplaneMapper airplaneMapper) {
         this.airplaneService = airplaneService;
+        this.flightService = flightService;
+        this.airplaneMapper = airplaneMapper;
     }
 
     @GetMapping
@@ -26,13 +33,14 @@ public class AirplaneController {
 
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("airplane", new Airplane(null, 0, 0, new ArrayList<>()));
+        model.addAttribute("airplaneForm", new AirplaneForm());
+        model.addAttribute("allFlights", flightService.findAll());
         return "airplanes/new";
     }
 
-
     @PostMapping
-    public String create(@ModelAttribute Airplane airplane) {
+    public String create(@ModelAttribute("airplaneForm") AirplaneForm form) {
+        Airplane airplane = airplaneMapper.toEntity(form);
         airplaneService.save(airplane);
         return "redirect:/airplanes";
     }
@@ -46,25 +54,21 @@ public class AirplaneController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
         Airplane airplane = airplaneService.findById(id).orElseThrow();
+        AirplaneForm form = airplaneMapper.toForm(airplane);
 
-        // Precompute CSV from existing flights
-        String csv = (airplane.getFlights() == null) ? "" :
-                airplane.getFlights().stream()
-                        .filter(f -> f != null && f.getId() != null)
-                        .map(f -> f.getId())
-                        .collect(java.util.stream.Collectors.joining(", "));
-
-        airplane.setFlightsCsv(csv);   // <= put it on the form-backing object
-        model.addAttribute("airplane", airplane);
+        model.addAttribute("airplaneForm", form);
+        model.addAttribute("allFlights", flightService.findAll());
         return "airplanes/edit";
     }
 
-
     @PostMapping("/{id}")
-    public String update(@PathVariable String id, @ModelAttribute Airplane airplane) {
-        airplaneService.update(id, airplane);
+    public String update(@PathVariable String id,
+                         @ModelAttribute("airplaneForm") AirplaneForm form) {
+
+        Airplane existing = airplaneService.findById(id).orElseThrow();
+        airplaneMapper.updateEntityFromForm(existing, form);
+        airplaneService.update(id, existing);
+
         return "redirect:/airplanes";
     }
 }
-
-

@@ -29,7 +29,7 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
     }
 
     @Override
-    public Airplane save(T entity) {
+    public T save(T entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity cannot be null");
         ID id = idExtractor.apply(entity);

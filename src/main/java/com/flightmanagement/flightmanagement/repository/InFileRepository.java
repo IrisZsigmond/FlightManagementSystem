@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
-import com.flightmanagement.flightmanagement.model.Airplane;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -69,7 +70,7 @@ public class InFileRepository<T, ID> implements AbstractRepository<T, ID> {
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                     .enable(SerializationFeature.INDENT_OUTPUT);
 
-            loadFromDisk(); // fill items + index
+            loadFromDisk(); /// fill items + indexById
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to prepare repository for " + fileName, e);
         }
@@ -147,7 +148,7 @@ public class InFileRepository<T, ID> implements AbstractRepository<T, ID> {
     // ------------------- CRUD -------------------
 
     @Override
-    public synchronized Airplane save(T entity) {
+    public synchronized T save(T entity) {
         if (entity == null) throw new IllegalArgumentException("entity cannot be null");
         ID id = idGetter.apply(entity);
         if (id == null) throw new IllegalArgumentException("entity ID cannot be null");

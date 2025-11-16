@@ -8,7 +8,8 @@
 <body>
 <h1>Edit Airplane</h1>
 
-<form th:action="@{'/airplanes/' + ${airplane.id}}" th:object="${airplane}" method="post">
+<form th:action="@{'/airplanes/' + ${airplaneForm.id}}"
+      th:object="${airplaneForm}" method="post">
 
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly />
@@ -19,10 +20,12 @@
     <label>Capacity:</label>
     <input type="number" th:field="*{capacity}" required />
 
-    <label>Flights (comma-separated IDs):</label>
-    <input type="text"
-           th:field="*{flightsCsv}"
-           placeholder="e.g., F001, F002" />
+    <label>Flights (select one or more):</label>
+    <select multiple th:field="*{flightIds}">
+        <option th:each="flight : ${allFlights}"
+                th:value="${flight.id}"
+                th:text="${flight.id + ' - ' + flight.name}">F001 - Example</option>
+    </select>
 
     <div class="form-actions">
         <button type="submit" class="btn">Save</button>

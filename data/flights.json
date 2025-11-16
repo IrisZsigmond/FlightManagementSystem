@@ -3,8 +3,8 @@
   "name" : "Morning Express",
   "departureTime" : "06:30:00",
   "feedbackScore" : 9,
-  "noticeBoardId" : "A01",
-  "airplaneId" : "NB01",
+  "noticeBoardId" : "NB01",
+  "airplaneId" : "A005",
   "tickets" : null,
   "flightAssignments" : null
 }, {
@@ -12,8 +12,8 @@
   "name" : "Sunset Cruiser",
   "departureTime" : "18:45:00",
   "feedbackScore" : 8,
-  "noticeBoardId" : "A02",
-  "airplaneId" : "NB02",
+  "noticeBoardId" : "NB02",
+  "airplaneId" : "A002",
   "tickets" : null,
   "flightAssignments" : null
 }, {
@@ -21,8 +21,8 @@
   "name" : "Night Owl",
   "departureTime" : "22:00:00",
   "feedbackScore" : 10,
-  "noticeBoardId" : "A03",
-  "airplaneId" : "NB03",
+  "noticeBoardId" : "NB03",
+  "airplaneId" : "A003",
   "tickets" : null,
   "flightAssignments" : null
 }, {
@@ -30,7 +30,7 @@
   "name" : "MoningSun",
   "departureTime" : "12:50:00",
   "feedbackScore" : 10,
-  "noticeBoardId" : "N463",
+  "noticeBoardId" : "NB463",
   "airplaneId" : "A276",
   "tickets" : null,
   "flightAssignments" : null

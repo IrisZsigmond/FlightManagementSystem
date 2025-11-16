@@ -19,7 +19,7 @@ public class AirplaneFileRepo extends InFileRepository<Airplane, String> {
 
     public AirplaneFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {
         super(
-                "airplanes.json",                          // file name
+                "airplanes.json",                  // file name
                 new TypeReference<List<Airplane>>() {},    // type hint
                 Airplane::getId,                           // id getter
                 props,
