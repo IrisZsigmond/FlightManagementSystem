@@ -9,37 +9,51 @@ import java.beans.PropertyEditorSupport;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Global WebDataBinder configuration for converting between
- * comma-separated strings in forms and List<T> model properties.
- */
 @ControllerAdvice
 public class GlobalBindingConfig {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
 
-        // --- Ticket.luggages ---
-        binder.registerCustomEditor(List.class, "luggages", new ListEditor<>(id -> new Luggage(id, null, null, null)));
+        // --- Lists ---
 
-        // --- AirlineEmployee.assignments ---
-        binder.registerCustomEditor(List.class, "assignments", new ListEditor<>(id -> new FlightAssignment(id, null, null)));
+        binder.registerCustomEditor(List.class, "luggages",
+                new ListEditor<>(id -> new Luggage(id, null, null, null)));
 
-        // --- Airplane.flights ---
-        binder.registerCustomEditor(List.class, "flights", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
+        binder.registerCustomEditor(List.class, "assignments",
+                new ListEditor<>(id -> new FlightAssignment(id, null, null)));
 
-        // --- NoticeBoard.flightsOfTheDay ---
-        binder.registerCustomEditor(List.class, "flightsOfTheDay", new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
+        binder.registerCustomEditor(List.class, "flights",
+                new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
 
-        // --- Passenger.tickets ---
-        binder.registerCustomEditor(List.class, "tickets", new ListEditor<>(id -> new Ticket(id, null, null, null, 0, null, null)));
+        binder.registerCustomEditor(List.class, "flightsOfTheDay",
+                new ListEditor<>(id -> new Flight(id, null, null, 0, null, null)));
+
+        binder.registerCustomEditor(List.class, "tickets",
+                new ListEditor<>(id -> new Ticket(id, null, null, null, 0, null, null)));
+
+
+        // --- Single Ticket (required for Luggage.ticket) ---
+
+        binder.registerCustomEditor(Ticket.class, "ticket",
+                new PropertyEditorSupport() {
+                    @Override
+                    public void setAsText(String text) {
+                        if (text == null || text.isBlank()) {
+                            setValue(null);
+                            return;
+                        }
+                        setValue(new Ticket(text.trim(), null, null, null, 0, null, null));
+                    }
+
+                    @Override
+                    public String getAsText() {
+                        Ticket t = (Ticket) getValue();
+                        return (t == null || t.getId() == null) ? "" : t.getId();
+                    }
+                });
     }
 
-    /**
-     * Generic reusable editor that converts between:
-     *  - "A1, A2, A3" ↔ List<T>
-     *  - Works for any type of object that has an ID constructor or mapping.
-     */
     private static class ListEditor<T> extends PropertyEditorSupport {
 
         private final java.util.function.Function<String, T> creator;
@@ -82,6 +96,5 @@ public class GlobalBindingConfig {
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.joining(", "));
         }
-
     }
 }
