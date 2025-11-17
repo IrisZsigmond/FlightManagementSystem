@@ -1,0 +1,123 @@
+[ {
+  "id" : "1",
+  "name" : "John",
+  "role" : "PILOT",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A002",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "2",
+  "name" : "Louise",
+  "role" : "CO_PILOT",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A004",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A005",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "3",
+  "name" : "Mary",
+  "role" : "PILOT",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "4",
+  "name" : "Carl",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ {
+    "id" : "A005",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "5",
+  "name" : "Rick",
+  "role" : "GROUND_STAFF",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A004",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A005",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "6",
+  "name" : "Miranda",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ {
+    "id" : "A007",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "7",
+  "name" : "Max",
+  "role" : "GROUND_STAFF",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "8",
+  "name" : "Tim",
+  "role" : "CO_PILOT",
+  "assignments" : [ {
+    "id" : "A002",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "9",
+  "name" : "Lara",
+  "role" : "PILOT",
+  "assignments" : [ {
+    "id" : "A003",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A008",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+}, {
+  "id" : "10",
+  "name" : "Bob",
+  "role" : "PILOT",
+  "assignments" : [ {
+    "id" : "A001",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A004",
+    "flightId" : null,
+    "staffId" : null
+  }, {
+    "id" : "A005",
+    "flightId" : null,
+    "staffId" : null
+  } ]
+} ]

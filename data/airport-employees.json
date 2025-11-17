@@ -1,0 +1,21 @@
+[ {
+  "id" : "1",
+  "name" : "Tom",
+  "designation" : "technician",
+  "department" : "security"
+}, {
+  "id" : "2",
+  "name" : "Emanuel",
+  "designation" : "dispatcher",
+  "department" : "operations"
+}, {
+  "id" : "3",
+  "name" : "Lily",
+  "designation" : "clerk",
+  "department" : "customer service"
+}, {
+  "id" : "4",
+  "name" : "Mark",
+  "designation" : "security officer",
+  "department" : "security"
+} ]

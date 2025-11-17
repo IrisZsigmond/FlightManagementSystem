@@ -1,0 +1,41 @@
+[ {
+  "id" : "1",
+  "flightId" : "F001",
+  "staffId" : "S2"
+}, {
+  "id" : "2",
+  "flightId" : "F2135",
+  "staffId" : "S187"
+}, {
+  "id" : "3",
+  "flightId" : "F724",
+  "staffId" : "S534"
+}, {
+  "id" : "4",
+  "flightId" : "F76",
+  "staffId" : "S23"
+}, {
+  "id" : "5",
+  "flightId" : "F234",
+  "staffId" : "S798"
+}, {
+  "id" : "6",
+  "flightId" : "F90",
+  "staffId" : "S70"
+}, {
+  "id" : "7",
+  "flightId" : "F54",
+  "staffId" : "S006"
+}, {
+  "id" : "8",
+  "flightId" : "F123",
+  "staffId" : "S872"
+}, {
+  "id" : "9",
+  "flightId" : "F607",
+  "staffId" : "S1"
+}, {
+  "id" : "10",
+  "flightId" : "F76",
+  "staffId" : "S123"
+} ]

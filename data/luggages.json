@@ -1,0 +1,131 @@
+[ {
+  "id" : "1",
+  "ticket" : {
+    "id" : "T001, T002",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "2",
+  "ticket" : {
+    "id" : "T003",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "LOADED",
+  "size" : "MEDIUM"
+}, {
+  "id" : "3",
+  "ticket" : {
+    "id" : "T003",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "DELIVERED",
+  "size" : "SMALL"
+}, {
+  "id" : "4",
+  "ticket" : {
+    "id" : "T001, T002",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "LOADED",
+  "size" : "LARGE"
+}, {
+  "id" : "5",
+  "ticket" : {
+    "id" : "T001",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "DELIVERED",
+  "size" : "MEDIUM"
+}, {
+  "id" : "6",
+  "ticket" : {
+    "id" : "T002",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "LOADED",
+  "size" : "SMALL"
+}, {
+  "id" : "7",
+  "ticket" : {
+    "id" : "T008",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "8",
+  "ticket" : {
+    "id" : "T003",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "9",
+  "ticket" : {
+    "id" : "T007",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "10",
+  "ticket" : {
+    "id" : "T003, T004",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "LARGE"
+} ]
