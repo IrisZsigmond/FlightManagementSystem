@@ -26,14 +26,29 @@ public class NoticeBoardController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("noticeboard", new NoticeBoard(null, LocalDate.now(), new ArrayList<>()));
-        return "noticeboards/form";
+    public String newForm(Model model) {
+        model.addAttribute("noticeboard",
+                new NoticeBoard(null, LocalDate.now(), new ArrayList<>()));
+        return "noticeboards/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute NoticeBoard noticeBoard) {
-        noticeBoardService.save(noticeBoard);
+    public String create(@ModelAttribute NoticeBoard board) {
+        noticeBoardService.save(board);
+        return "redirect:/noticeboards";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        NoticeBoard board = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("noticeboard", board);
+        return "noticeboards/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id,
+                         @ModelAttribute NoticeBoard board) {
+        noticeBoardService.update(id, board);
         return "redirect:/noticeboards";
     }
 

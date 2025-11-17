@@ -26,15 +26,30 @@ public class TicketController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("ticket", new Ticket(null, null, null, null, 0.0, null, new ArrayList<>()));
+    public String newForm(Model model) {
+        model.addAttribute("ticket",
+                new Ticket(null, null, null, null, 0.0, null, new ArrayList<>()));
         model.addAttribute("categories", TicketCategory.values());
-        return "tickets/form";
+        return "tickets/new";
     }
 
     @PostMapping
     public String create(@ModelAttribute Ticket ticket) {
         ticketService.save(ticket);
+        return "redirect:/tickets";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        Ticket ticket = ticketService.findById(id).orElseThrow();
+        model.addAttribute("ticket", ticket);
+        model.addAttribute("categories", TicketCategory.values());
+        return "tickets/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id, @ModelAttribute Ticket ticket) {
+        ticketService.update(id, ticket);
         return "redirect:/tickets";
     }
 

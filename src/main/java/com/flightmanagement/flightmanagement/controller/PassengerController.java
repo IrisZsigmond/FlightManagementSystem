@@ -25,14 +25,28 @@ public class PassengerController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("passenger", new Passenger(null, null, null, new ArrayList<>()));
-        return "passengers/form";
+    public String newForm(Model model) {
+        model.addAttribute("passenger",
+                new Passenger(null, null, null, new ArrayList<>()));
+        return "passengers/new";
     }
 
     @PostMapping
     public String create(@ModelAttribute Passenger passenger) {
         passengerService.save(passenger);
+        return "redirect:/passengers";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        Passenger passenger = passengerService.findById(id).orElseThrow();
+        model.addAttribute("passenger", passenger);
+        return "passengers/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id, @ModelAttribute Passenger passenger) {
+        passengerService.update(id, passenger);
         return "redirect:/passengers";
     }
 

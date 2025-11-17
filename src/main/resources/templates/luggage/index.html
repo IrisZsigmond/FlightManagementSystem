@@ -6,33 +6,42 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>All Luggage</h1>
 
-<a th:href="@{/luggage/new}">Add New Luggage</a>
+<a th:href="@{/luggage/new}" class="btn">Add New Luggage</a>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Ticket ID</th>
-        <th>Status</th>
-        <th>Size</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="luggage : ${luggageList}">
-        <td th:text="${luggage.id}">ID</td>
-        <td th:text="${luggage.ticket != null ? luggage.ticket.id : 'N/A'}">Ticket</td>
-        <td th:text="${luggage.status}">Status</td>
-        <td th:text="${luggage.size}">Size</td>
-        <td>
-            <form th:action="@{'/luggage/' + ${luggage.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ticket</th>
+            <th>Status</th>
+            <th>Size</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="l : ${luggageList}">
+            <td th:text="${l.id}"></td>
+            <td th:text="${l.ticket != null ? l.ticket.id : 'N/A'}"></td>
+            <td th:text="${l.status}"></td>
+            <td th:text="${l.size}"></td>
+
+            <td>
+                <a th:href="@{'/luggage/' + ${l.id} + '/edit'}" class="btn">Edit</a>
+
+                <form th:action="@{'/luggage/' + ${l.id} + '/delete'}" method="post"
+                      class="inline-form">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

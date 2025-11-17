@@ -25,7 +25,7 @@ public class FlightAssignmentController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("assignment", new FlightAssignment(null, null, null));
-        return "flightassignments/form";
+        return "flightassignments/new";
     }
 
     @PostMapping
@@ -37,6 +37,19 @@ public class FlightAssignmentController {
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         flightAssignmentService.delete(id);
+        return "redirect:/flightassignments";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        FlightAssignment assignment = flightAssignmentService.findById(id).orElseThrow();
+        model.addAttribute("assignment", assignment);
+        return "flightassignments/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id, @ModelAttribute FlightAssignment assignment) {
+        flightAssignmentService.update(id, assignment);
         return "redirect:/flightassignments";
     }
 }

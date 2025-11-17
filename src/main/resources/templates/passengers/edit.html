@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Passenger</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Passenger</h1>
+
+<form th:action="@{'/passengers/' + ${passenger.id}}"
+      th:object="${passenger}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required />
+
+    <label>Currency:</label>
+    <input type="text" th:field="*{currency}" />
+
+    <label>Tickets (comma-separated IDs):</label>
+    <input type="text" th:field="*{tickets}" />
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
+    </div>
+
+</form>
+
+</body>
+</html>

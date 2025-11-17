@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Airport Employee</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Airport Employee</h1>
+
+<form th:action="@{/airportemployees}" th:object="${employee}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" required />
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required />
+
+    <label>Designation:</label>
+    <input type="text" th:field="*{designation}" placeholder="e.g., Technician" />
+
+    <label>Department:</label>
+    <input type="text" th:field="*{department}" placeholder="e.g., Security" />
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Create</button>
+        <a th:href="@{/airportemployees}" class="btn secondary">Cancel</a>
+    </div>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Luggage</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Luggage</h1>
+
+<form th:action="@{'/luggage/' + ${luggage.id}}" th:object="${luggage}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Ticket ID:</label>
+    <input type="text" th:field="*{ticket}" />
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select>
+
+    <label>Size:</label>
+    <select th:field="*{size}">
+        <option th:each="s : ${sizes}" th:value="${s}" th:text="${s}"></option>
+    </select>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/luggage}" class="btn secondary">Cancel</a>
+    </div>
+
+</form>
+
+</body>
+</html>

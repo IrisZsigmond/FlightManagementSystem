@@ -27,10 +27,9 @@ public class AirlineEmployeeController {
 
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("employee",
-                new AirlineEmployee(null, null, null, new ArrayList<>()));
+        model.addAttribute("employee", new AirlineEmployee(null, null, null, new ArrayList<>()));
         model.addAttribute("roles", AirlineRole.values());
-        return "airlineemployees/form";
+        return "airlineemployees/new";
     }
 
     @PostMapping
@@ -42,6 +41,20 @@ public class AirlineEmployeeController {
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         airlineEmployeeService.delete(id);
+        return "redirect:/airlineemployees";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        AirlineEmployee employee = airlineEmployeeService.findById(id).orElseThrow();
+        model.addAttribute("employee", employee);
+        model.addAttribute("roles", AirlineRole.values());
+        return "airlineemployees/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id, @ModelAttribute AirlineEmployee employee) {
+        airlineEmployeeService.update(id, employee);
         return "redirect:/airlineemployees";
     }
 }

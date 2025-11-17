@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Notice Board</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Notice Board</h1>
+
+<form th:action="@{'/noticeboards/' + ${noticeboard.id}}"
+      th:object="${noticeboard}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Date:</label>
+    <input type="date" th:field="*{date}" />
+
+    <label>Flights of the Day (comma-separated IDs):</label>
+    <input type="text" th:field="*{flightsOfTheDay}" />
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
+    </div>
+
+</form>
+
+</body>
+</html>
