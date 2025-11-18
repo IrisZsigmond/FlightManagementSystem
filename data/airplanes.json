@@ -1,1 +1,141 @@
-[]
+[ {
+  "id" : "A001",
+  "number" : 123,
+  "capacity" : 89,
+  "flights" : [ {
+    "id" : "F001",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A002",
+  "number" : 345,
+  "capacity" : 100,
+  "flights" : [ {
+    "id" : "F002",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A003",
+  "number" : 256,
+  "capacity" : 200,
+  "flights" : [ {
+    "id" : "F003",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A004",
+  "number" : 678,
+  "capacity" : 300,
+  "flights" : [ {
+    "id" : "F004",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A005",
+  "number" : 289,
+  "capacity" : 250,
+  "flights" : [ {
+    "id" : "F005",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A006",
+  "number" : 367,
+  "capacity" : 230,
+  "flights" : [ {
+    "id" : "F006",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A007",
+  "number" : 178,
+  "capacity" : 400,
+  "flights" : [ {
+    "id" : "F007",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A008",
+  "number" : 240,
+  "capacity" : 500,
+  "flights" : [ {
+    "id" : "F008",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A009",
+  "number" : 124,
+  "capacity" : 450,
+  "flights" : [ {
+    "id" : "F009",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "A010",
+  "number" : 478,
+  "capacity" : 600,
+  "flights" : [ {
+    "id" : "F010",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+} ]

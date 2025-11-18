@@ -2,7 +2,7 @@
   "id" : "1",
   "name" : "Tom",
   "designation" : "technician",
-  "department" : "security"
+  "department" : "maintenance"
 }, {
   "id" : "2",
   "name" : "Emanuel",
@@ -16,6 +16,36 @@
 }, {
   "id" : "4",
   "name" : "Mark",
+  "designation" : "security officer",
+  "department" : "security"
+}, {
+  "id" : "5",
+  "name" : "Ralph",
+  "designation" : "clerk",
+  "department" : "customer service"
+}, {
+  "id" : "6",
+  "name" : "Fred",
+  "designation" : "technician",
+  "department" : "maintenance"
+}, {
+  "id" : "7",
+  "name" : "Brian",
+  "designation" : "security officer",
+  "department" : "security"
+}, {
+  "id" : "8",
+  "name" : "Emma",
+  "designation" : "clerk",
+  "department" : "customer service"
+}, {
+  "id" : "9",
+  "name" : "Jules",
+  "designation" : "luggage check-in",
+  "department" : "customer service"
+}, {
+  "id" : "10",
+  "name" : "Dob",
   "designation" : "security officer",
   "department" : "security"
 } ]

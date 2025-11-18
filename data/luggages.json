@@ -1,7 +1,7 @@
 [ {
-  "id" : "1",
+  "id" : "L001",
   "ticket" : {
-    "id" : "T001, T002",
+    "id" : "T001",
     "passenger" : null,
     "flightId" : null,
     "category" : null,
@@ -12,59 +12,7 @@
   "status" : "CHECKED_IN",
   "size" : "SMALL"
 }, {
-  "id" : "2",
-  "ticket" : {
-    "id" : "T003",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  },
-  "status" : "LOADED",
-  "size" : "MEDIUM"
-}, {
-  "id" : "3",
-  "ticket" : {
-    "id" : "T003",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  },
-  "status" : "DELIVERED",
-  "size" : "SMALL"
-}, {
-  "id" : "4",
-  "ticket" : {
-    "id" : "T001, T002",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  },
-  "status" : "LOADED",
-  "size" : "LARGE"
-}, {
-  "id" : "5",
-  "ticket" : {
-    "id" : "T001",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  },
-  "status" : "DELIVERED",
-  "size" : "MEDIUM"
-}, {
-  "id" : "6",
+  "id" : "L002",
   "ticket" : {
     "id" : "T002",
     "passenger" : null,
@@ -75,22 +23,9 @@
     "luggages" : null
   },
   "status" : "LOADED",
-  "size" : "SMALL"
+  "size" : "MEDIUM"
 }, {
-  "id" : "7",
-  "ticket" : {
-    "id" : "T008",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  },
-  "status" : "CHECKED_IN",
-  "size" : "SMALL"
-}, {
-  "id" : "8",
+  "id" : "L003",
   "ticket" : {
     "id" : "T003",
     "passenger" : null,
@@ -100,10 +35,49 @@
     "seatNumber" : null,
     "luggages" : null
   },
+  "status" : "DELIVERED",
+  "size" : "SMALL"
+}, {
+  "id" : "L004",
+  "ticket" : {
+    "id" : "T004",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "DELIVERED",
+  "size" : "SMALL"
+}, {
+  "id" : "L005",
+  "ticket" : {
+    "id" : "T005",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "DELIVERED",
+  "size" : "LARGE"
+}, {
+  "id" : "L006",
+  "ticket" : {
+    "id" : "T006",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
   "status" : "CHECKED_IN",
   "size" : "SMALL"
 }, {
-  "id" : "9",
+  "id" : "L007",
   "ticket" : {
     "id" : "T007",
     "passenger" : null,
@@ -116,9 +90,35 @@
   "status" : "CHECKED_IN",
   "size" : "SMALL"
 }, {
-  "id" : "10",
+  "id" : "L008",
   "ticket" : {
-    "id" : "T003, T004",
+    "id" : "T007",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "L009",
+  "ticket" : {
+    "id" : "T008",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
+}, {
+  "id" : "L010",
+  "ticket" : {
+    "id" : "T009",
     "passenger" : null,
     "flightId" : null,
     "category" : null,
@@ -128,4 +128,30 @@
   },
   "status" : "CHECKED_IN",
   "size" : "LARGE"
+}, {
+  "id" : "L011",
+  "ticket" : {
+    "id" : "T010",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "DELIVERED",
+  "size" : "SMALL"
+}, {
+  "id" : "L012",
+  "ticket" : {
+    "id" : "T011",
+    "passenger" : null,
+    "flightId" : null,
+    "category" : null,
+    "price" : 0.0,
+    "seatNumber" : null,
+    "luggages" : null
+  },
+  "status" : "CHECKED_IN",
+  "size" : "SMALL"
 } ]

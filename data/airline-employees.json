@@ -3,11 +3,11 @@
   "name" : "John",
   "role" : "PILOT",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "1",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A002",
+    "id" : "2",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -16,15 +16,15 @@
   "name" : "Louise",
   "role" : "CO_PILOT",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "1",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A004",
+    "id" : "4",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A005",
+    "id" : "5",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -33,7 +33,7 @@
   "name" : "Mary",
   "role" : "PILOT",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "3",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -42,7 +42,7 @@
   "name" : "Carl",
   "role" : "FLIGHT_ATTENDANT",
   "assignments" : [ {
-    "id" : "A005",
+    "id" : "5",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -51,15 +51,15 @@
   "name" : "Rick",
   "role" : "GROUND_STAFF",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "1",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A004",
+    "id" : "4",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A005",
+    "id" : "5",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -68,7 +68,7 @@
   "name" : "Miranda",
   "role" : "FLIGHT_ATTENDANT",
   "assignments" : [ {
-    "id" : "A007",
+    "id" : "7",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -77,7 +77,7 @@
   "name" : "Max",
   "role" : "GROUND_STAFF",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "1",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -86,7 +86,7 @@
   "name" : "Tim",
   "role" : "CO_PILOT",
   "assignments" : [ {
-    "id" : "A002",
+    "id" : "2",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -95,11 +95,11 @@
   "name" : "Lara",
   "role" : "PILOT",
   "assignments" : [ {
-    "id" : "A003",
+    "id" : "6",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A008",
+    "id" : "8",
     "flightId" : null,
     "staffId" : null
   } ]
@@ -108,15 +108,11 @@
   "name" : "Bob",
   "role" : "PILOT",
   "assignments" : [ {
-    "id" : "A001",
+    "id" : "4",
     "flightId" : null,
     "staffId" : null
   }, {
-    "id" : "A004",
-    "flightId" : null,
-    "staffId" : null
-  }, {
-    "id" : "A005",
+    "id" : "5",
     "flightId" : null,
     "staffId" : null
   } ]

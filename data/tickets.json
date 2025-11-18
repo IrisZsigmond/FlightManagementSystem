@@ -1,1 +1,217 @@
-[]
+[ {
+  "id" : "T001",
+  "passenger" : {
+    "id" : "P001",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F001",
+  "category" : "ECONOMY",
+  "price" : 100.0,
+  "seatNumber" : "12A",
+  "luggages" : [ {
+    "id" : "L001",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T002",
+  "passenger" : {
+    "id" : "P002",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F002",
+  "category" : "PREMIUM_ECONOMY",
+  "price" : 200.0,
+  "seatNumber" : "10D",
+  "luggages" : [ {
+    "id" : "L002",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T003",
+  "passenger" : {
+    "id" : "P003",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F003",
+  "category" : "BUSINESS",
+  "price" : 130.0,
+  "seatNumber" : "23F",
+  "luggages" : [ {
+    "id" : "L003",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T004",
+  "passenger" : {
+    "id" : "P003",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F004",
+  "category" : "PREMIUM_ECONOMY",
+  "price" : 160.0,
+  "seatNumber" : "3C",
+  "luggages" : [ {
+    "id" : "L004",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T005",
+  "passenger" : {
+    "id" : "P004",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F004",
+  "category" : "FIRST_CLASS",
+  "price" : 300.0,
+  "seatNumber" : "20A",
+  "luggages" : [ {
+    "id" : "L005",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T006",
+  "passenger" : {
+    "id" : "P005",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F004",
+  "category" : "ECONOMY",
+  "price" : 50.0,
+  "seatNumber" : "60B",
+  "luggages" : [ {
+    "id" : "L006",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T007",
+  "passenger" : {
+    "id" : "P006",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F001",
+  "category" : "BUSINESS",
+  "price" : 120.0,
+  "seatNumber" : "10A",
+  "luggages" : [ {
+    "id" : "L007",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  }, {
+    "id" : "L008",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T008",
+  "passenger" : {
+    "id" : "P006",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F003",
+  "category" : "ECONOMY",
+  "price" : 80.0,
+  "seatNumber" : "58E",
+  "luggages" : [ {
+    "id" : "L009",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T009",
+  "passenger" : {
+    "id" : "P007",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F007",
+  "category" : "ECONOMY",
+  "price" : 70.0,
+  "seatNumber" : "45C",
+  "luggages" : [ {
+    "id" : "L010",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T010",
+  "passenger" : {
+    "id" : "P008",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F008",
+  "category" : "FIRST_CLASS",
+  "price" : 200.0,
+  "seatNumber" : "10D",
+  "luggages" : [ {
+    "id" : "L011",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T011",
+  "passenger" : {
+    "id" : "P009",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F009",
+  "category" : "ECONOMY",
+  "price" : 60.0,
+  "seatNumber" : "78C",
+  "luggages" : [ {
+    "id" : "L012",
+    "ticket" : null,
+    "status" : null,
+    "size" : null
+  } ]
+}, {
+  "id" : "T012",
+  "passenger" : {
+    "id" : "P010",
+    "name" : null,
+    "currency" : null,
+    "tickets" : null
+  },
+  "flightId" : "F010",
+  "category" : "ECONOMY",
+  "price" : 75.0,
+  "seatNumber" : "89F",
+  "luggages" : [ ]
+} ]

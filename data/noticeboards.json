@@ -1,1 +1,131 @@
-[]
+[ {
+  "id" : "N001",
+  "date" : "2025-11-15",
+  "flightsOfTheDay" : [ {
+    "id" : "F001",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N002",
+  "date" : "2025-11-29",
+  "flightsOfTheDay" : [ {
+    "id" : "F002",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  }, {
+    "id" : "F003",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N003",
+  "date" : "2025-12-04",
+  "flightsOfTheDay" : [ {
+    "id" : "F004",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N004",
+  "date" : "2025-12-16",
+  "flightsOfTheDay" : [ {
+    "id" : "F005",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N005",
+  "date" : "2025-12-11",
+  "flightsOfTheDay" : [ ]
+}, {
+  "id" : "N007",
+  "date" : "2026-01-01",
+  "flightsOfTheDay" : [ {
+    "id" : "F007",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N008",
+  "date" : "2026-01-02",
+  "flightsOfTheDay" : [ {
+    "id" : "F008",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N009",
+  "date" : "2026-02-20",
+  "flightsOfTheDay" : [ {
+    "id" : "F009",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N010",
+  "date" : "2026-03-05",
+  "flightsOfTheDay" : [ {
+    "id" : "F010",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+}, {
+  "id" : "N006",
+  "date" : "2025-12-22",
+  "flightsOfTheDay" : [ {
+    "id" : "F006",
+    "name" : null,
+    "departureTime" : null,
+    "feedbackScore" : 0,
+    "noticeBoardId" : null,
+    "airplaneId" : null,
+    "tickets" : null,
+    "flightAssignments" : null
+  } ]
+} ]
