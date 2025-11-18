@@ -1,41 +1,49 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 
 import java.util.List;
 
-/**Represents a ticket in the management system.
- * Contains details such as passenger, flight ID,
- * category, price, seat number, and luggage */
-
+/**
+ * Represents a ticket in the management system.
+ * Uses IDs (passengerId, flightId) as the single source of truth.
+ */
 public class Ticket {
 
     private String id;
-    private Passenger passenger;
+    private String passengerId;          // <--- now an ID, not a Passenger object
     private String flightId;
     private TicketCategory category;
     private double price;
     private String seatNumber;
-    private List<Luggage> luggages;
+
+    @JsonIgnore
+    private List<Luggage> luggages;      // projection only, not persisted in tickets.json
 
     public Ticket() {}
 
-    public Ticket(String id, Passenger passenger, String flightId, TicketCategory category,
-                  double price, String seatNumber, List<Luggage> luggages) {
+    public Ticket(String id,
+                  String passengerId,
+                  String flightId,
+                  TicketCategory category,
+                  double price,
+                  String seatNumber,
+                  List<Luggage> luggages) {
         this.id = id;
-        this.passenger = passenger;
+        this.passengerId = passengerId;
         this.flightId = flightId;
         this.category = category;
         this.price = price;
-        this.seatNumber = seatNumber;
+        this.setSeatNumber(seatNumber);
         this.luggages = luggages;
     }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Passenger getPassenger() { return passenger; }
-    public void setPassenger(Passenger passenger) { this.passenger = passenger; }
+    public String getPassengerId() { return passengerId; }
+    public void setPassengerId(String passengerId) { this.passengerId = passengerId; }
 
     public String getFlightId() { return flightId; }
     public void setFlightId(String flightId) { this.flightId = flightId; }
@@ -55,7 +63,8 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "passenger=" + passenger +
+                "id='" + id + '\'' +
+                ", passengerId='" + passengerId + '\'' +
                 ", flightId='" + flightId + '\'' +
                 ", category=" + category +
                 ", price=" + price +

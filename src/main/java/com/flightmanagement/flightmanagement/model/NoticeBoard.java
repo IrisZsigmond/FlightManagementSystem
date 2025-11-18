@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,6 +12,8 @@ public class NoticeBoard {
 
     private String id;
     private LocalDate date;
+
+    @JsonProperty
     private List<Flight> flightsOfTheDay;
 
     public NoticeBoard() {}

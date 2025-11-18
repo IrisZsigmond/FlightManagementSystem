@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Ticket</h1>
+
+<form th:action="@{'/tickets/' + ${ticketForm.id}}"
+      th:object="${ticketForm}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Passenger ID:</label>
+    <input type="text" th:field="*{passengerId}" />
+
+    <label>Flight ID:</label>
+    <input type="text" th:field="*{flightId}" />
+
+    <label>Category:</label>
+    <select th:field="*{category}">
+        <option th:each="c : ${categories}"
+                th:value="${c}"
+                th:text="${c}">
+        </option>
+    </select>
+
+    <label>Price:</label>
+    <input type="number" step="0.01" th:field="*{price}" />
+
+    <label>Seat Number:</label>
+    <input type="text" th:field="*{seatNumber}" />
+
+    <h3>Luggages</h3>
+    <ul>
+        <li th:each="l : ${ticket.luggages}"
+            th:text="${l.id + ' (' + l.status + ', ' + l.size + ')'}">
+            L1 (CHECKED_IN, MEDIUM)
+        </li>
+        <li th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">
+            No luggages for this ticket.
+        </li>
+    </ul>
+
+    <div class="form-actions">
+        <button type="submit">Save</button>
+        <a th:href="@{/tickets}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
+

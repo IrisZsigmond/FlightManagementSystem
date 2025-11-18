@@ -1,5 +1,7 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalTime;
 import java.util.List;
 
@@ -13,7 +15,9 @@ public class Flight {
     private LocalTime departureTime;
     private String noticeBoardId;
     private String airplaneId;
+    @JsonIgnore
     List<Ticket> tickets;
+    @JsonIgnore
     List<FlightAssignment> flightAssignments;
 
     public Flight() {};

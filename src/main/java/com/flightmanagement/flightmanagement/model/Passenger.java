@@ -1,5 +1,8 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /** Represents a passenger in the management system.
@@ -10,6 +13,7 @@ public class Passenger {
     private String id;
     private String name;
     private String currency;
+    @JsonIgnore
     private List<Ticket> tickets;
 
     public Passenger() {}

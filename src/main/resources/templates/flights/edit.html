@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Flight</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Edit Flight</h1>
+
+<form th:action="@{'/flights/' + ${flightForm.id}}"
+      th:object="${flightForm}" method="post">
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly />
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required />
+
+    <label>Departure Time (HH:mm):</label>
+    <input type="text" th:field="*{departureTime}" placeholder="e.g., 10:45" />
+
+    <label>Notice Board ID:</label>
+    <input type="text" th:field="*{noticeBoardId}" />
+
+    <label>Airplane ID:</label>
+    <input type="text" th:field="*{airplaneId}" />
+
+    <h3>Assigned Tickets</h3>
+    <ul>
+        <li th:each="t : ${flight.tickets}"
+            th:text="${t.id + (t.category != null ? ' - ' + T(java.lang.String).valueOf(t.category) : '')}">
+            T001 - ECONOMY
+        </li>
+        <li th:if="${#lists.isEmpty(flight.tickets)}">No tickets assigned.</li>
+    </ul>
+
+    <h3>Assigned Staff</h3>
+    <ul>
+        <li th:each="a : ${flight.flightAssignments}"
+            th:text="${a.staffId != null ? a.staffId : 'Unknown staff'}">
+            STAFF001
+        </li>
+        <li th:if="${#lists.isEmpty(flight.flightAssignments)}">No staff assignments.</li>
+    </ul>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/flights}" class="btn secondary">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

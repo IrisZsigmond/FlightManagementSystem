@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Luggage</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Luggage</h1>
+
+<form th:action="@{/luggage}" th:object="${luggageForm}" method="post">
+
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
+
+    <label for="ticketId">Ticket ID:</label>
+    <input id="ticketId" type="text" th:field="*{ticketId}" placeholder="T1" />
+
+    <label for="status">Status:</label>
+    <select id="status" th:field="*{status}">
+        <option th:each="s : ${statuses}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select>
+
+    <label for="size">Size:</label>
+    <select id="size" th:field="*{size}">
+        <option th:each="sz : ${sizes}"
+                th:value="${sz}"
+                th:text="${sz}">
+        </option>
+    </select>
+
+    <div class="form-actions">
+        <button type="submit">Create</button>
+        <a th:href="@{/luggage}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

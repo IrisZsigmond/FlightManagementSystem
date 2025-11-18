@@ -35,7 +35,6 @@ public class AirplaneController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("airplaneForm", new AirplaneForm());
-        // No flights list here; flights are assigned only from the Flight side
         return "airplanes/new";
     }
 

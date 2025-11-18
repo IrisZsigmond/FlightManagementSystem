@@ -1,1 +1,71 @@
-[]
+[ {
+  "id" : "T1",
+  "passengerId" : "P10",
+  "flightId" : "FL1",
+  "category" : "PREMIUM_ECONOMY",
+  "price" : 120.0,
+  "seatNumber" : "12A"
+}, {
+  "id" : "T2",
+  "passengerId" : "P2",
+  "flightId" : "FL1",
+  "category" : "BUSINESS",
+  "price" : 350.0,
+  "seatNumber" : "1C"
+}, {
+  "id" : "T3",
+  "passengerId" : "P3",
+  "flightId" : "FL3",
+  "category" : "ECONOMY",
+  "price" : 90.0,
+  "seatNumber" : "15B"
+}, {
+  "id" : "T4",
+  "passengerId" : "P4",
+  "flightId" : "FL4",
+  "category" : "PREMIUM_ECONOMY",
+  "price" : 150.0,
+  "seatNumber" : "8D"
+}, {
+  "id" : "T5",
+  "passengerId" : "P5",
+  "flightId" : "FL5",
+  "category" : "ECONOMY",
+  "price" : 80.0,
+  "seatNumber" : "22A"
+}, {
+  "id" : "T6",
+  "passengerId" : "P6",
+  "flightId" : "FL6",
+  "category" : "BUSINESS",
+  "price" : 320.0,
+  "seatNumber" : "2A"
+}, {
+  "id" : "T7",
+  "passengerId" : "P7",
+  "flightId" : "FL7",
+  "category" : "ECONOMY",
+  "price" : 110.0,
+  "seatNumber" : "14C"
+}, {
+  "id" : "T8",
+  "passengerId" : "P8",
+  "flightId" : "FL8",
+  "category" : "FIRST_CLASS",
+  "price" : 500.0,
+  "seatNumber" : "1A"
+}, {
+  "id" : "T9",
+  "passengerId" : "P9",
+  "flightId" : "FL9",
+  "category" : "ECONOMY",
+  "price" : 95.0,
+  "seatNumber" : "18F"
+}, {
+  "id" : "T10",
+  "passengerId" : "P10",
+  "flightId" : "FL10",
+  "category" : "ECONOMY",
+  "price" : 100.0,
+  "seatNumber" : "19C"
+} ]

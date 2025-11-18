@@ -6,7 +6,12 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>All Flight Assignments</h1>
+
+<!-- Flash messages (dacă vei folosi RedirectAttributes) -->
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
 <a th:href="@{/flightassignments/new}">Add New Assignment</a>
 
@@ -25,12 +30,19 @@
         <td th:text="${a.flightId}">Flight ID</td>
         <td th:text="${a.staffId}">Staff ID</td>
         <td>
-            <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}" method="post">
+            <form th:action="@{'/flightassignments/' + ${a.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+
+            <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

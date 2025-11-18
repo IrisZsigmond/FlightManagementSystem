@@ -2,6 +2,7 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service interface for managing Passenger entities.
@@ -31,4 +32,10 @@ public interface PassengerService extends BaseService<Passenger, String> {
      * @return number of tickets
      */
     int countTickets(String passengerId);
+
+    /**
+     * Încarcă Passenger + îi atașează lista de bilete (tickets).
+     * Tickets sunt obținute din TicketService pe baza passengerId.
+     */
+    Optional<Passenger> findWithTickets(String id);
 }

@@ -6,7 +6,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>All Luggage</h1>
+
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
 <a th:href="@{/luggage/new}">Add New Luggage</a>
 
@@ -21,18 +25,24 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="luggage : ${luggageList}">
-        <td th:text="${luggage.id}">ID</td>
-        <td th:text="${luggage.ticket != null ? luggage.ticket.id : 'N/A'}">Ticket</td>
-        <td th:text="${luggage.status}">Status</td>
-        <td th:text="${luggage.size}">Size</td>
+    <tr th:each="l : ${luggages}">
+        <td th:text="${l.id}">ID</td>
+        <td th:text="${l.ticketId}">Ticket ID</td>
+        <td th:text="${l.status}">Status</td>
+        <td th:text="${l.size}">Size</td>
         <td>
-            <form th:action="@{'/luggage/' + ${luggage.id} + '/delete'}" method="post">
+            <form th:action="@{'/luggage/' + ${l.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+            <form th:action="@{'/luggage/' + ${l.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

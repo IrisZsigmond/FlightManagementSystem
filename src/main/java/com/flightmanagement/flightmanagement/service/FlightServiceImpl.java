@@ -6,13 +6,21 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implements FlightService {
 
-    public FlightServiceImpl(AbstractRepository<Flight, String> repository) {
+    private final TicketService ticketService;
+    private final FlightAssignmentService flightAssignmentService;
+
+    public FlightServiceImpl(AbstractRepository<Flight, String> repository,
+                             TicketService ticketService,
+                             FlightAssignmentService flightAssignmentService) {
         super(repository);
+        this.ticketService = ticketService;
+        this.flightAssignmentService = flightAssignmentService;
     }
 
     /// -------- Ownership-side read methods --------
@@ -23,6 +31,15 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
         return repo().findAll().stream()
                 .filter(f -> airplaneId.equalsIgnoreCase(f.getAirplaneId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Flight> findWithTicketsAndAssignments(String id) {
+        return repo().findById(id).map(f -> {
+            f.setTickets(ticketService.findByFlightId(id));
+            f.setFlightAssignments(flightAssignmentService.findByFlightId(id));
+            return f;
+        });
     }
 
     @Override
@@ -64,18 +81,22 @@ public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implement
     @Override
     public List<Flight> findByTicketId(String ticketId) {
         if (ticketId == null || ticketId.isBlank()) return List.of();
+
         return repo().findAll().stream()
-                .filter(f -> f.getTickets() != null &&
-                        f.getTickets().stream().anyMatch(t -> t != null && ticketId.equals(t.getId())))
+                .filter(f -> ticketService.findByFlightId(f.getId())
+                        .stream()
+                        .anyMatch(t -> t != null && ticketId.equals(t.getId())))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Flight> findByStaffId(String staffId) {
         if (staffId == null || staffId.isBlank()) return List.of();
+
         return repo().findAll().stream()
-                .filter(f -> f.getFlightAssignments() != null &&
-                        f.getFlightAssignments().stream().anyMatch(a -> a != null && staffId.equals(a.getStaffId())))
+                .filter(f -> flightAssignmentService.findByFlightId(f.getId())
+                        .stream()
+                        .anyMatch(a -> a != null && staffId.equals(a.getStaffId())))
                 .collect(Collectors.toList());
     }
 }

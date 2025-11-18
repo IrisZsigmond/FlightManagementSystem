@@ -3,21 +3,22 @@ package com.flightmanagement.flightmanagement.model;
 import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
 
-/** Represents a luggage in the flight management system.
- * Contains details such as ticket, status, and size */
-
+/**
+ * Represents a luggage in the flight management system.
+ * Uses ticketId as the single source of truth link to Ticket.
+ */
 public class Luggage {
 
     private String id;
-    private Ticket ticket;
+    private String ticketId;        // <-- în loc de Ticket ticket
     private LuggageStatus status;
     private LuggageSize size;
 
     public Luggage() {}
 
-    public Luggage(String id, Ticket ticket, LuggageStatus status, LuggageSize size) {
+    public Luggage(String id, String ticketId, LuggageStatus status, LuggageSize size) {
         this.id = id;
-        this.ticket = ticket;
+        this.ticketId = ticketId;
         this.status = status;
         this.size = size;
     }
@@ -25,8 +26,8 @@ public class Luggage {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Ticket getTicket() { return ticket; }
-    public void setTicket(Ticket ticket) { this.ticket = ticket; }
+    public String getTicketId() { return ticketId; }
+    public void setTicketId(String ticketId) { this.ticketId = ticketId; }
 
     public LuggageStatus getStatus() { return status; }
     public void setStatus(LuggageStatus status) { this.status = status; }
@@ -37,7 +38,8 @@ public class Luggage {
     @Override
     public String toString() {
         return "Luggage{" +
-                "ticket=" + ticket +
+                "id='" + id + '\'' +
+                ", ticketId='" + ticketId + '\'' +
                 ", status=" + status +
                 ", size=" + size +
                 '}';

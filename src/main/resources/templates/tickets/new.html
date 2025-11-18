@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Ticket</h1>
+
+<form th:action="@{/tickets}" th:object="${ticketForm}" method="post">
+
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
+
+    <label for="passengerId">Passenger ID:</label>
+    <input id="passengerId" type="text" th:field="*{passengerId}" placeholder="P1" />
+
+    <label for="flightId">Flight ID:</label>
+    <input id="flightId" type="text" th:field="*{flightId}" placeholder="FL1" />
+
+    <label for="category">Category:</label>
+    <select id="category" th:field="*{category}">
+        <option th:each="c : ${categories}"
+                th:value="${c}"
+                th:text="${c}">
+        </option>
+    </select>
+
+    <label for="price">Price:</label>
+    <input id="price" type="number" step="0.01" th:field="*{price}" />
+
+    <label for="seatNumber">Seat Number:</label>
+    <input id="seatNumber" type="text" th:field="*{seatNumber}" placeholder="12A" />
+
+    <div class="form-actions">
+        <button type="submit">Create</button>
+        <a th:href="@{/tickets}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

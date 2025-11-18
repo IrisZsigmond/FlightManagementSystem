@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.model.Flight;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service interface for managing Flight entities.
@@ -44,4 +45,9 @@ public interface FlightService extends BaseService<Flight, String> {
      * Find all flights that include a staff member with the given staffId (via assignments).
      */
     List<Flight> findByStaffId(String staffId);
+
+    /**
+     * Load a flight and attach its tickets + assignments (read-only projection).
+     */
+    Optional<Flight> findWithTicketsAndAssignments(String flightId);
 }

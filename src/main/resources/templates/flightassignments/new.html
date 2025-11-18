@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Flight Assignment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Flight Assignment</h1>
+
+<form th:action="@{/flightassignments}" th:object="${assignmentForm}" method="post">
+
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
+
+    <label for="flightId">Flight ID:</label>
+    <input id="flightId" type="text" th:field="*{flightId}" placeholder="FL1" />
+
+    <label for="staffId">Staff ID:</label>
+    <input id="staffId" type="text" th:field="*{staffId}" placeholder="STAFF1" />
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Create</button>
+        <a th:href="@{/flightassignments}" class="btn secondary">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

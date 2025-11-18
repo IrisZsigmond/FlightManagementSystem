@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Flight</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Flight</h1>
+
+<form th:action="@{/flights}" th:object="${flightForm}" method="post">
+
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
+
+    <label for="name">Name:</label>
+    <input id="name" type="text" th:field="*{name}" required />
+
+    <label for="departureTime">Departure Time (HH:mm):</label>
+    <input id="departureTime" type="text"
+           th:field="*{departureTime}"
+           placeholder="10:45" />
+
+    <label for="noticeBoardId">Notice Board ID:</label>
+    <input id="noticeBoardId" type="text" th:field="*{noticeBoardId}" />
+
+    <label for="airplaneId">Airplane ID:</label>
+    <input id="airplaneId" type="text" th:field="*{airplaneId}" />
+
+    <button type="submit">Create</button>
+    <a th:href="@{/flights}">Cancel</a>
+</form>
+
+</body>
+</html>

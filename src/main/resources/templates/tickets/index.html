@@ -14,7 +14,7 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Passenger</th>
+        <th>Passenger ID</th>
         <th>Flight ID</th>
         <th>Category</th>
         <th>Price</th>
@@ -27,25 +27,31 @@
     <tr th:each="ticket : ${tickets}">
         <td th:text="${ticket.id}">ID</td>
 
-        <!-- ✅ afișează ID-ul pasagerului -->
-        <td th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}">Passenger</td>
+        <!-- afișăm direct passengerId (string) -->
+        <td th:text="${ticket.passengerId != null ? ticket.passengerId : 'N/A'}">Passenger ID</td>
 
         <td th:text="${ticket.flightId}">Flight ID</td>
         <td th:text="${ticket.category}">Category</td>
         <td th:text="${ticket.price}">Price</td>
         <td th:text="${ticket.seatNumber}">Seat Number</td>
 
-        <!-- ✅ afișează id-urile bagajelor separate prin virgulă -->
+        <!-- luggages: listă opțională, proiectată în memorie -->
         <td>
-            <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}"> </span>
-            <span th:each="l,iterStat : ${ticket.luggages}"
-                  th:text="${l.id}"
-                  th:append="${!iterStat.last ? ', ' : ''}"></span>
+            <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">-</span>
+            <span th:if="${ticket.luggages != null and !#lists.isEmpty(ticket.luggages)}">
+                <span th:each="l,iterStat : ${ticket.luggages}">
+                    <span th:text="${l.id}">LUGGAGE_ID</span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
+            </span>
         </td>
 
         <td>
             <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{'/tickets/' + ${ticket.id} + '/edit'}" method="get">
+                <button type="submit">Edit</button>
             </form>
         </td>
     </tr>

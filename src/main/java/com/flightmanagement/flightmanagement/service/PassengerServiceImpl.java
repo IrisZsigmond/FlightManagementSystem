@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -14,10 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class PassengerServiceImpl extends BaseServiceImpl<Passenger, String> implements PassengerService {
 
-    public PassengerServiceImpl(AbstractRepository<Passenger, String> repository) {
-        super(repository);
-    }
+    private final TicketService ticketService;
 
+    public PassengerServiceImpl(AbstractRepository<Passenger, String> repository,
+                                TicketService ticketService) {
+        super(repository);
+        this.ticketService = ticketService;
+    }
     /// -------- Passenger-specific methods --------
 
     @Override
@@ -40,5 +44,24 @@ public class PassengerServiceImpl extends BaseServiceImpl<Passenger, String> imp
         return repo().findById(passengerId)
                 .map(p -> p.getTickets() != null ? p.getTickets().size() : 0)
                 .orElse(0);
+    }
+
+    @Override
+    public Optional<Passenger> findWithTickets(String id) {
+        return repo().findById(id).map(p -> {
+            p.setTickets(ticketService.findByPassengerId(id));
+            return p;
+        });
+    }
+
+    @Override
+    public boolean delete(String id) {
+        var tickets = ticketService.findByPassengerId(id);
+        if (!tickets.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot delete passenger '" + id +
+                            "' because tickets are still assigned (" + tickets.size() + ").");
+        }
+        return super.delete(id);
     }
 }

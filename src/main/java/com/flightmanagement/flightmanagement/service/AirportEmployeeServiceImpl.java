@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee, String> implements AirportEmployeeService {
+public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee, String>
+        implements AirportEmployeeService {
 
     public AirportEmployeeServiceImpl(AbstractRepository<AirportEmployee, String> repository) {
         super(repository);
     }
-    /// -------- AirportEmployee-specific methods --------
 
     @Override
     public List<AirportEmployee> findByDepartment(String department) {
@@ -21,7 +21,8 @@ public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee,
             throw new IllegalArgumentException("Department cannot be null or empty");
         }
         return repo().findAll().stream()
-                .filter(e -> department.equalsIgnoreCase(e.getDepartment()))
+                .filter(e -> e.getDepartment() != null &&
+                        department.equalsIgnoreCase(e.getDepartment()))
                 .collect(Collectors.toList());
     }
 
@@ -31,7 +32,18 @@ public class AirportEmployeeServiceImpl extends BaseServiceImpl<AirportEmployee,
             throw new IllegalArgumentException("Designation cannot be null or empty");
         }
         return repo().findAll().stream()
-                .filter(e -> designation.equalsIgnoreCase(e.getDesignation()))
+                .filter(e -> e.getDesignation() != null &&
+                        designation.equalsIgnoreCase(e.getDesignation()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AirportEmployee> findByNameContains(String term) {
+        if (term == null || term.isBlank()) return List.of();
+        String needle = term.toLowerCase();
+        return repo().findAll().stream()
+                .filter(e -> e.getName() != null &&
+                        e.getName().toLowerCase().contains(needle))
                 .collect(Collectors.toList());
     }
 }

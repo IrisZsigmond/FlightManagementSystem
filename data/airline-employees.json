@@ -1,1 +1,12 @@
-[]
+[
+  { "id": "AE1",  "name": "Captain Andrei Radu",     "role": "PILOT" },
+  { "id": "AE2",  "name": "Mihai Pavel",             "role": "CO_PILOT" },
+  { "id": "AE3",  "name": "Ioana Enache",            "role": "FLIGHT_ATTENDANT" },
+  { "id": "AE4",  "name": "Cristina Barbu",          "role": "FLIGHT_ATTENDANT" },
+  { "id": "AE5",  "name": "Radu Marinescu",          "role": "GROUND_STAFF" },
+  { "id": "AE6",  "name": "Captain Sorin Mihalache", "role": "PILOT" },
+  { "id": "AE7",  "name": "Alina Pop",               "role": "CO_PILOT" },
+  { "id": "AE8",  "name": "Laura Dobre",             "role": "FLIGHT_ATTENDANT" },
+  { "id": "AE9",  "name": "Vlad Oprea",              "role": "GROUND_STAFF" },
+  { "id": "AE10", "name": "Captain Victor Ilie",     "role": "PILOT" }
+]
