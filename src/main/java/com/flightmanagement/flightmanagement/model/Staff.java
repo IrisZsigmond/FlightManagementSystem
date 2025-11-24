@@ -1,24 +1,30 @@
 package com.flightmanagement.flightmanagement.model;
 
-/** Represents a staff member in the flight management system.
- * Contains details such as id and name */
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "staff")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "staff_type")
 public abstract class Staff {
+
+    @Id
     private String id;
+
     private String name;
 
     public Staff() {}
 
-    public Staff(String Id, String name) {
-        this.id = Id;
+    public Staff(String id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     public String getId() {
         return id;
     }
-    public void setId(String Id) {
-        this.id = Id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -29,5 +35,10 @@ public abstract class Staff {
     }
 
     @Override
-    public abstract String toString();
+    public String toString() {
+        return "Staff{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

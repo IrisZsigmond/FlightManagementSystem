@@ -6,21 +6,21 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>Create Airplane</h1>
 
-<form th:action="@{/airplanes}" th:object="${airplane}" method="post">
+<form th:action="@{/airplanes}" th:object="${airplaneForm}" method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" required />
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
 
-    <label>Number:</label>
-    <input type="number" th:field="*{number}" required />
+    <label for="number">Number:</label>
+    <input id="number" type="number" th:field="*{number}" required />
 
-    <label>Capacity:</label>
-    <input type="number" th:field="*{capacity}" required />
+    <label for="capacity">Capacity:</label>
+    <input id="capacity" type="number" th:field="*{capacity}" required />
 
-    <label>Flights (comma-separated IDs):</label>
-    <input type="text" th:field="*{flights}" placeholder="e.g., F001, F002" />
+    <!-- Note: Flights are NOT assigned here. They are set on the Flight form via flight.airplaneId. -->
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>

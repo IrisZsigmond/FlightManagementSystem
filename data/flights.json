@@ -1,91 +1,61 @@
 [ {
-  "id" : "F001",
-  "name" : "Rome",
-  "departureTime" : "11:20:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N001",
-  "airplaneId" : "A001",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL1",
+  "name" : "RO101 Bucharest - London",
+  "departureTime" : "08:15:00",
+  "noticeBoardId" : "NB1",
+  "airplaneId" : "AP1"
 }, {
-  "id" : "F002",
-  "name" : "Paris",
-  "departureTime" : "00:00:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N002",
-  "airplaneId" : "A002",
-  "tickets" : null,
-  "flightAssignments" : null
-}, {
-  "id" : "F003",
-  "name" : "Bucharest",
+  "id" : "FL2",
+  "name" : "RO102 London - Bucharest",
   "departureTime" : "12:30:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N002",
-  "airplaneId" : "A003",
-  "tickets" : null,
-  "flightAssignments" : null
+  "noticeBoardId" : "NB1",
+  "airplaneId" : "AP1"
 }, {
-  "id" : "F004",
-  "name" : "Venice",
-  "departureTime" : "13:45:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N003",
-  "airplaneId" : "A004",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL3",
+  "name" : "RO201 Bucharest - Paris",
+  "departureTime" : "09:45:00",
+  "noticeBoardId" : "NB2",
+  "airplaneId" : "AP2"
 }, {
-  "id" : "F005",
-  "name" : "New York",
-  "departureTime" : "00:00:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N004",
-  "airplaneId" : "A005",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL4",
+  "name" : "RO202 Paris - Bucharest",
+  "departureTime" : "14:10:00",
+  "noticeBoardId" : "NB2",
+  "airplaneId" : "AP2"
 }, {
-  "id" : "F006",
-  "name" : "Tokyo",
-  "departureTime" : "14:20:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N006",
-  "airplaneId" : "A006",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL5",
+  "name" : "RO301 Bucharest - Rome",
+  "departureTime" : "07:20:00",
+  "noticeBoardId" : "NB3",
+  "airplaneId" : "AP3"
 }, {
-  "id" : "F007",
-  "name" : "Beijing",
+  "id" : "FL6",
+  "name" : "RO302 Rome - Bucharest",
   "departureTime" : "18:00:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N007",
-  "airplaneId" : "A007",
-  "tickets" : null,
-  "flightAssignments" : null
+  "noticeBoardId" : "NB3",
+  "airplaneId" : "AP3"
 }, {
-  "id" : "F008",
-  "name" : "Moscow",
-  "departureTime" : "13:45:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N008",
-  "airplaneId" : "A008",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL7",
+  "name" : "RO401 Bucharest - Amsterdam",
+  "departureTime" : "06:50:00",
+  "noticeBoardId" : "NB4",
+  "airplaneId" : "AP4"
 }, {
-  "id" : "F009",
-  "name" : "Cluj",
-  "departureTime" : "12:30:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N009",
-  "airplaneId" : "A009",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL8",
+  "name" : "RO402 Amsterdam - Bucharest",
+  "departureTime" : "21:15:00",
+  "noticeBoardId" : "NB4",
+  "airplaneId" : "AP4"
 }, {
-  "id" : "F010",
-  "name" : "Madrid",
-  "departureTime" : "11:20:00",
-  "feedbackScore" : 0,
-  "noticeBoardId" : "N010",
-  "airplaneId" : "A010",
-  "tickets" : null,
-  "flightAssignments" : null
+  "id" : "FL9",
+  "name" : "RO501 Bucharest - Berlin",
+  "departureTime" : "10:05:00",
+  "noticeBoardId" : "NB5",
+  "airplaneId" : "AP5"
+}, {
+  "id" : "FL10",
+  "name" : "RO502 Berlin - Bucharest",
+  "departureTime" : "16:40:00",
+  "noticeBoardId" : "NB5",
+  "airplaneId" : "AP5"
 } ]

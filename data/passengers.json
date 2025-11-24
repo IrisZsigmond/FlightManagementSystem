@@ -1,147 +1,37 @@
 [ {
-  "id" : "1",
-  "name" : "Ana",
-  "currency" : "EUR",
-  "tickets" : [ {
-    "id" : "T001",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P2",
+  "name" : "Bogdan Ionescu",
+  "currency" : "EUR"
 }, {
-  "id" : "2",
-  "name" : "Iris",
-  "currency" : "USD",
-  "tickets" : [ {
-    "id" : "T002",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P3",
+  "name" : "Carmen Marinescu",
+  "currency" : "USD"
 }, {
-  "id" : "3",
-  "name" : "Mark",
-  "currency" : "RON",
-  "tickets" : [ {
-    "id" : "T003",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  }, {
-    "id" : "T004",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P4",
+  "name" : "Dan Georgescu",
+  "currency" : "RON"
 }, {
-  "id" : "4",
-  "name" : "Lilian",
-  "currency" : "EUR",
-  "tickets" : [ {
-    "id" : "T005",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P5",
+  "name" : "Elena Dumitru",
+  "currency" : "EUR"
 }, {
-  "id" : "5",
-  "name" : "Sophie",
-  "currency" : "USD",
-  "tickets" : [ {
-    "id" : "T006",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P6",
+  "name" : "Florin Stratan",
+  "currency" : "USD"
 }, {
-  "id" : "6",
-  "name" : "Lucas",
-  "currency" : "USD",
-  "tickets" : [ {
-    "id" : "T007",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  }, {
-    "id" : "T008",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P7",
+  "name" : "Gabriela Tudor",
+  "currency" : "EUR"
 }, {
-  "id" : "7",
-  "name" : "Michael",
-  "currency" : "EUR",
-  "tickets" : [ {
-    "id" : "T009",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P8",
+  "name" : "Horia Matei",
+  "currency" : "RON"
 }, {
-  "id" : "8",
-  "name" : "Magda",
-  "currency" : "RON",
-  "tickets" : [ {
-    "id" : "T010",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P9",
+  "name" : "Irina Stoica",
+  "currency" : "EUR"
 }, {
-  "id" : "9",
-  "name" : "Jean",
-  "currency" : "EUR",
-  "tickets" : [ {
-    "id" : "T011",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
-}, {
-  "id" : "10",
-  "name" : "Ron",
-  "currency" : "RON",
-  "tickets" : [ {
-    "id" : "T012",
-    "passenger" : null,
-    "flightId" : null,
-    "category" : null,
-    "price" : 0.0,
-    "seatNumber" : null,
-    "luggages" : null
-  } ]
+  "id" : "P10",
+  "name" : "Julian Constantin",
+  "currency" : "USD"
 } ]

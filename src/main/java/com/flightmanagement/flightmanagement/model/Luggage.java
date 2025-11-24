@@ -2,15 +2,24 @@ package com.flightmanagement.flightmanagement.model;
 
 import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
+import jakarta.persistence.*;
 
-/** Represents a luggage in the flight management system.
- * Contains details such as ticket, status, and size */
-
+@Entity
+@Table(name = "luggages")
 public class Luggage {
 
+    @Id
     private String id;
+
+    // Many luggages belong to one ticket
+    @ManyToOne
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
+    @Enumerated(EnumType.STRING)
     private LuggageStatus status;
+
+    @Enumerated(EnumType.STRING)
     private LuggageSize size;
 
     public Luggage() {}
@@ -37,7 +46,8 @@ public class Luggage {
     @Override
     public String toString() {
         return "Luggage{" +
-                "ticket=" + ticket +
+                "id='" + id + '\'' +
+                ", ticket=" + (ticket != null ? ticket.getId() : null) +
                 ", status=" + status +
                 ", size=" + size +
                 '}';

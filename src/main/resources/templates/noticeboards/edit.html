@@ -9,23 +9,30 @@
 
 <h1>Edit Notice Board</h1>
 
-<form th:action="@{'/noticeboards/' + ${noticeboard.id}}"
-      th:object="${noticeboard}" method="post">
+<form th:action="@{'/noticeboards/' + ${noticeBoardForm.id}}"
+      th:object="${noticeBoardForm}" method="post">
 
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly />
 
-    <label>Date:</label>
-    <input type="date" th:field="*{date}" />
+    <label>Date (yyyy-MM-dd):</label>
+    <input type="text" th:field="*{date}" />
 
-    <label>Flights of the Day (comma-separated IDs):</label>
-    <input type="text" th:field="*{flightsOfTheDay}" />
+    <h3>Flights of the Day</h3>
+    <ul>
+        <li th:each="f : ${noticeBoard.flightsOfTheDay}"
+            th:text="${f.id + ' - ' + f.name}">
+            FL1 - Sample flight
+        </li>
+        <li th:if="${noticeBoard.flightsOfTheDay == null or #lists.isEmpty(noticeBoard.flightsOfTheDay)}">
+            No flights assigned to this board.
+        </li>
+    </ul>
 
     <div class="form-actions">
         <button type="submit" class="btn">Save</button>
         <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
     </div>
-
 </form>
 
 </body>

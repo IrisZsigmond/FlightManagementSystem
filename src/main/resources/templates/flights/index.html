@@ -1,52 +1,71 @@
 <!DOCTYPE html>
+<!-- The standard HTML5 document declaration -->
 <html xmlns:th="http://www.thymeleaf.org">
+<!-- "xmlns:th" defines the Thymeleaf XML namespace.
+     It allows us to use all Thymeleaf attributes starting with 'th:' (like th:text, th:each, th:href, etc.) -->
+
 <head>
     <meta charset="UTF-8">
     <title>Flights List</title>
+
+    <!-- Link to a CSS stylesheet located under: src/main/resources/static/css/style.css -->
+    <!-- The @{} syntax in th:href dynamically builds the correct path according to your application's context root -->
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
 
+<body>
 <h1>All Flights</h1>
 
-<a th:href="@{/flights/new}" class="btn">Add New Flight</a>
+<!-- Optional flash messages (from RedirectAttributes) -->
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Departure Time</th>
-            <th>Feedback Score</th>
-            <th>Airplane ID</th>
-            <th>Notice Board ID</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+<!-- ========================================== -->
+<!-- 1. Link to create a new Flight -->
+<!-- ========================================== -->
+<a th:href="@{/flights/new}">Add New Flight</a>
 
-        <tbody>
-        <tr th:each="f : ${flights}">
-            <td th:text="${f.id}"></td>
-            <td th:text="${f.name}"></td>
-            <td th:text="${f.departureTime}"></td>
-            <td th:text="${f.feedbackScore}"></td>
-            <td th:text="${f.airplaneId}"></td>
-            <td th:text="${f.noticeBoardId}"></td>
+<!-- ========================================== -->
+<!-- 2. Table displaying all flights -->
+<!-- ========================================== -->
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Departure Time</th>
+        <th>Airplane ID</th>
+        <th>Notice Board ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
 
-            <td>
-                <a th:href="@{'/flights/' + ${f.id} + '/edit'}" class="btn">Edit</a>
+    <tbody>
+    <!-- Loop over all flights from the model attribute "flights" -->
+    <tr th:each="flight : ${flights}">
 
-                <form th:action="@{'/flights/' + ${f.id} + '/delete'}"
-                      method="post" class="inline-form">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
+        <td th:text="${flight.id}">ID</td>
+        <td th:text="${flight.name}">Name</td>
+        <td th:text="${flight.departureTime}">Departure Time</td>
+        <td th:text="${flight.airplaneId}">Airplane ID</td>
+        <td th:text="${flight.noticeBoardId}">Notice Board ID</td>
 
-    </table>
-</div>
+        <td>
+            <!-- Edit button: goes to GET /flights/{id}/edit -->
+            <form th:action="@{'/flights/' + ${flight.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+
+            <!-- Delete button: posts to POST /flights/{id}/delete -->
+            <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

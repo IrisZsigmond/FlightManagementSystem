@@ -1,5 +1,6 @@
 package com.flightmanagement.flightmanagement.repository.InMemoryRepositories;
 
+import com.flightmanagement.flightmanagement.model.Airplane;
 import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 
 import java.util.ArrayList;
@@ -28,13 +29,14 @@ public class BaseRepositoryInMemory<T, ID> implements AbstractRepository<T, ID> 
     }
 
     @Override
-    public void save(T entity) {
+    public T save(T entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity cannot be null");
         ID id = idExtractor.apply(entity);
         if (id == null)
             throw new IllegalArgumentException("entity ID cannot be null");
         store.putIfAbsent(id, entity);
+        return null;
     }
 
     @Override

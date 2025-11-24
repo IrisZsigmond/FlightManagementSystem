@@ -1,41 +1,12 @@
-[ {
-  "id" : "1",
-  "flightId" : "F001",
-  "staffId" : "S001"
-}, {
-  "id" : "2",
-  "flightId" : "F002",
-  "staffId" : "S002"
-}, {
-  "id" : "3",
-  "flightId" : "F003",
-  "staffId" : "S004"
-}, {
-  "id" : "4",
-  "flightId" : "F004",
-  "staffId" : "S003"
-}, {
-  "id" : "5",
-  "flightId" : "F005",
-  "staffId" : "S007"
-}, {
-  "id" : "6",
-  "flightId" : "F006",
-  "staffId" : "S006"
-}, {
-  "id" : "7",
-  "flightId" : "F007",
-  "staffId" : "S005"
-}, {
-  "id" : "8",
-  "flightId" : "F008",
-  "staffId" : "S008"
-}, {
-  "id" : "9",
-  "flightId" : "F009",
-  "staffId" : "S010"
-}, {
-  "id" : "10",
-  "flightId" : "F010",
-  "staffId" : "S009"
-} ]
+[
+  { "id": "FA1",  "staffId": "AE1", "flightId": "FL1" },
+  { "id": "FA2",  "staffId": "AE2", "flightId": "FL1" },
+  { "id": "FA3",  "staffId": "AE3", "flightId": "FL1" },
+  { "id": "FA4",  "staffId": "AE3", "flightId": "FL2" },
+  { "id": "FA5",  "staffId": "AE4", "flightId": "FL3" },
+  { "id": "FA6",  "staffId": "AE5", "flightId": "FL3" },
+  { "id": "FA7",  "staffId": "AE6", "flightId": "FL5" },
+  { "id": "FA8",  "staffId": "AE7", "flightId": "FL7" },
+  { "id": "FA9",  "staffId": "AE8", "flightId": "FL8" },
+  { "id": "FA10", "staffId": "AE9", "flightId": "FL9" }
+]

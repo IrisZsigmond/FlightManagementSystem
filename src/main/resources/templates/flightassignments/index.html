@@ -9,38 +9,40 @@
 
 <h1>All Flight Assignments</h1>
 
-<a th:href="@{/flightassignments/new}" class="btn">Add New Assignment</a>
+<!-- Flash messages (dacă vei folosi RedirectAttributes) -->
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Flight ID</th>
-            <th>Staff ID</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+<a th:href="@{/flightassignments/new}">Add New Assignment</a>
 
-        <tbody>
-        <tr th:each="a : ${assignments}">
-            <td th:text="${a.id}"></td>
-            <td th:text="${a.flightId}"></td>
-            <td th:text="${a.staffId}"></td>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Flight ID</th>
+        <th>Staff ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${assignments}">
+        <td th:text="${a.id}">ID</td>
+        <td th:text="${a.flightId}">Flight ID</td>
+        <td th:text="${a.staffId}">Staff ID</td>
+        <td>
+            <form th:action="@{'/flightassignments/' + ${a.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
 
-            <td>
-                <a th:href="@{'/flightassignments/' + ${a.id} + '/edit'}" class="btn">Edit</a>
-
-                <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
-                      method="post" class="inline-form">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-
-    </table>
-</div>
+            <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

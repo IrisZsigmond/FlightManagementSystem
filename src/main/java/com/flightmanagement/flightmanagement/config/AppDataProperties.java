@@ -3,11 +3,15 @@ package com.flightmanagement.flightmanagement.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/// Application data properties (data directory, auto-seed).
+/// Mapped from application.properties with prefix "fms".
+/// Only used for the InFileRepository implementations.
+///
 @Component
 @ConfigurationProperties(prefix = "fms")
 public class AppDataProperties {
     /**
-     * Writable runtime data directory (e.g., ./data or /var/lib/fms/data).
+     * Writable runtime data directory (./data).
      */
     private String dataDir = "./data";
 

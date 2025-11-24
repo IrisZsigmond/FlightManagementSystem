@@ -9,7 +9,8 @@
 
 <h1>Edit Airport Employee</h1>
 
-<form th:action="@{'/airportemployees/' + ${employee.id}}" th:object="${employee}" method="post">
+<form th:action="@{'/airportemployees/' + ${airportEmployeeForm.id}}"
+      th:object="${airportEmployeeForm}" method="post">
 
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly />
@@ -27,7 +28,6 @@
         <button type="submit" class="btn">Save</button>
         <a th:href="@{/airportemployees}" class="btn secondary">Cancel</a>
     </div>
-
 </form>
 
 </body>

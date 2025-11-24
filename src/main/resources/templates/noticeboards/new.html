@@ -9,22 +9,20 @@
 
 <h1>Create Notice Board</h1>
 
-<form th:action="@{/noticeboards}" th:object="${noticeboard}" method="post">
+<form th:action="@{/noticeboards}" th:object="${noticeBoardForm}" method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" required />
+    <label for="id">ID:</label>
+    <input id="id" type="text" th:field="*{id}" required />
 
-    <label>Date:</label>
-    <input type="date" th:field="*{date}" />
+    <label for="date">Date (yyyy-MM-dd):</label>
+    <input id="date" type="text" th:field="*{date}" placeholder="2025-11-18" />
 
-    <label>Flights of the Day (comma-separated IDs):</label>
-    <input type="text" th:field="*{flightsOfTheDay}" placeholder="F001, F002" />
+    <p>Flights of the day will be automatically associated by their noticeBoardId.</p>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>
         <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
     </div>
-
 </form>
 
 </body>

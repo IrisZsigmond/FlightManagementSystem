@@ -9,40 +9,40 @@
 
 <h1>All Airport Employees</h1>
 
-<a th:href="@{/airportemployees/new}" class="btn">Add New Employee</a>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+<a th:href="@{/airportemployees/new}">Add New Airport Employee</a>
 
-        <tbody>
-        <tr th:each="e : ${employees}">
-            <td th:text="${e.id}"></td>
-            <td th:text="${e.name}"></td>
-            <td th:text="${e.designation}"></td>
-            <td th:text="${e.department}"></td>
-
-            <td>
-                <a th:href="@{'/airportemployees/' + ${e.id} + '/edit'}" class="btn">Edit</a>
-
-                <form th:action="@{'/airportemployees/' + ${e.id} + '/delete'}"
-                      method="post" class="inline-form">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-
-    </table>
-</div>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Department</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="e : ${employees}">
+        <td th:text="${e.id}">ID</td>
+        <td th:text="${e.name}">Name</td>
+        <td th:text="${e.designation}">Designation</td>
+        <td th:text="${e.department}">Department</td>
+        <td>
+            <form th:action="@{'/airportemployees/' + ${e.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+            <form th:action="@{'/airportemployees/' + ${e.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

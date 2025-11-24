@@ -1,15 +1,23 @@
 package com.flightmanagement.flightmanagement.model;
 
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 import java.util.List;
 
-/** Represents a notice board in the management system.
- * Contains details such as date and flights of the day. */
-
+@Entity
+@Table(name = "noticeboards")
 public class NoticeBoard {
 
+    @Id
     private String id;
+
     private LocalDate date;
+
+    // One noticeboard has many flights
+    @OneToMany(mappedBy = "noticeBoard")
+    @JsonIgnore
     private List<Flight> flightsOfTheDay;
 
     public NoticeBoard() {}
@@ -32,8 +40,8 @@ public class NoticeBoard {
     @Override
     public String toString() {
         return "NoticeBoard{" +
-                "date=" + date +
-                ", flightsOfTheDay=" + flightsOfTheDay +
+                "id='" + id + '\'' +
+                ", date=" + date +
                 '}';
     }
 }

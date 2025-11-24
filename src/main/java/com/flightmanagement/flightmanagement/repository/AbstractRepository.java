@@ -14,8 +14,10 @@ public interface AbstractRepository<T, ID> {
     /**
      * Saves a new entity if it doesn't exist
      * C = create
+     *
+     * @return the stored entity
      */
-    void save(T entity);
+    T save(T entity);
 
     /**
      * Retrieves all entities in the repository

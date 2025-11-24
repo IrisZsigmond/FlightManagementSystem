@@ -23,13 +23,15 @@ public class TicketServiceImpl extends BaseServiceImpl<Ticket, String> implement
 
     @Override
     public List<Ticket> findByPassengerId(String passengerId) {
+        if (passengerId == null || passengerId.isBlank()) return List.of();
         return repo().findAll().stream()
-                .filter(t -> t.getPassenger() != null && passengerId.equals(t.getPassenger().getId()))
+                .filter(t -> passengerId.equals(t.getPassengerId()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Ticket> findByFlightId(String flightId) {
+        if (flightId == null || flightId.isBlank()) return List.of();
         return repo().findAll().stream()
                 .filter(t -> flightId.equals(t.getFlightId()))
                 .collect(Collectors.toList());
@@ -37,6 +39,7 @@ public class TicketServiceImpl extends BaseServiceImpl<Ticket, String> implement
 
     @Override
     public List<Ticket> findByCategory(TicketCategory category) {
+        if (category == null) return List.of();
         return repo().findAll().stream()
                 .filter(t -> category.equals(t.getCategory()))
                 .collect(Collectors.toList());

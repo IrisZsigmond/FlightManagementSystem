@@ -6,56 +6,57 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-
 <h1>All Tickets</h1>
 
-<a th:href="@{/tickets/new}" class="btn">Add New Ticket</a>
+<a th:href="@{/tickets/new}">Add New Ticket</a>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Passenger</th>
-            <th>Flight ID</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Seat</th>
-            <th>Luggages</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Passenger ID</th>
+        <th>Flight ID</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Seat Number</th>
+        <th>Luggages</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.id}">ID</td>
 
-        <tbody>
-        <tr th:each="t : ${tickets}">
-            <td th:text="${t.id}"></td>
+        <!-- afișăm direct passengerId (string) -->
+        <td th:text="${ticket.passengerId != null ? ticket.passengerId : 'N/A'}">Passenger ID</td>
 
-            <td th:text="${t.passenger != null ? t.passenger.id : 'N/A'}"></td>
+        <td th:text="${ticket.flightId}">Flight ID</td>
+        <td th:text="${ticket.category}">Category</td>
+        <td th:text="${ticket.price}">Price</td>
+        <td th:text="${ticket.seatNumber}">Seat Number</td>
 
-            <td th:text="${t.flightId}"></td>
-            <td th:text="${t.category}"></td>
-            <td th:text="${t.price}"></td>
-            <td th:text="${t.seatNumber}"></td>
+        <!-- luggages: listă opțională, proiectată în memorie -->
+        <td>
+            <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">-</span>
+            <span th:if="${ticket.luggages != null and !#lists.isEmpty(ticket.luggages)}">
+                <span th:each="l,iterStat : ${ticket.luggages}">
+                    <span th:text="${l.id}">LUGGAGE_ID</span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
+            </span>
+        </td>
 
-            <td>
-                <span th:each="l, iter : ${t.luggages}"
-                      th:utext="${l.id + (iter.last ? '' : ', ')}"></span>
-            </td>
-
-            <td>
-                <a th:href="@{'/tickets/' + ${t.id} + '/edit'}" class="btn">Edit</a>
-
-                <form th:action="@{'/tickets/' + ${t.id} + '/delete'}"
-                      method="post" class="inline-form">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-            </td>
-
-        </tr>
-        </tbody>
-
-    </table>
-</div>
+        <td>
+            <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{'/tickets/' + ${ticket.id} + '/edit'}" method="get">
+                <button type="submit">Edit</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

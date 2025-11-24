@@ -2,50 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Passengers List</title>
+    <title>Passengers</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
 <h1>All Passengers</h1>
 
-<a th:href="@{/passengers/new}" class="btn">Add New Passenger</a>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Currency</th>
-            <th>Tickets</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+<a th:href="@{/passengers/new}">Add New Passenger</a>
 
-        <tbody>
-        <tr th:each="p : ${passengers}">
-            <td th:text="${p.id}"></td>
-            <td th:text="${p.name}"></td>
-            <td th:text="${p.currency}"></td>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Currency</th>
+        <th>Tickets (IDs)</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${passengers}">
+        <td th:text="${p.id}">ID</td>
+        <td th:text="${p.name}">Name</td>
+        <td th:text="${p.currency}">Currency</td>
 
-            <td>
-                <span th:each="t, iter : ${p.tickets}"
-                      th:utext="${t.id + (iter.last ? '' : ', ')}"></span>
-            </td>
+        <!-- afișăm id-urile biletelor, separate prin virgulă -->
+        <td>
+            <span th:if="${p.tickets == null or #lists.isEmpty(p.tickets)}">-</span>
+            <span th:if="${p.tickets != null and !#lists.isEmpty(p.tickets)}">
+                <span th:each="t, iter : ${p.tickets}">
+                    <span th:text="${t.id}">TICKET_ID</span>
+                    <span th:if="${!iter.last}">, </span>
+                </span>
+            </span>
+        </td>
 
-            <td>
-                <a th:href="@{'/passengers/' + ${p.id} + '/edit'}" class="btn">Edit</a>
-
-                <form th:action="@{'/passengers/' + ${p.id} + '/delete'}"
-                      method="post" class="inline-form">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+        <td>
+            <form th:action="@{'/passengers/' + ${p.id} + '/edit'}"
+                  method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+            <form th:action="@{'/passengers/' + ${p.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>
