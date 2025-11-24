@@ -2,75 +2,121 @@ package com.flightmanagement.flightmanagement.mapper;
 
 import com.flightmanagement.flightmanagement.dto.FlightForm;
 import com.flightmanagement.flightmanagement.model.Flight;
+import com.flightmanagement.flightmanagement.service.AirplaneService;
+import com.flightmanagement.flightmanagement.service.NoticeBoardService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-/**
- * Mapper between Flight entity and FlightForm DTO.
- * Does NOT touch tickets or assignments (those are populated
- * separately in the service layer and are @JsonIgnore).
- */
 @Component
 public class FlightMapper {
 
-    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
+    private final NoticeBoardService noticeBoardService;
+    private final AirplaneService airplaneService;
+
+    // format pentru câmpul de timp din form (ex. "10:45")
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+    public FlightMapper(NoticeBoardService noticeBoardService,
+                        AirplaneService airplaneService) {
+        this.noticeBoardService = noticeBoardService;
+        this.airplaneService = airplaneService;
+    }
 
     public Flight toEntity(FlightForm form) {
-        if (form == null) return null;
+        Flight f = new Flight();
+        f.setId(form.getId());
+        f.setName(form.getName());
 
-        Flight flight = new Flight();
-        flight.setId(form.getId());
-        flight.setName(form.getName());
-        flight.setDepartureTime(parseTime(form.getDepartureTime()));
-        flight.setNoticeBoardId(form.getNoticeBoardId());
-        flight.setAirplaneId(form.getAirplaneId());
-        return flight;
+        // String -> LocalTime
+        if (form.getDepartureTime() != null && !form.getDepartureTime().isBlank()) {
+            try {
+                LocalTime time = LocalTime.parse(form.getDepartureTime(), TIME_FORMATTER);
+                f.setDepartureTime(time);
+            } catch (DateTimeParseException ex) {
+                throw new IllegalArgumentException("Invalid time format for departureTime. Use HH:mm", ex);
+            }
+        } else {
+            f.setDepartureTime(null);
+        }
+
+        // NoticeBoard
+        if (form.getNoticeBoardId() != null && !form.getNoticeBoardId().isBlank()) {
+            f.setNoticeBoard(
+                    noticeBoardService.findById(form.getNoticeBoardId())
+                            .orElseThrow(() -> new IllegalArgumentException("NoticeBoard not found"))
+            );
+        } else {
+            f.setNoticeBoard(null);
+        }
+
+        // Airplane
+        if (form.getAirplaneId() != null && !form.getAirplaneId().isBlank()) {
+            f.setAirplane(
+                    airplaneService.findById(form.getAirplaneId())
+                            .orElseThrow(() -> new IllegalArgumentException("Airplane not found"))
+            );
+        } else {
+            f.setAirplane(null);
+        }
+
+        return f;
     }
 
     public FlightForm toForm(Flight flight) {
-        if (flight == null) return null;
-
         FlightForm form = new FlightForm();
         form.setId(flight.getId());
         form.setName(flight.getName());
-        form.setDepartureTime(formatTime(flight.getDepartureTime()));
-        form.setNoticeBoardId(flight.getNoticeBoardId());
-        form.setAirplaneId(flight.getAirplaneId());
+
+        // LocalTime -> String
+        if (flight.getDepartureTime() != null) {
+            form.setDepartureTime(flight.getDepartureTime().format(TIME_FORMATTER));
+        } else {
+            form.setDepartureTime(null);
+        }
+
+        form.setNoticeBoardId(
+                flight.getNoticeBoard() != null ? flight.getNoticeBoard().getId() : null
+        );
+        form.setAirplaneId(
+                flight.getAirplane() != null ? flight.getAirplane().getId() : null
+        );
         return form;
     }
 
-    /**
-     * Update scalar fields on an existing Flight from the form.
-     * Does not touch tickets or assignments.
-     */
     public void updateEntityFromForm(Flight existing, FlightForm form) {
-        if (existing == null || form == null) return;
-
         existing.setName(form.getName());
-        existing.setDepartureTime(parseTime(form.getDepartureTime()));
-        existing.setNoticeBoardId(form.getNoticeBoardId());
-        existing.setAirplaneId(form.getAirplaneId());
-        // tickets & flightAssignments remain under control of the service layer
-    }
 
-    // -------- helper methods --------
-
-    private LocalTime parseTime(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
+        // String -> LocalTime
+        if (form.getDepartureTime() != null && !form.getDepartureTime().isBlank()) {
+            try {
+                LocalTime time = LocalTime.parse(form.getDepartureTime(), TIME_FORMATTER);
+                existing.setDepartureTime(time);
+            } catch (DateTimeParseException ex) {
+                throw new IllegalArgumentException("Invalid time format for departureTime. Use HH:mm", ex);
+            }
+        } else {
+            existing.setDepartureTime(null);
         }
-        try {
-            return LocalTime.parse(value, TIME_FMT);
-        } catch (DateTimeParseException e) {
-            // In a real app you might throw a validation exception instead
-            return null;
-        }
-    }
 
-    private String formatTime(LocalTime time) {
-        return time == null ? "" : time.format(TIME_FMT);
+        if (form.getNoticeBoardId() != null && !form.getNoticeBoardId().isBlank()) {
+            existing.setNoticeBoard(
+                    noticeBoardService.findById(form.getNoticeBoardId())
+                            .orElseThrow(() -> new IllegalArgumentException("NoticeBoard not found"))
+            );
+        } else {
+            existing.setNoticeBoard(null);
+        }
+
+        if (form.getAirplaneId() != null && !form.getAirplaneId().isBlank()) {
+            existing.setAirplane(
+                    airplaneService.findById(form.getAirplaneId())
+                            .orElseThrow(() -> new IllegalArgumentException("Airplane not found"))
+            );
+        } else {
+            existing.setAirplane(null);
+        }
     }
 }

@@ -1,18 +1,23 @@
 package com.flightmanagement.flightmanagement.model;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/** Represents a passenger in the management system.
- * Contains details such as name, currency, and tickets*/
-
+@Entity
+@Table(name = "passengers")
 public class Passenger {
 
+    @Id
     private String id;
+
     private String name;
+
     private String currency;
+
+    // One passenger has many tickets
+    @OneToMany(mappedBy = "passenger")
     @JsonIgnore
     private List<Ticket> tickets;
 
@@ -37,14 +42,12 @@ public class Passenger {
     public List<Ticket> getTickets() { return tickets; }
     public void setTickets(List<Ticket> tickets) { this.tickets = tickets; }
 
-
     @Override
     public String toString() {
         return "Passenger{" +
-                "currency='" + currency + '\'' +
-                ", tickets=" + tickets +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", currency='" + currency + '\'' +
                 '}';
     }
-
 }

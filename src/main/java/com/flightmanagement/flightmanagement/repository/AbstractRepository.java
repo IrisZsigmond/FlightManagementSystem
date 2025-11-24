@@ -1,7 +1,5 @@
 package com.flightmanagement.flightmanagement.repository;
 
-import com.flightmanagement.flightmanagement.model.Airplane;
-
 import java.util.List;
 import java.util.Optional;
 

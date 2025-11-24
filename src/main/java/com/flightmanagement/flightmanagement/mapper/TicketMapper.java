@@ -2,50 +2,86 @@ package com.flightmanagement.flightmanagement.mapper;
 
 import com.flightmanagement.flightmanagement.dto.TicketForm;
 import com.flightmanagement.flightmanagement.model.Ticket;
+import com.flightmanagement.flightmanagement.service.FlightService;
+import com.flightmanagement.flightmanagement.service.PassengerService;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper between Ticket entity and TicketForm DTO.
- * Uses IDs only. Does not touch luggages.
- */
 @Component
 public class TicketMapper {
 
-    public Ticket toEntity(TicketForm form) {
-        if (form == null) return null;
+    private final PassengerService passengerService;
+    private final FlightService flightService;
 
-        Ticket ticket = new Ticket();
-        ticket.setId(form.getId());
-        ticket.setPassengerId(form.getPassengerId());
-        ticket.setFlightId(form.getFlightId());
-        ticket.setCategory(form.getCategory());
-        ticket.setPrice(form.getPrice());
-        ticket.setSeatNumber(form.getSeatNumber());
-        // luggages remains null/managed separately
-        return ticket;
+    public TicketMapper(PassengerService passengerService,
+                        FlightService flightService) {
+        this.passengerService = passengerService;
+        this.flightService = flightService;
+    }
+
+    public Ticket toEntity(TicketForm form) {
+        Ticket t = new Ticket();
+        t.setId(form.getId());
+        t.setCategory(form.getCategory());
+        t.setPrice(form.getPrice());
+        t.setSeatNumber(form.getSeatNumber());
+
+        if (form.getPassengerId() != null && !form.getPassengerId().isBlank()) {
+            t.setPassenger(
+                    passengerService.findById(form.getPassengerId())
+                            .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
+            );
+        } else {
+            t.setPassenger(null);
+        }
+
+        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
+            t.setFlight(
+                    flightService.findById(form.getFlightId())
+                            .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+            );
+        } else {
+            t.setFlight(null);
+        }
+
+        return t;
     }
 
     public TicketForm toForm(Ticket ticket) {
-        if (ticket == null) return null;
-
         TicketForm form = new TicketForm();
         form.setId(ticket.getId());
-        form.setPassengerId(ticket.getPassengerId());
-        form.setFlightId(ticket.getFlightId());
         form.setCategory(ticket.getCategory());
         form.setPrice(ticket.getPrice());
         form.setSeatNumber(ticket.getSeatNumber());
+        form.setPassengerId(
+                ticket.getPassenger() != null ? ticket.getPassenger().getId() : null
+        );
+        form.setFlightId(
+                ticket.getFlight() != null ? ticket.getFlight().getId() : null
+        );
         return form;
     }
 
     public void updateEntityFromForm(Ticket existing, TicketForm form) {
-        if (existing == null || form == null) return;
-
-        existing.setPassengerId(form.getPassengerId());
-        existing.setFlightId(form.getFlightId());
         existing.setCategory(form.getCategory());
         existing.setPrice(form.getPrice());
         existing.setSeatNumber(form.getSeatNumber());
-        // existing.luggages unchanged
+
+        if (form.getPassengerId() != null && !form.getPassengerId().isBlank()) {
+            existing.setPassenger(
+                    passengerService.findById(form.getPassengerId())
+                            .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
+            );
+        } else {
+            existing.setPassenger(null);
+        }
+
+        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
+            existing.setFlight(
+                    flightService.findById(form.getFlightId())
+                            .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+            );
+        } else {
+            existing.setFlight(null);
+        }
     }
 }

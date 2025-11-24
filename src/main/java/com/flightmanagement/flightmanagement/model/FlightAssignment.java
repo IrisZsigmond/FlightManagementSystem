@@ -1,45 +1,47 @@
 package com.flightmanagement.flightmanagement.model;
 
-/** FlightAssignment class represents a mapping between a flight and a staff.
- * Contains details such as flight ID and staff ID.*/
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "flight_assignments")
 public class FlightAssignment {
-    String id;
-    String flightId;
-    String staffId;
 
-    public FlightAssignment() {};
+    @Id
+    private String id;
 
-    public FlightAssignment(String id, String flightId, String staffId) {
+    // Many assignments belong to one flight
+    @ManyToOne
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    // Many assignments belong to one airline employee (crew member)
+    @ManyToOne
+    @JoinColumn(name = "airline_employee_id")
+    private AirlineEmployee airlineEmployee;
+
+    public FlightAssignment() {}
+
+    public FlightAssignment(String id, Flight flight, AirlineEmployee airlineEmployee) {
         this.id = id;
-        this.flightId = flightId;
-        this.staffId = staffId;
+        this.flight = flight;
+        this.airlineEmployee = airlineEmployee;
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getFlightId() {
-        return flightId;
-    }
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
-    }
+    public Flight getFlight() { return flight; }
+    public void setFlight(Flight flight) { this.flight = flight; }
 
-    public String getStaffId() {
-        return staffId;
-    }
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
+    public AirlineEmployee getAirlineEmployee() { return airlineEmployee; }
+    public void setAirlineEmployee(AirlineEmployee airlineEmployee) { this.airlineEmployee = airlineEmployee; }
 
     @Override
     public String toString() {
-        return "FlightAssignment {flightId="
-                + flightId + ", staffId=" + staffId + "}";
+        return "FlightAssignment{" +
+                "id='" + id + '\'' +
+                ", flight=" + (flight != null ? flight.getId() : null) +
+                ", airlineEmployee=" + (airlineEmployee != null ? airlineEmployee.getId() : null) +
+                '}';
     }
 }

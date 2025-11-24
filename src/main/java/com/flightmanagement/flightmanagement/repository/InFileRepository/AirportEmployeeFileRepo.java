@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InFileRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
@@ -14,7 +14,6 @@ import java.util.List;
  * Loads/saves airport employees into airport-employees.json under the runtime data directory.
  */
 @Repository
-@Primary
 public class AirportEmployeeFileRepo extends InFileRepository<AirportEmployee, String> {
 
     public AirportEmployeeFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

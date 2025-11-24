@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InFileRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@Primary // ensure this replaces any in-memory bean if still present
 public class FlightFileRepo extends InFileRepository<Flight, String> {
 
     public FlightFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

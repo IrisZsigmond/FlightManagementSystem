@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InFileRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
@@ -14,7 +14,6 @@ import java.util.List;
  * Loads/saves airplanes into airplanes.json under the runtime data directory.
  */
 @Repository
-@Primary
 public class AirplaneFileRepo extends InFileRepository<Airplane, String> {
 
     public AirplaneFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

@@ -1,39 +1,63 @@
 package com.flightmanagement.flightmanagement.model;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalTime;
 import java.util.List;
 
-/** Represents a flight in the management system.
- * Contains details such as name, departure time,
- * notice board ID, and airplane ID.*/
-
+@Entity
+@Table(name = "flights")
 public class Flight {
+
+    @Id
     private String id;
+
     private String name;
+
     private LocalTime departureTime;
-    private String noticeBoardId;
-    private String airplaneId;
-    @JsonIgnore
-    List<Ticket> tickets;
-    @JsonIgnore
-    List<FlightAssignment> flightAssignments;
 
-    public Flight() {};
+    // ------------------------
+    // RELATIONSHIPS
+    // ------------------------
 
-    public Flight(String id, String name, LocalTime departureTime, String noticeBoardId, String airplaneId) {
+    // Many flights can belong to one NoticeBoard
+    @ManyToOne
+    @JoinColumn(name = "noticeboard_id")
+    private NoticeBoard noticeBoard;
+
+    // Many flights use one Airplane
+    @ManyToOne
+    @JoinColumn(name = "airplane_id")
+    private Airplane airplane;
+
+    // One flight has many Tickets
+    @OneToMany(mappedBy = "flight")
+    @JsonIgnore
+    private List<Ticket> tickets;
+
+    // One flight has many FlightAssignments
+    @OneToMany(mappedBy = "flight")
+    @JsonIgnore
+    private List<FlightAssignment> flightAssignments;
+
+    public Flight() {}
+
+    public Flight(String id, String name, LocalTime departureTime, NoticeBoard noticeBoard, Airplane airplane) {
         this.id = id;
         this.name = name;
         this.departureTime = departureTime;
-        this.noticeBoardId = noticeBoardId;
-        this.airplaneId = airplaneId;
+        this.noticeBoard = noticeBoard;
+        this.airplane = airplane;
     }
 
+    // ------------------------
+    // GETTERS & SETTERS
+    // ------------------------
 
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -41,6 +65,7 @@ public class Flight {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -48,27 +73,31 @@ public class Flight {
     public LocalTime getDepartureTime() {
         return departureTime;
     }
+
     public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getNoticeBoardId() {
-        return noticeBoardId;
-    }
-    public void setNoticeBoardId(String noticeBoardId) {
-        this.noticeBoardId = noticeBoardId;
+    public NoticeBoard getNoticeBoard() {
+        return noticeBoard;
     }
 
-    public String getAirplaneId() {
-        return airplaneId;
+    public void setNoticeBoard(NoticeBoard noticeBoard) {
+        this.noticeBoard = noticeBoard;
     }
-    public void setAirplaneId(String airplaneId) {
-        this.airplaneId = airplaneId;
+
+    public Airplane getAirplane() {
+        return airplane;
+    }
+
+    public void setAirplane(Airplane airplane) {
+        this.airplane = airplane;
     }
 
     public List<Ticket> getTickets() {
         return tickets;
     }
+
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
@@ -76,18 +105,17 @@ public class Flight {
     public List<FlightAssignment> getFlightAssignments() {
         return flightAssignments;
     }
+
     public void setFlightAssignments(List<FlightAssignment> flightAssignments) {
         this.flightAssignments = flightAssignments;
     }
 
-
     @Override
     public String toString() {
         return "Flight{" +
-                " name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", departureTime=" + departureTime +
-                ", noticeBoardId='" + noticeBoardId + '\'' +
-                ", airplaneId='" + airplaneId + '\'' +
                 '}';
     }
 }

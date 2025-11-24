@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InFileRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
@@ -14,7 +14,6 @@ import java.util.List;
  * Replaces the in-memory repository and persists data into luggages.json.
  */
 @Repository
-@Primary
 public class LuggageFileRepo extends InFileRepository<Luggage, String> {
 
     public LuggageFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

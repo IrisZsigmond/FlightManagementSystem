@@ -57,7 +57,7 @@
                 <button type="submit">Edit</button>
             </form>
 
-            <!-- Delete button: posts to /flights/{id}/delete -->
+            <!-- Delete button: posts to POST /flights/{id}/delete -->
             <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>

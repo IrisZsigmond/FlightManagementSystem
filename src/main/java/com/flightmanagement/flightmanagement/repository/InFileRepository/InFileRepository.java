@@ -1,4 +1,4 @@
-package com.flightmanagement.flightmanagement.repository;
+package com.flightmanagement.flightmanagement.repository.InFileRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import com.flightmanagement.flightmanagement.config.AppDataProperties;
 
+import com.flightmanagement.flightmanagement.repository.AbstractRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 

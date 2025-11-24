@@ -6,48 +6,32 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Service interface for managing Flight entities.
- * Extends BaseService for CRUD and adds domain-specific queries.
- */
-public interface FlightService extends BaseService<Flight, String> {
+public interface FlightService {
 
-    /**
-     * Find all flights operated by a given airplane.
-     */
+    Flight save(Flight flight);
+
+    List<Flight> findAll();
+
+    Optional<Flight> findById(String id);
+
+    Flight update(String id, Flight updated);
+
+    boolean delete(String id);
+
+    // metodele tale custom:
     List<Flight> findByAirplaneId(String airplaneId);
 
-    /**
-     * Find all flights that are not assigned to any airplane.
-     */
+    Optional<Flight> findWithTicketsAndAssignments(String id);
+
     List<Flight> findUnassigned();
-    /**
-     * Find all flights attached to a given notice board.
-     */
+
     List<Flight> findByNoticeBoardId(String noticeBoardId);
 
-    /**
-     * Case-insensitive substring search on flight name.
-     */
     List<Flight> findByNameContains(String term);
 
-    /**
-     * Find flights departing between 'from' (inclusive) and 'to' (exclusive).
-     */
     List<Flight> findByDepartureBetween(LocalTime from, LocalTime to);
 
-    /**
-     * Find all flights that include a ticket with the given ticketId.
-     */
     List<Flight> findByTicketId(String ticketId);
 
-    /**
-     * Find all flights that include a staff member with the given staffId (via assignments).
-     */
     List<Flight> findByStaffId(String staffId);
-
-    /**
-     * Load a flight and attach its tickets + assignments (read-only projection).
-     */
-    Optional<Flight> findWithTicketsAndAssignments(String flightId);
 }

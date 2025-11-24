@@ -2,20 +2,22 @@ package com.flightmanagement.flightmanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
+import jakarta.persistence.*;
 
 import java.util.List;
 
-/**
- * Represents an airline employee in the flight management system.
- * Inherits common attributes from Staff (ID and name)
- * and adds specific details like role and assigned flights.
- */
+@Entity
+@Table(name = "airline_employee")
+@DiscriminatorValue("AIRLINE")
 public class AirlineEmployee extends Staff {
 
+    @Enumerated(EnumType.STRING)
     private AirlineRole role;
 
+    // One airline employee can have many flight assignments
+    @OneToMany(mappedBy = "airlineEmployee")
     @JsonIgnore
-    private List<FlightAssignment> assignments; // proiecție doar pentru citire
+    private List<FlightAssignment> assignments;
 
     public AirlineEmployee() {
         super();
@@ -27,21 +29,11 @@ public class AirlineEmployee extends Staff {
         this.assignments = assignments;
     }
 
-    public AirlineRole getRole() {
-        return role;
-    }
+    public AirlineRole getRole() { return role; }
+    public void setRole(AirlineRole role) { this.role = role; }
 
-    public void setRole(AirlineRole role) {
-        this.role = role;
-    }
-
-    public List<FlightAssignment> getAssignments() {
-        return assignments;
-    }
-
-    public void setAssignments(List<FlightAssignment> assignments) {
-        this.assignments = assignments;
-    }
+    public List<FlightAssignment> getAssignments() { return assignments; }
+    public void setAssignments(List<FlightAssignment> assignments) { this.assignments = assignments; }
 
     @Override
     public String toString() {
@@ -49,7 +41,6 @@ public class AirlineEmployee extends Staff {
                 "id='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", role=" + role +
-                ", assignments=" + assignments +
                 '}';
     }
 }
