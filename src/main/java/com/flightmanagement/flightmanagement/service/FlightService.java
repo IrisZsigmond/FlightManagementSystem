@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FlightService {
-
+    // Basic CRUD methods:
     Flight save(Flight flight);
 
     List<Flight> findAll();
@@ -18,7 +18,7 @@ public interface FlightService {
 
     boolean delete(String id);
 
-    // metodele tale custom:
+    // Custom methods:
     List<Flight> findByAirplaneId(String airplaneId);
 
     Optional<Flight> findWithTicketsAndAssignments(String id);
