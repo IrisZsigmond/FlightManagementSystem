@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+//@Repository
 public class FlightFileRepo extends InFileRepository<Flight, String> {
 
     public FlightFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

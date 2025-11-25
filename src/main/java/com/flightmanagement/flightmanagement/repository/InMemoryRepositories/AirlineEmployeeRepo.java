@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
  * This class extends the generic BaseRepositoryInMemory and
  * provides operations specifically for AirlineEmployee objects.
  */
-@Repository
+//@Repository
 public class AirlineEmployeeRepo extends BaseRepositoryInMemory<AirlineEmployee, String> {
     public AirlineEmployeeRepo() {
         super(AirlineEmployee::getId);

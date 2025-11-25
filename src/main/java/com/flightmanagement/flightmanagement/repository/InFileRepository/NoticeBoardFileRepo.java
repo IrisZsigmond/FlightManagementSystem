@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for NoticeBoard.
  * Loads/saves notice boards into noticeboards.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class NoticeBoardFileRepo extends InFileRepository<NoticeBoard, String> {
 
     public NoticeBoardFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

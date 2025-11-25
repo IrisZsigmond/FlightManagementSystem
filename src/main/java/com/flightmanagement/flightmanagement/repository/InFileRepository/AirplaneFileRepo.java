@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for Airplane.
  * Loads/saves airplanes into airplanes.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class AirplaneFileRepo extends InFileRepository<Airplane, String> {
 
     public AirplaneFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

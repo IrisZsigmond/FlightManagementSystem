@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for FlightAssignment.
  * Loads/saves flight assignments into flightassignments.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class FlightAssignmentFileRepo extends InFileRepository<FlightAssignment, String> {
 
     public FlightAssignmentFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

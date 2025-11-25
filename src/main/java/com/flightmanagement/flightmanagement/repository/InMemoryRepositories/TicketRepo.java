@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 /**In-memory repository for managing Ticket entities.
  * This class extends the generic BaseRepositoryInMemory and
  * provides CRUD operations specifically for Ticket objects.*/
-@Repository
+//@Repository
 public class TicketRepo extends BaseRepositoryInMemory<Ticket, String> {
 
     public TicketRepo() {
