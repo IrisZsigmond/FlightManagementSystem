@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for managing Luggage entities.
  * Replaces the in-memory repository and persists data into luggages.json.
  */
-@Repository
+//@Repository
 public class LuggageFileRepo extends InFileRepository<Luggage, String> {
 
     public LuggageFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

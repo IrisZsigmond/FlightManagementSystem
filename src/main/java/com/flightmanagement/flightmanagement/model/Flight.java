@@ -116,6 +116,8 @@ public class Flight {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", departureTime=" + departureTime +
+                ", noticeBoard=" + (noticeBoard != null ? noticeBoard.getId() : null) +
+                ", airplane=" + (airplane != null ? airplane.getId() : null) +
                 '}';
     }
 }

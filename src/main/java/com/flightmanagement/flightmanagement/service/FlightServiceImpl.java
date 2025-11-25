@@ -24,7 +24,7 @@ public class FlightServiceImpl implements FlightService {
         this.flightAssignmentService = flightAssignmentService;
     }
 
-    // ------------- CRUD de bază ----------------
+    // ------------- basic CRUD ----------------
 
     @Override
     public Flight save(Flight flight) {
@@ -52,7 +52,7 @@ public class FlightServiceImpl implements FlightService {
         if (!flightRepository.existsById(id)) {
             throw new IllegalArgumentException("Flight not found: " + id);
         }
-        // ne asigurăm că id-ul din entitate e același
+        // we make sure the updated entity has the correct id
         updated.setId(id);
         return flightRepository.save(updated);
     }
@@ -66,7 +66,7 @@ public class FlightServiceImpl implements FlightService {
         return true;
     }
 
-    // ------------- Metode custom (moștenite din vechea implementare) -----------
+    // ------------- Custom methods -----------
 
     @Override
     public List<Flight> findByAirplaneId(String airplaneId) {

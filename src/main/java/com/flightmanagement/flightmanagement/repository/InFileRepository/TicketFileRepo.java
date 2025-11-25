@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for Ticket.
  * Loads/saves tickets into tickets.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class TicketFileRepo extends InFileRepository<Ticket, String> {
 
     public TicketFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

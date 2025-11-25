@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for Passenger.
  * Loads/saves passengers into passengers.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class PassengerFileRepo extends InFileRepository<Passenger, String> {
 
     public PassengerFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {

@@ -13,7 +13,7 @@ import java.util.List;
  * File-backed repository for AirportEmployee.
  * Loads/saves airport employees into airport-employees.json under the runtime data directory.
  */
-@Repository
+//@Repository
 public class AirportEmployeeFileRepo extends InFileRepository<AirportEmployee, String> {
 
     public AirportEmployeeFileRepo(AppDataProperties props, ResourceLoader resourceLoader) {
