@@ -9,55 +9,45 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-
 @Controller
 @RequestMapping("/noticeboards")
 public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
-    private final NoticeBoardMapper noticeBoardMapper;
+    private final NoticeBoardMapper mapper;
 
     public NoticeBoardController(NoticeBoardService noticeBoardService,
-                                 NoticeBoardMapper noticeBoardMapper) {
+                                 NoticeBoardMapper mapper) {
         this.noticeBoardService = noticeBoardService;
-        this.noticeBoardMapper = noticeBoardMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public String index(Model model) {
-        var boards = noticeBoardService.findAll().stream()
-                .map(b -> noticeBoardService.findWithFlights(b.getId()).orElse(b))
-                .toList();
-
-        model.addAttribute("noticeboards", boards);
+        model.addAttribute("noticeboards", noticeBoardService.findAll());
         return "noticeboards/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
-        NoticeBoardForm form = new NoticeBoardForm();
-        form.setDate(LocalDate.now().toString()); // default: azi
-        model.addAttribute("noticeBoardForm", form);
+        model.addAttribute("noticeBoardForm", new NoticeBoardForm());
         return "noticeboards/new";
     }
 
     @PostMapping
     public String create(@ModelAttribute("noticeBoardForm") NoticeBoardForm form,
                          RedirectAttributes ra) {
-        NoticeBoard board = noticeBoardMapper.toEntity(form);
-        noticeBoardService.save(board);
+        NoticeBoard nb = mapper.toEntity(form);
+        noticeBoardService.save(nb);
         ra.addFlashAttribute("success", "Notice board created.");
         return "redirect:/noticeboards";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        NoticeBoard board = noticeBoardService.findWithFlights(id).orElseThrow();
-        NoticeBoardForm form = noticeBoardMapper.toForm(board);
-
-        model.addAttribute("noticeBoardForm", form); // editable fields
-        model.addAttribute("noticeBoard", board);    // conține flightsOfTheDay pentru afișare read-only
+        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
+        model.addAttribute("noticeBoard", nb);
         return "noticeboards/edit";
     }
 
@@ -67,7 +57,7 @@ public class NoticeBoardController {
                          RedirectAttributes ra) {
 
         NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
-        noticeBoardMapper.updateEntityFromForm(existing, form);
+        mapper.updateEntityFromForm(existing, form);
         noticeBoardService.update(id, existing);
 
         ra.addFlashAttribute("success", "Notice board updated.");
@@ -79,7 +69,7 @@ public class NoticeBoardController {
         try {
             noticeBoardService.delete(id);
             ra.addFlashAttribute("success", "Notice board deleted.");
-        } catch (IllegalStateException ex) {
+        } catch (Exception ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/noticeboards";

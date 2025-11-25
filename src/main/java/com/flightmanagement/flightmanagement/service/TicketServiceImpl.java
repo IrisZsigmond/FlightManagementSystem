@@ -2,47 +2,68 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Ticket;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
-import com.flightmanagement.flightmanagement.repository.AbstractRepository;
+import com.flightmanagement.flightmanagement.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-/**
- * Implementation of TicketService that provides business logic
- * and interacts with the Ticket repository to perform CRUD operations.
- */
 @Service
-public class TicketServiceImpl extends BaseServiceImpl<Ticket, String> implements TicketService {
+public class TicketServiceImpl implements TicketService {
 
-    public TicketServiceImpl(AbstractRepository<Ticket, String> repository) {
-        super(repository);
+    private final TicketRepository ticketRepository;
+
+    public TicketServiceImpl(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
     }
 
-    /// -------- Ticket-specific methods --------
+    // --------------- CRUD ------------------
+
+    @Override
+    public Ticket save(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
+
+    @Override
+    public List<Ticket> findAll() {
+        return ticketRepository.findAll();
+    }
+
+    @Override
+    public Optional<Ticket> findById(String id) {
+        return ticketRepository.findById(id);
+    }
+
+    @Override
+    public Ticket update(String id, Ticket updated) {
+        if (!ticketRepository.existsById(id))
+            throw new IllegalArgumentException("Ticket not found: " + id);
+
+        updated.setId(id);
+        return ticketRepository.save(updated);
+    }
+
+    @Override
+    public boolean delete(String id) {
+        ticketRepository.deleteById(id);
+        return true;
+    }
+
+    // --------------- CUSTOM ------------------
 
     @Override
     public List<Ticket> findByPassengerId(String passengerId) {
-        if (passengerId == null || passengerId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(t -> passengerId.equals(t.getPassengerId()))
-                .collect(Collectors.toList());
+        return ticketRepository.findByPassenger_Id(passengerId);
     }
 
     @Override
     public List<Ticket> findByFlightId(String flightId) {
-        if (flightId == null || flightId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(t -> flightId.equals(t.getFlightId()))
-                .collect(Collectors.toList());
+        return ticketRepository.findByFlight_Id(flightId);
     }
 
     @Override
     public List<Ticket> findByCategory(TicketCategory category) {
-        if (category == null) return List.of();
-        return repo().findAll().stream()
-                .filter(t -> category.equals(t.getCategory()))
-                .collect(Collectors.toList());
+        return ticketRepository.findByCategory(category);
     }
 
     @Override

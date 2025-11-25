@@ -1,81 +1,61 @@
 package com.flightmanagement.flightmanagement.mapper;
 
 import com.flightmanagement.flightmanagement.dto.FlightAssignmentForm;
-import com.flightmanagement.flightmanagement.model.AirlineEmployee;
-import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
-import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
 import com.flightmanagement.flightmanagement.service.FlightService;
+import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FlightAssignmentMapper {
 
     private final FlightService flightService;
-    private final AirlineEmployeeService airlineEmployeeService;
+    private final AirlineEmployeeService employeeService;
 
-    public FlightAssignmentMapper(FlightService flightService,
-                                  AirlineEmployeeService airlineEmployeeService) {
+    public FlightAssignmentMapper(
+            FlightService flightService,
+            AirlineEmployeeService employeeService
+    ) {
         this.flightService = flightService;
-        this.airlineEmployeeService = airlineEmployeeService;
+        this.employeeService = employeeService;
     }
 
     public FlightAssignment toEntity(FlightAssignmentForm form) {
         FlightAssignment fa = new FlightAssignment();
         fa.setId(form.getId());
 
-        // Flight
-        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
-            Flight flight = flightService.findById(form.getFlightId())
-                    .orElseThrow(() -> new IllegalArgumentException("Flight not found: " + form.getFlightId()));
-            fa.setFlight(flight);
-        } else {
-            fa.setFlight(null);
-        }
+        fa.setFlight(
+                flightService.findById(form.getFlightId())
+                        .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+        );
 
-        // AirlineEmployee
-        if (form.getAirlineEmployeeId() != null && !form.getAirlineEmployeeId().isBlank()) {
-            AirlineEmployee employee = airlineEmployeeService.findById(form.getAirlineEmployeeId())
-                    .orElseThrow(() -> new IllegalArgumentException("AirlineEmployee not found: " + form.getAirlineEmployeeId()));
-            fa.setAirlineEmployee(employee);
-        } else {
-            fa.setAirlineEmployee(null);
-        }
+        fa.setAirlineEmployee(
+                employeeService.findById(form.getAirlineEmployeeId())
+                        .orElseThrow(() -> new IllegalArgumentException("Employee not found"))
+        );
 
         return fa;
     }
 
-    public FlightAssignmentForm toForm(FlightAssignment fa) {
+    public FlightAssignmentForm toForm(FlightAssignment a) {
         FlightAssignmentForm form = new FlightAssignmentForm();
-        form.setId(fa.getId());
-        form.setFlightId(
-                fa.getFlight() != null ? fa.getFlight().getId() : null
-        );
-        form.setAirlineEmployeeId(
-                fa.getAirlineEmployee() != null ? fa.getAirlineEmployee().getId() : null
-        );
+
+        form.setId(a.getId());
+        form.setFlightId(a.getFlight().getId());
+        form.setAirlineEmployeeId(a.getAirlineEmployee().getId());
+
         return form;
     }
 
     public void updateEntityFromForm(FlightAssignment existing, FlightAssignmentForm form) {
-        // id de obicei nu se schimbă, deci îl lăsăm cum e
+        existing.setFlight(
+                flightService.findById(form.getFlightId())
+                        .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+        );
 
-        // Flight
-        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
-            Flight flight = flightService.findById(form.getFlightId())
-                    .orElseThrow(() -> new IllegalArgumentException("Flight not found: " + form.getFlightId()));
-            existing.setFlight(flight);
-        } else {
-            existing.setFlight(null);
-        }
-
-        // AirlineEmployee
-        if (form.getAirlineEmployeeId() != null && !form.getAirlineEmployeeId().isBlank()) {
-            AirlineEmployee employee = airlineEmployeeService.findById(form.getAirlineEmployeeId())
-                    .orElseThrow(() -> new IllegalArgumentException("AirlineEmployee not found: " + form.getAirlineEmployeeId()));
-            existing.setAirlineEmployee(employee);
-        } else {
-            existing.setAirlineEmployee(null);
-        }
+        existing.setAirlineEmployee(
+                employeeService.findById(form.getAirlineEmployeeId())
+                        .orElseThrow(() -> new IllegalArgumentException("Employee not found"))
+        );
     }
 }

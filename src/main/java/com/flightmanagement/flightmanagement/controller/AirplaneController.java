@@ -16,19 +16,14 @@ public class AirplaneController {
     private final AirplaneService airplaneService;
     private final AirplaneMapper airplaneMapper;
 
-    public AirplaneController(AirplaneService airplaneService,
-                              AirplaneMapper airplaneMapper) {
+    public AirplaneController(AirplaneService airplaneService, AirplaneMapper airplaneMapper) {
         this.airplaneService = airplaneService;
         this.airplaneMapper = airplaneMapper;
     }
 
     @GetMapping
     public String index(Model model) {
-        var airplanes = airplaneService.findAll().stream()
-                .map(a -> airplaneService.findAirplaneWithFlights(a.getId()).orElse(a))
-                .toList();
-
-        model.addAttribute("airplanes", airplanes);
+        model.addAttribute("airplanes", airplaneService.findAll());
         return "airplanes/index";
     }
 
@@ -41,33 +36,17 @@ public class AirplaneController {
     @PostMapping
     public String create(@ModelAttribute("airplaneForm") AirplaneForm form,
                          RedirectAttributes ra) {
-        Airplane airplane = airplaneMapper.toEntity(form);
-        airplaneService.save(airplane);
+        Airplane a = airplaneMapper.toEntity(form);
+        airplaneService.save(a);
         ra.addFlashAttribute("success", "Airplane created.");
-        return "redirect:/airplanes";
-    }
-
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id, RedirectAttributes ra) {
-        try {
-            airplaneService.delete(id); // will throw if flights exist (block policy)
-            ra.addFlashAttribute("success", "Airplane deleted.");
-        } catch (IllegalStateException ex) {
-            ra.addFlashAttribute("error", ex.getMessage());
-        }
         return "redirect:/airplanes";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        // Load airplane and attach a read-only projection of its flights
-        Airplane airplane = airplaneService.findAirplaneWithFlights(id).orElseThrow();
-
-        // Populate the form with scalar fields only
-        AirplaneForm form = airplaneMapper.toForm(airplane);
-
-        model.addAttribute("airplaneForm", form);
-        model.addAttribute("airplane", airplane); // contains airplane.flights for read-only display
+        Airplane a = airplaneService.findById(id).orElseThrow();
+        model.addAttribute("airplaneForm", airplaneMapper.toForm(a));
+        model.addAttribute("airplane", a);
         return "airplanes/edit";
     }
 
@@ -81,6 +60,17 @@ public class AirplaneController {
         airplaneService.update(id, existing);
 
         ra.addFlashAttribute("success", "Airplane updated.");
+        return "redirect:/airplanes";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id, RedirectAttributes ra) {
+        try {
+            airplaneService.delete(id);
+            ra.addFlashAttribute("success", "Airplane deleted.");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
         return "redirect:/airplanes";
     }
 }

@@ -2,6 +2,7 @@ package com.flightmanagement.flightmanagement.mapper;
 
 import com.flightmanagement.flightmanagement.dto.TicketForm;
 import com.flightmanagement.flightmanagement.model.Ticket;
+import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.service.FlightService;
 import com.flightmanagement.flightmanagement.service.PassengerService;
 import org.springframework.stereotype.Component;
@@ -21,67 +22,53 @@ public class TicketMapper {
     public Ticket toEntity(TicketForm form) {
         Ticket t = new Ticket();
         t.setId(form.getId());
-        t.setCategory(form.getCategory());
-        t.setPrice(form.getPrice());
+
+        // passenger
+        t.setPassenger(
+                passengerService.findById(form.getPassengerId())
+                        .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
+        );
+
+        // flight
+        t.setFlight(
+                flightService.findById(form.getFlightId())
+                        .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+        );
+
+        t.setCategory(TicketCategory.valueOf(form.getCategory()));
+        t.setPrice(Double.parseDouble(form.getPrice()));
         t.setSeatNumber(form.getSeatNumber());
-
-        if (form.getPassengerId() != null && !form.getPassengerId().isBlank()) {
-            t.setPassenger(
-                    passengerService.findById(form.getPassengerId())
-                            .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
-            );
-        } else {
-            t.setPassenger(null);
-        }
-
-        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
-            t.setFlight(
-                    flightService.findById(form.getFlightId())
-                            .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
-            );
-        } else {
-            t.setFlight(null);
-        }
 
         return t;
     }
 
-    public TicketForm toForm(Ticket ticket) {
+    public TicketForm toForm(Ticket t) {
         TicketForm form = new TicketForm();
-        form.setId(ticket.getId());
-        form.setCategory(ticket.getCategory());
-        form.setPrice(ticket.getPrice());
-        form.setSeatNumber(ticket.getSeatNumber());
-        form.setPassengerId(
-                ticket.getPassenger() != null ? ticket.getPassenger().getId() : null
-        );
-        form.setFlightId(
-                ticket.getFlight() != null ? ticket.getFlight().getId() : null
-        );
+
+        form.setId(t.getId());
+        form.setPassengerId(t.getPassenger().getId());
+        form.setFlightId(t.getFlight().getId());
+        form.setCategory(t.getCategory().name());
+        form.setPrice(String.valueOf(t.getPrice()));
+        form.setSeatNumber(t.getSeatNumber());
+
         return form;
     }
 
     public void updateEntityFromForm(Ticket existing, TicketForm form) {
-        existing.setCategory(form.getCategory());
-        existing.setPrice(form.getPrice());
+
+        existing.setPassenger(
+                passengerService.findById(form.getPassengerId())
+                        .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
+        );
+
+        existing.setFlight(
+                flightService.findById(form.getFlightId())
+                        .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
+        );
+
+        existing.setCategory(TicketCategory.valueOf(form.getCategory()));
+        existing.setPrice(Double.parseDouble(form.getPrice()));
         existing.setSeatNumber(form.getSeatNumber());
-
-        if (form.getPassengerId() != null && !form.getPassengerId().isBlank()) {
-            existing.setPassenger(
-                    passengerService.findById(form.getPassengerId())
-                            .orElseThrow(() -> new IllegalArgumentException("Passenger not found"))
-            );
-        } else {
-            existing.setPassenger(null);
-        }
-
-        if (form.getFlightId() != null && !form.getFlightId().isBlank()) {
-            existing.setFlight(
-                    flightService.findById(form.getFlightId())
-                            .orElseThrow(() -> new IllegalArgumentException("Flight not found"))
-            );
-        } else {
-            existing.setFlight(null);
-        }
     }
 }

@@ -8,18 +8,27 @@ public class AirplaneForm {
 
     public AirplaneForm() {}
 
-    public AirplaneForm(String id, int number, int capacity) {
-        this.id = id;
-        this.number = number;
-        this.capacity = capacity;
+    public String getId() {
+        return id;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public int getNumber() { return number; }
-    public void setNumber(int number) { this.number = number; }
+    public int getNumber() {
+        return number;
+    }
 
-    public int getCapacity() { return capacity; }
-    public void setCapacity(int capacity) { this.capacity = capacity; }
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
 }

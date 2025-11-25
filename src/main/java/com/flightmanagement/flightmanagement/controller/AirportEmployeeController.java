@@ -10,47 +10,47 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/airportemployees")
+@RequestMapping("/airport-employees")
 public class AirportEmployeeController {
 
-    private final AirportEmployeeService airportEmployeeService;
-    private final AirportEmployeeMapper airportEmployeeMapper;
+    private final AirportEmployeeService service;
+    private final AirportEmployeeMapper mapper;
 
-    public AirportEmployeeController(AirportEmployeeService airportEmployeeService,
-                                     AirportEmployeeMapper airportEmployeeMapper) {
-        this.airportEmployeeService = airportEmployeeService;
-        this.airportEmployeeMapper = airportEmployeeMapper;
+    public AirportEmployeeController(AirportEmployeeService service,
+                                     AirportEmployeeMapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("employees", airportEmployeeService.findAll());
-        return "airportemployees/index";
+        model.addAttribute("employees", service.findAll());
+        return "airport_employees/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("airportEmployeeForm", new AirportEmployeeForm());
-        return "airportemployees/new";
+        return "airport_employees/new";
     }
 
     @PostMapping
     public String create(@ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
                          RedirectAttributes ra) {
-        AirportEmployee e = airportEmployeeMapper.toEntity(form);
-        airportEmployeeService.save(e);
+
+        AirportEmployee e = mapper.toEntity(form);
+        service.save(e);
+
         ra.addFlashAttribute("success", "Airport employee created.");
-        return "redirect:/airportemployees";
+        return "redirect:/airport-employees";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        AirportEmployee e = airportEmployeeService.findById(id).orElseThrow();
-        AirportEmployeeForm form = airportEmployeeMapper.toForm(e);
-
-        model.addAttribute("airportEmployeeForm", form);
+        AirportEmployee e = service.findById(id).orElseThrow();
+        model.addAttribute("airportEmployeeForm", mapper.toForm(e));
         model.addAttribute("employee", e);
-        return "airportemployees/edit";
+        return "airport_employees/edit";
     }
 
     @PostMapping("/{id}")
@@ -58,19 +58,23 @@ public class AirportEmployeeController {
                          @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
                          RedirectAttributes ra) {
 
-        AirportEmployee existing = airportEmployeeService.findById(id).orElseThrow();
-        airportEmployeeMapper.updateEntityFromForm(existing, form);
-        airportEmployeeService.update(id, existing);
+        AirportEmployee existing = service.findById(id).orElseThrow();
+        mapper.updateEntityFromForm(existing, form);
+        service.update(id, existing);
 
         ra.addFlashAttribute("success", "Airport employee updated.");
-        return "redirect:/airportemployees";
+        return "redirect:/airport-employees";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id,
                          RedirectAttributes ra) {
-        airportEmployeeService.delete(id);
-        ra.addFlashAttribute("success", "Airport employee deleted.");
-        return "redirect:/airportemployees";
+        try {
+            service.delete(id);
+            ra.addFlashAttribute("success", "Airport employee deleted.");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/airport-employees";
     }
 }

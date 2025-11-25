@@ -1,57 +1,48 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
-import com.flightmanagement.flightmanagement.repository.AbstractRepository;
+import com.flightmanagement.flightmanagement.repository.PassengerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-/**
- * Implementation of PassengerService that provides business logic
- * and interacts with the Passenger repository to perform CRUD operations.
- */
 @Service
-public class PassengerServiceImpl extends BaseServiceImpl<Passenger, String> implements PassengerService {
+public class PassengerServiceImpl implements PassengerService {
 
+    private final PassengerRepository passengerRepository;
     private final TicketService ticketService;
 
-    public PassengerServiceImpl(AbstractRepository<Passenger, String> repository,
+    public PassengerServiceImpl(PassengerRepository passengerRepository,
                                 TicketService ticketService) {
-        super(repository);
+        this.passengerRepository = passengerRepository;
         this.ticketService = ticketService;
     }
-    /// -------- Passenger-specific methods --------
+
+    // ---------------- CRUD ----------------
 
     @Override
-    public List<Passenger> findByName(String name) {
-        return repo().findAll().stream()
-                .filter(p -> name != null && name.equalsIgnoreCase(p.getName()))
-                .collect(Collectors.toList());
+    public Passenger save(Passenger passenger) {
+        return passengerRepository.save(passenger);
     }
 
     @Override
-    public List<Passenger> findByCurrency(String currency) {
-        return repo().findAll().stream()
-                .filter(p -> currency != null && currency.equalsIgnoreCase(p.getCurrency()))
-                .collect(Collectors.toList());
-    }
-
-    // Returns the number of tickets associated with a given passenger
-    @Override
-    public int countTickets(String passengerId) {
-        return repo().findById(passengerId)
-                .map(p -> p.getTickets() != null ? p.getTickets().size() : 0)
-                .orElse(0);
+    public List<Passenger> findAll() {
+        return passengerRepository.findAll();
     }
 
     @Override
-    public Optional<Passenger> findWithTickets(String id) {
-        return repo().findById(id).map(p -> {
-            p.setTickets(ticketService.findByPassengerId(id));
-            return p;
-        });
+    public Optional<Passenger> findById(String id) {
+        return passengerRepository.findById(id);
+    }
+
+    @Override
+    public Passenger update(String id, Passenger updated) {
+        if (!passengerRepository.existsById(id))
+            throw new IllegalArgumentException("Passenger not found: " + id);
+
+        updated.setId(id);
+        return passengerRepository.save(updated);
     }
 
     @Override
@@ -60,8 +51,39 @@ public class PassengerServiceImpl extends BaseServiceImpl<Passenger, String> imp
         if (!tickets.isEmpty()) {
             throw new IllegalStateException(
                     "Cannot delete passenger '" + id +
-                            "' because tickets are still assigned (" + tickets.size() + ").");
+                            "' because tickets are still assigned (" + tickets.size() + ")."
+            );
         }
-        return super.delete(id);
+
+        passengerRepository.deleteById(id);
+        return true;
+    }
+
+    // ---------------- CUSTOM ----------------
+
+    @Override
+    public List<Passenger> findByName(String name) {
+        return passengerRepository.findByNameIgnoreCase(name);
+    }
+
+    @Override
+    public List<Passenger> findByCurrency(String currency) {
+        return passengerRepository.findByCurrencyIgnoreCase(currency);
+    }
+
+    @Override
+    public int countTickets(String passengerId) {
+        return passengerRepository.findById(passengerId)
+                .map(p -> p.getTickets() != null ? p.getTickets().size() : 0)
+                .orElse(0);
+    }
+
+    @Override
+    public Optional<Passenger> findWithTickets(String id) {
+        return passengerRepository.findById(id)
+                .map(p -> {
+                    p.setTickets(ticketService.findByPassengerId(id));
+                    return p;
+                });
     }
 }

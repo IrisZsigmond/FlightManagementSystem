@@ -14,21 +14,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PassengerController {
 
     private final PassengerService passengerService;
-    private final PassengerMapper passengerMapper;
+    private final PassengerMapper mapper;
 
     public PassengerController(PassengerService passengerService,
-                               PassengerMapper passengerMapper) {
+                               PassengerMapper mapper) {
         this.passengerService = passengerService;
-        this.passengerMapper = passengerMapper;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public String index(Model model) {
-        var passengers = passengerService.findAll().stream()
-                .map(p -> passengerService.findWithTickets(p.getId()).orElse(p))
-                .toList();
-
-        model.addAttribute("passengers", passengers);
+        model.addAttribute("passengers", passengerService.findAll());
         return "passengers/index";
     }
 
@@ -41,19 +37,19 @@ public class PassengerController {
     @PostMapping
     public String create(@ModelAttribute("passengerForm") PassengerForm form,
                          RedirectAttributes ra) {
-        Passenger passenger = passengerMapper.toEntity(form);
-        passengerService.save(passenger);
+
+        Passenger p = mapper.toEntity(form);
+        passengerService.save(p);
+
         ra.addFlashAttribute("success", "Passenger created.");
         return "redirect:/passengers";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        Passenger passenger = passengerService.findWithTickets(id).orElseThrow();
-        PassengerForm form = passengerMapper.toForm(passenger);
-
-        model.addAttribute("passengerForm", form);  // editabile
-        model.addAttribute("passenger", passenger); // conține lista de tickets pentru display
+        Passenger p = passengerService.findById(id).orElseThrow();
+        model.addAttribute("passengerForm", mapper.toForm(p));
+        model.addAttribute("passenger", p);
         return "passengers/edit";
     }
 
@@ -63,7 +59,7 @@ public class PassengerController {
                          RedirectAttributes ra) {
 
         Passenger existing = passengerService.findById(id).orElseThrow();
-        passengerMapper.updateEntityFromForm(existing, form);
+        mapper.updateEntityFromForm(existing, form);
         passengerService.update(id, existing);
 
         ra.addFlashAttribute("success", "Passenger updated.");
@@ -71,12 +67,11 @@ public class PassengerController {
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id,
-                         RedirectAttributes ra) {
+    public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
             passengerService.delete(id);
             ra.addFlashAttribute("success", "Passenger deleted.");
-        } catch (IllegalStateException ex) {
+        } catch (Exception ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/passengers";

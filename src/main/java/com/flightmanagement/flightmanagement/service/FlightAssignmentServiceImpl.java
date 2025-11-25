@@ -1,39 +1,62 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
-import com.flightmanagement.flightmanagement.repository.AbstractRepository;
+import com.flightmanagement.flightmanagement.repository.FlightAssignmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class FlightAssignmentServiceImpl extends BaseServiceImpl<FlightAssignment, String>
-        implements FlightAssignmentService {
+public class FlightAssignmentServiceImpl implements FlightAssignmentService {
 
-    public FlightAssignmentServiceImpl(AbstractRepository<FlightAssignment, String> repository) {
-        super(repository);
+    private final FlightAssignmentRepository repo;
+
+    public FlightAssignmentServiceImpl(FlightAssignmentRepository repo) {
+        this.repo = repo;
     }
 
-    /// -------- FlightAssignment-specific methods --------
+    // ---------------- CRUD ----------------
+
+    @Override
+    public FlightAssignment save(FlightAssignment assignment) {
+        return repo.save(assignment);
+    }
+
+    @Override
+    public List<FlightAssignment> findAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public Optional<FlightAssignment> findById(String id) {
+        return repo.findById(id);
+    }
+
+    @Override
+    public FlightAssignment update(String id, FlightAssignment updated) {
+        if (!repo.existsById(id))
+            throw new IllegalArgumentException("FlightAssignment not found: " + id);
+
+        updated.setId(id);
+        return repo.save(updated);
+    }
+
+    @Override
+    public boolean delete(String id) {
+        repo.deleteById(id);
+        return true;
+    }
+
+    // ---------------- Custom queries ----------------
 
     @Override
     public List<FlightAssignment> findByFlightId(String flightId) {
-        if (flightId == null || flightId.isBlank()) {
-            throw new IllegalArgumentException("Flight ID cannot be null or empty");
-        }
-        return repo().findAll().stream()
-                .filter(a -> flightId.equalsIgnoreCase(a.getFlightId()))
-                .collect(Collectors.toList());
+        return repo.findByFlight_Id(flightId);
     }
 
     @Override
-    public List<FlightAssignment> findByStaffId(String staffId) {
-        if (staffId == null || staffId.isBlank()) {
-            throw new IllegalArgumentException("Staff ID cannot be null or empty");
-        }
-        return repo().findAll().stream()
-                .filter(a -> staffId.equalsIgnoreCase(a.getStaffId()))
-                .collect(Collectors.toList());
+    public List<FlightAssignment> findByAirlineEmployeeId(String employeeId) {
+        return repo.findByAirlineEmployee_Id(employeeId);
     }
 }

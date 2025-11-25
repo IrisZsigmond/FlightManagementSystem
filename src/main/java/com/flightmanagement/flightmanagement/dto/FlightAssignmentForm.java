@@ -8,12 +8,24 @@ public class FlightAssignmentForm {
 
     public FlightAssignmentForm() {}
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getFlightId() { return flightId; }
-    public void setFlightId(String flightId) { this.flightId = flightId; }
+    public String getFlightId() {
+        return flightId;
+    }
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
+    }
 
-    public String getAirlineEmployeeId() { return airlineEmployeeId; }
-    public void setAirlineEmployeeId(String airlineEmployeeId) { this.airlineEmployeeId = airlineEmployeeId; }
+    public String getAirlineEmployeeId() {
+        return airlineEmployeeId;
+    }
+    public void setAirlineEmployeeId(String airlineEmployeeId) {
+        this.airlineEmployeeId = airlineEmployeeId;
+    }
 }

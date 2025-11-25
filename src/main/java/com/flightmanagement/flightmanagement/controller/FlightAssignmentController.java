@@ -7,63 +7,75 @@ import com.flightmanagement.flightmanagement.service.FlightAssignmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/flightassignments")
+@RequestMapping("/assignments")
 public class FlightAssignmentController {
 
-    private final FlightAssignmentService flightAssignmentService;
-    private final FlightAssignmentMapper flightAssignmentMapper;
+    private final FlightAssignmentService service;
+    private final FlightAssignmentMapper mapper;
 
-    public FlightAssignmentController(FlightAssignmentService flightAssignmentService,
-                                      FlightAssignmentMapper flightAssignmentMapper) {
-        this.flightAssignmentService = flightAssignmentService;
-        this.flightAssignmentMapper = flightAssignmentMapper;
+    public FlightAssignmentController(
+            FlightAssignmentService service,
+            FlightAssignmentMapper mapper
+    ) {
+        this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("assignments", flightAssignmentService.findAll());
-        return "flightassignments/index";
+        model.addAttribute("assignments", service.findAll());
+        return "assignments/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("assignmentForm", new FlightAssignmentForm());
-        return "flightassignments/new";
+        return "assignments/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("assignmentForm") FlightAssignmentForm form) {
-        FlightAssignment assignment = flightAssignmentMapper.toEntity(form);
-        flightAssignmentService.save(assignment);
-        return "redirect:/flightassignments";
+    public String create(@ModelAttribute("assignmentForm") FlightAssignmentForm form,
+                         RedirectAttributes ra) {
+
+        FlightAssignment a = mapper.toEntity(form);
+        service.save(a);
+
+        ra.addFlashAttribute("success", "Assignment created.");
+        return "redirect:/assignments";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        FlightAssignment assignment = flightAssignmentService.findById(id).orElseThrow();
-        FlightAssignmentForm form = flightAssignmentMapper.toForm(assignment);
-
-        model.addAttribute("assignmentForm", form);
-        model.addAttribute("assignment", assignment); // dacă vrei să afișezi read-only ceva în viitor
-        return "flightassignments/edit";
+        FlightAssignment a = service.findById(id).orElseThrow();
+        model.addAttribute("assignmentForm", mapper.toForm(a));
+        model.addAttribute("assignment", a);
+        return "assignments/edit";
     }
 
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @ModelAttribute("assignmentForm") FlightAssignmentForm form) {
+                         @ModelAttribute("assignmentForm") FlightAssignmentForm form,
+                         RedirectAttributes ra) {
 
-        FlightAssignment existing = flightAssignmentService.findById(id).orElseThrow();
-        flightAssignmentMapper.updateEntityFromForm(existing, form);
-        flightAssignmentService.update(id, existing);
+        FlightAssignment existing = service.findById(id).orElseThrow();
+        mapper.updateEntityFromForm(existing, form);
+        service.update(id, existing);
 
-        return "redirect:/flightassignments";
+        ra.addFlashAttribute("success", "Assignment updated.");
+        return "redirect:/assignments";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        flightAssignmentService.delete(id);
-        return "redirect:/flightassignments";
+    public String delete(@PathVariable String id, RedirectAttributes ra) {
+        try {
+            service.delete(id);
+            ra.addFlashAttribute("success", "Assignment deleted.");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/assignments";
     }
 }
