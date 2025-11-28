@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.controller;
 import com.flightmanagement.flightmanagement.dto.TicketForm;
 import com.flightmanagement.flightmanagement.mapper.TicketMapper;
 import com.flightmanagement.flightmanagement.model.Ticket;
+import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.service.TicketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class TicketController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("ticketForm", new TicketForm());
+        model.addAttribute("categories", TicketCategory.values());
         return "tickets/new";
     }
 
@@ -50,6 +52,7 @@ public class TicketController {
         Ticket t = ticketService.findById(id).orElseThrow();
         model.addAttribute("ticketForm", mapper.toForm(t));
         model.addAttribute("ticket", t);
+        model.addAttribute("categories", TicketCategory.values());
         return "tickets/edit";
     }
 

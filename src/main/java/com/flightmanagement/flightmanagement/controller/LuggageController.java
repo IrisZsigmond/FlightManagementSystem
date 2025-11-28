@@ -3,6 +3,8 @@ package com.flightmanagement.flightmanagement.controller;
 import com.flightmanagement.flightmanagement.dto.LuggageForm;
 import com.flightmanagement.flightmanagement.mapper.LuggageMapper;
 import com.flightmanagement.flightmanagement.model.Luggage;
+import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
+import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
 import com.flightmanagement.flightmanagement.service.LuggageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +27,15 @@ public class LuggageController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("luggages", luggageService.findAll());
-        return "luggages/index";
+        return "luggage/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("luggageForm", new LuggageForm());
-        return "luggages/new";
+        model.addAttribute("statuses", LuggageStatus.values());
+        model.addAttribute("sizes", LuggageSize.values());
+        return "luggage/new";
     }
 
     @PostMapping
@@ -50,7 +54,9 @@ public class LuggageController {
         Luggage luggage = luggageService.findById(id).orElseThrow();
         model.addAttribute("luggageForm", mapper.toForm(luggage));
         model.addAttribute("luggage", luggage);
-        return "luggages/edit";
+        model.addAttribute("statuses", LuggageStatus.values());
+        model.addAttribute("sizes", LuggageSize.values());
+        return "luggage/edit";
     }
 
     @PostMapping("/{id}")

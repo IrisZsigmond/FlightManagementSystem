@@ -29,9 +29,9 @@
     <h3>Assignments</h3>
     <ul>
         <li th:each="a : ${employee.assignments}"
-            th:text="${a.id + ' (flight ' + a.flightId + ')'}">
-            ASSIGN1 (flight FL1)
+            th:text="${a.id + ' (flight ' + a.flight.id + ')'}">
         </li>
+
         <li th:if="${employee.assignments == null or #lists.isEmpty(employee.assignments)}">
             No assignments for this employee.
         </li>

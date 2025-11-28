@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>All Tickets</h1>
 
 <a th:href="@{/tickets/new}">Add New Ticket</a>
@@ -14,8 +15,8 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Passenger ID</th>
-        <th>Flight ID</th>
+        <th>Passenger</th>
+        <th>Flight</th>
         <th>Category</th>
         <th>Price</th>
         <th>Seat Number</th>
@@ -23,19 +24,27 @@
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="ticket : ${tickets}">
+
         <td th:text="${ticket.id}">ID</td>
 
-        <!-- afișăm direct passengerId (string) -->
-        <td th:text="${ticket.passengerId != null ? ticket.passengerId : 'N/A'}">Passenger ID</td>
+        <!-- PASSENGER ID FIX -->
+        <td th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}">
+            Passenger ID
+        </td>
 
-        <td th:text="${ticket.flightId}">Flight ID</td>
+        <!-- FLIGHT ID FIX -->
+        <td th:text="${ticket.flight != null ? ticket.flight.id : 'N/A'}">
+            Flight ID
+        </td>
+
         <td th:text="${ticket.category}">Category</td>
         <td th:text="${ticket.price}">Price</td>
         <td th:text="${ticket.seatNumber}">Seat Number</td>
 
-        <!-- luggages: listă opțională, proiectată în memorie -->
+        <!-- LUGGAGES -->
         <td>
             <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">-</span>
             <span th:if="${ticket.luggages != null and !#lists.isEmpty(ticket.luggages)}">
@@ -50,10 +59,12 @@
             <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
+
             <form th:action="@{'/tickets/' + ${ticket.id} + '/edit'}" method="get">
                 <button type="submit">Edit</button>
             </form>
         </td>
+
     </tr>
     </tbody>
 </table>

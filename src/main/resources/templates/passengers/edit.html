@@ -23,10 +23,12 @@
 
     <h3>Tickets</h3>
     <ul>
+
+        <!-- FIXED VERSION -->
         <li th:each="t : ${passenger.tickets}"
-            th:text="${t.id + ' (flight ' + t.flightId + ')'}">
-            T1 (flight FL1)
+            th:text="${t.id + ' (flight ' + (t.flight != null ? t.flight.id : 'N/A') + ')'}">
         </li>
+
         <li th:if="${passenger.tickets == null or #lists.isEmpty(passenger.tickets)}">
             No tickets for this passenger.
         </li>

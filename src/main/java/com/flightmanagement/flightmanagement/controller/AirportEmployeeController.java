@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/airport-employees")
+@RequestMapping("/airportemployees")
 public class AirportEmployeeController {
 
     private final AirportEmployeeService service;
@@ -25,13 +25,13 @@ public class AirportEmployeeController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("employees", service.findAll());
-        return "airport_employees/index";
+        return "airportemployees/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("airportEmployeeForm", new AirportEmployeeForm());
-        return "airport_employees/new";
+        return "airportemployees/new";
     }
 
     @PostMapping
@@ -42,7 +42,7 @@ public class AirportEmployeeController {
         service.save(e);
 
         ra.addFlashAttribute("success", "Airport employee created.");
-        return "redirect:/airport-employees";
+        return "redirect:/airportemployees";
     }
 
     @GetMapping("/{id}/edit")
@@ -50,7 +50,7 @@ public class AirportEmployeeController {
         AirportEmployee e = service.findById(id).orElseThrow();
         model.addAttribute("airportEmployeeForm", mapper.toForm(e));
         model.addAttribute("employee", e);
-        return "airport_employees/edit";
+        return "airportemployees/edit";
     }
 
     @PostMapping("/{id}")
@@ -63,7 +63,7 @@ public class AirportEmployeeController {
         service.update(id, existing);
 
         ra.addFlashAttribute("success", "Airport employee updated.");
-        return "redirect:/airport-employees";
+        return "redirect:/airportemployees";
     }
 
     @PostMapping("/{id}/delete")
@@ -75,6 +75,7 @@ public class AirportEmployeeController {
         } catch (Exception ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/airport-employees";
+        return "redirect:/airportemployees";
     }
 }
+

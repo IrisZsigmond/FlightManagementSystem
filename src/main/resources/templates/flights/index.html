@@ -1,33 +1,20 @@
 <!DOCTYPE html>
-<!-- The standard HTML5 document declaration -->
 <html xmlns:th="http://www.thymeleaf.org">
-<!-- "xmlns:th" defines the Thymeleaf XML namespace.
-     It allows us to use all Thymeleaf attributes starting with 'th:' (like th:text, th:each, th:href, etc.) -->
-
 <head>
     <meta charset="UTF-8">
     <title>Flights List</title>
-
-    <!-- Link to a CSS stylesheet located under: src/main/resources/static/css/style.css -->
-    <!-- The @{} syntax in th:href dynamically builds the correct path according to your application's context root -->
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
 <body>
+
 <h1>All Flights</h1>
 
-<!-- Optional flash messages (from RedirectAttributes) -->
 <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<!-- ========================================== -->
-<!-- 1. Link to create a new Flight -->
-<!-- ========================================== -->
 <a th:href="@{/flights/new}">Add New Flight</a>
 
-<!-- ========================================== -->
-<!-- 2. Table displaying all flights -->
-<!-- ========================================== -->
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
@@ -41,23 +28,25 @@
     </thead>
 
     <tbody>
-    <!-- Loop over all flights from the model attribute "flights" -->
     <tr th:each="flight : ${flights}">
-
         <td th:text="${flight.id}">ID</td>
         <td th:text="${flight.name}">Name</td>
         <td th:text="${flight.departureTime}">Departure Time</td>
-        <td th:text="${flight.airplaneId}">Airplane ID</td>
-        <td th:text="${flight.noticeBoardId}">Notice Board ID</td>
+
+        <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
+            Airplane ID
+        </td>
+
+        <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
+            Notice Board ID
+        </td>
 
         <td>
-            <!-- Edit button: goes to GET /flights/{id}/edit -->
             <form th:action="@{'/flights/' + ${flight.id} + '/edit'}"
                   method="get" style="display:inline;">
                 <button type="submit">Edit</button>
             </form>
 
-            <!-- Delete button: posts to POST /flights/{id}/delete -->
             <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>

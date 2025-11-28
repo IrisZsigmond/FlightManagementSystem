@@ -9,7 +9,7 @@
 
 <h1>Edit Luggage</h1>
 
-<form th:action="@{'/luggage/' + ${luggageForm.id}}"
+<form th:action="@{'/luggages/' + ${luggageForm.id}}"
       th:object="${luggageForm}" method="post">
 
     <label>ID:</label>
@@ -21,23 +21,22 @@
     <label>Status:</label>
     <select th:field="*{status}">
         <option th:each="s : ${statuses}"
-                th:value="${s}"
-                th:text="${s}">
+                th:value="${s}" th:text="${s}">
         </option>
     </select>
 
     <label>Size:</label>
     <select th:field="*{size}">
         <option th:each="sz : ${sizes}"
-                th:value="${sz}"
-                th:text="${sz}">
+                th:value="${sz}" th:text="${sz}">
         </option>
     </select>
 
     <div class="form-actions">
         <button type="submit">Save</button>
-        <a th:href="@{/luggage}">Cancel</a>
+        <a th:href="@{/luggages}">Cancel</a>
     </div>
+
 </form>
 
 </body>

@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.controller;
 import com.flightmanagement.flightmanagement.dto.AirlineEmployeeForm;
 import com.flightmanagement.flightmanagement.mapper.AirlineEmployeeMapper;
 import com.flightmanagement.flightmanagement.model.AirlineEmployee;
+import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/airline-employees")
+@RequestMapping("/airlineemployees")
 public class AirlineEmployeeController {
 
     private final AirlineEmployeeService service;
@@ -25,14 +26,16 @@ public class AirlineEmployeeController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("employees", service.findAll());
-        return "airline_employees/index";
+        return "airlineemployees/index";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("airlineEmployeeForm", new AirlineEmployeeForm());
-        return "airline_employees/new";
+        model.addAttribute("roles", AirlineRole.values());
+        return "airlineemployees/new";
     }
+
 
     @PostMapping
     public String create(@ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
@@ -42,7 +45,7 @@ public class AirlineEmployeeController {
         service.save(e);
 
         ra.addFlashAttribute("success", "Airline employee created.");
-        return "redirect:/airline-employees";
+        return "redirect:/airlineemployees";
     }
 
     @GetMapping("/{id}/edit")
@@ -50,7 +53,8 @@ public class AirlineEmployeeController {
         AirlineEmployee e = service.findById(id).orElseThrow();
         model.addAttribute("airlineEmployeeForm", mapper.toForm(e));
         model.addAttribute("employee", e);
-        return "airline_employees/edit";
+        model.addAttribute("roles", AirlineRole.values());
+        return "airlineemployees/edit";
     }
 
     @PostMapping("/{id}")
@@ -63,7 +67,7 @@ public class AirlineEmployeeController {
         service.update(id, existing);
 
         ra.addFlashAttribute("success", "Airline employee updated.");
-        return "redirect:/airline-employees";
+        return "redirect:/airlineemployees";
     }
 
     @PostMapping("/{id}/delete")
@@ -75,6 +79,6 @@ public class AirlineEmployeeController {
         } catch (Exception ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/airline-employees";
+        return "redirect:/airlineemployees";
     }
 }

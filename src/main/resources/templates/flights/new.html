@@ -5,11 +5,14 @@
     <title>Create Flight</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
+
 <body>
 
 <h1>Create Flight</h1>
 
-<form th:action="@{/flights}" th:object="${flightForm}" method="post">
+<form th:action="@{/flights}"
+      th:object="${flightForm}"
+      method="post">
 
     <label for="id">ID:</label>
     <input id="id" type="text" th:field="*{id}" required />
@@ -28,8 +31,10 @@
     <label for="airplaneId">Airplane ID:</label>
     <input id="airplaneId" type="text" th:field="*{airplaneId}" />
 
-    <button type="submit">Create</button>
-    <a th:href="@{/flights}">Cancel</a>
+    <div class="form-actions">
+        <button type="submit">Create</button>
+        <a th:href="@{/flights}" class="btn secondary">Cancel</a>
+    </div>
 </form>
 
 </body>

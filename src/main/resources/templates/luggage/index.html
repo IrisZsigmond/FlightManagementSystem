@@ -12,31 +12,35 @@
 <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-<a th:href="@{/luggage/new}">Add New Luggage</a>
+<a th:href="@{/luggages/new}">Add New Luggage</a>
 
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Ticket ID</th>
+        <th>Ticket</th>
         <th>Status</th>
         <th>Size</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="l : ${luggages}">
         <td th:text="${l.id}">ID</td>
-        <td th:text="${l.ticketId}">Ticket ID</td>
+
+        <!-- Show ticket.id safely -->
+        <td th:text="${l.ticket != null ? l.ticket.id : 'N/A'}">Ticket</td>
+
         <td th:text="${l.status}">Status</td>
         <td th:text="${l.size}">Size</td>
+
         <td>
-            <form th:action="@{'/luggage/' + ${l.id} + '/edit'}"
-                  method="get" style="display:inline;">
+            <form th:action="@{'/luggages/' + ${l.id} + '/edit'}" method="get" style="display:inline;">
                 <button type="submit">Edit</button>
             </form>
-            <form th:action="@{'/luggage/' + ${l.id} + '/delete'}"
-                  method="post" style="display:inline;">
+
+            <form th:action="@{'/luggages/' + ${l.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

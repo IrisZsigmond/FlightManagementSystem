@@ -9,7 +9,6 @@
 
 <h1>All Flight Assignments</h1>
 
-<!-- Flash messages (dacă vei folosi RedirectAttributes) -->
 <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
@@ -20,15 +19,20 @@
     <tr>
         <th>ID</th>
         <th>Flight ID</th>
-        <th>Staff ID</th>
+        <th>Employee ID</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="a : ${assignments}">
         <td th:text="${a.id}">ID</td>
-        <td th:text="${a.flightId}">Flight ID</td>
-        <td th:text="${a.staffId}">Staff ID</td>
+
+        <!-- folosim a.flight.id -->
+        <td th:text="${a.flight != null ? a.flight.id : 'N/A'}">Flight ID</td>
+
+        <!-- folosim a.airlineEmployee.id -->
+        <td th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'N/A'}">Employee ID</td>
+
         <td>
             <form th:action="@{'/flightassignments/' + ${a.id} + '/edit'}"
                   method="get" style="display:inline;">
