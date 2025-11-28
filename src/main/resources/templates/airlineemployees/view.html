@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Airline Employee Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Airline Employee Details</h1>
+
+<div class="details-container">
+
+    <p><strong>ID:</strong> <span th:text="${employee.id}">EMP01</span></p>
+
+    <p><strong>Name:</strong> <span th:text="${employee.name}">John Doe</span></p>
+
+    <p><strong>Role:</strong> <span th:text="${employee.role}">PILOT</span></p>
+
+    <p><strong>Assigned to Flights:</strong></p>
+
+    <ul>
+        <li th:each="a : ${employee.assignments}">
+            <span th:text="${a.id + ' (flight ' + a.flight.id + ')'}">FA1 (flight F1)</span>
+        </li>
+
+        <li th:if="${employee.assignments == null or #lists.isEmpty(employee.assignments)}">
+            No flight assignments.
+        </li>
+    </ul>
+
+</div>
+
+<div class="form-actions">
+    <a th:href="@{/airlineemployees}" class="btn">Back</a>
+
+    <a th:href="@{'/airlineemployees/' + ${employee.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/airlineemployees/' + ${employee.id} + '/delete'}"
+          method="post" style="display:inline;">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -63,6 +63,10 @@
             <form th:action="@{'/tickets/' + ${ticket.id} + '/edit'}" method="get">
                 <button type="submit">Edit</button>
             </form>
+
+            <form th:action="@{'/tickets/' + ${ticket.id}}" method="get" style="display:inline;">
+                <button type="submit">View</button>
+            </form>
         </td>
 
     </tr>

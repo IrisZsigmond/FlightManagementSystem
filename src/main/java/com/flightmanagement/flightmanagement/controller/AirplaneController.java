@@ -73,4 +73,11 @@ public class AirplaneController {
         }
         return "redirect:/airplanes";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        Airplane airplane = airplaneService.findById(id).orElseThrow();
+        model.addAttribute("airplane", airplane);
+        return "airplanes/view";
+    }
 }

@@ -77,5 +77,13 @@ public class AirportEmployeeController {
         }
         return "redirect:/airportemployees";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        AirportEmployee employee = service.findById(id).orElseThrow();
+        model.addAttribute("employee", employee);
+        return "airportemployees/view";
+    }
+
 }
 

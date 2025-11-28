@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+<h1>Flight Details</h1>
+
+<div class="details-container">
+
+    <p><strong>ID:</strong> <span th:text="${flight.id}">F01</span></p>
+
+    <p><strong>Name:</strong> <span th:text="${flight.name}">Flight Name</span></p>
+
+    <p><strong>Departure Time:</strong>
+        <span th:text="${flight.departureTime != null ? flight.departureTime : 'N/A'}">10:00</span>
+    </p>
+
+    <p><strong>Airplane:</strong>
+        <span th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">A01</span>
+    </p>
+
+    <p><strong>Notice Board:</strong>
+        <span th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">NB01</span>
+    </p>
+
+    <hr>
+
+    <h3>Tickets</h3>
+    <ul>
+        <li th:each="t : ${flight.tickets}">
+            <span th:text="${t.id + ' (Seat ' + t.seatNumber + ')'}">T1 (Seat 12A)</span>
+        </li>
+
+        <li th:if="${flight.tickets == null or #lists.isEmpty(flight.tickets)}">
+            No tickets for this flight.
+        </li>
+    </ul>
+
+    <hr>
+
+    <h3>Assignments</h3>
+    <ul>
+        <li th:each="a : ${flight.flightAssignments}">
+            <span th:text="${a.id + ' - ' + a.airlineEmployee.name}">FA1 - John Doe</span>
+        </li>
+
+        <li th:if="${flight.flightAssignments == null or #lists.isEmpty(flight.flightAssignments)}">
+            No assignments for this flight.
+        </li>
+    </ul>
+
+</div>
+
+<div class="form-actions">
+    <a th:href="@{/flights}" class="btn">Back</a>
+
+    <a th:href="@{'/flights/' + ${flight.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
+          method="post" style="display:inline;">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

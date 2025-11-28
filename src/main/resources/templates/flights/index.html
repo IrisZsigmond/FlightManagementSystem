@@ -51,6 +51,10 @@
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
+
+            <form th:action="@{'/flights/' + ${flight.id}}" method="get" style="display:inline;">
+                <button type="submit">View</button>
+            </form>
         </td>
     </tr>
     </tbody>

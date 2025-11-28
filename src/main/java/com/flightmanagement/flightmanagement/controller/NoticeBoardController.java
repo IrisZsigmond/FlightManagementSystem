@@ -74,4 +74,11 @@ public class NoticeBoardController {
         }
         return "redirect:/noticeboards";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        NoticeBoard board = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("board", board);
+        return "noticeboards/view";
+    }
 }

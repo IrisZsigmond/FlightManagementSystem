@@ -81,4 +81,11 @@ public class FlightController {
         ra.addFlashAttribute("success", "Flight updated.");
         return "redirect:/flights";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        Flight flight = flightService.findWithTicketsAndAssignments(id).orElseThrow();
+        model.addAttribute("flight", flight);
+        return "flights/view";
+    }
 }

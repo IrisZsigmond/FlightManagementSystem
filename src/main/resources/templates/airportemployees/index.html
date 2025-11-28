@@ -35,9 +35,14 @@
                   method="get" style="display:inline;">
                 <button type="submit">Edit</button>
             </form>
+
             <form th:action="@{'/airportemployees/' + ${e.id} + '/delete'}"
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>
+            </form>
+
+            <form th:action="@{'/airportemployees/' + ${e.id}}" method="get" style="display:inline;">
+                <button type="submit">View</button>
             </form>
         </td>
     </tr>

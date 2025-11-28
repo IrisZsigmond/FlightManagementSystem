@@ -82,4 +82,11 @@ public class LuggageController {
         }
         return "redirect:/luggages";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        Luggage luggage = luggageService.findById(id).orElseThrow();
+        model.addAttribute("luggage", luggage);
+        return "luggage/view";
+    }
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Luggage Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Luggage Details</h1>
+
+<div class="details-container">
+
+    <p><strong>ID:</strong>
+        <span th:text="${luggage.id}">LG1</span>
+    </p>
+
+    <p><strong>Ticket:</strong>
+        <span th:text="${luggage.ticket != null ? luggage.ticket.id : 'N/A'}">T001</span>
+    </p>
+
+    <p><strong>Status:</strong>
+        <span th:text="${luggage.status}">CHECKED_IN</span>
+    </p>
+
+    <p><strong>Size:</strong>
+        <span th:text="${luggage.size}">LARGE</span>
+    </p>
+
+</div>
+
+<div class="form-actions">
+    <a th:href="@{/luggages}" class="btn">Back</a>
+
+    <a th:href="@{'/luggages/' + ${luggage.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/luggages/' + ${luggage.id} + '/delete'}"
+          method="post" style="display:inline;">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

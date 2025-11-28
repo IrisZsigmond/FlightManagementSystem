@@ -81,4 +81,12 @@ public class AirlineEmployeeController {
         }
         return "redirect:/airlineemployees";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        AirlineEmployee employee = service.findById(id).orElseThrow();
+        model.addAttribute("employee", employee);
+        return "airlineemployees/view";
+    }
+
 }

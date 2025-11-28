@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Airplane Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Airplane Details</h1>
+
+<div class="details-container">
+
+    <p><strong>ID:</strong>
+        <span th:text="${airplane.id}">A001</span>
+    </p>
+
+    <p><strong>Number:</strong>
+        <span th:text="${airplane.number}">10011</span>
+    </p>
+
+    <p><strong>Capacity:</strong>
+        <span th:text="${airplane.capacity}">400</span>
+    </p>
+
+    <h3>Flights Using This Aircraft</h3>
+
+    <ul>
+
+        <!-- Loop flights -->
+        <li th:each="f : ${airplane.flights}"
+            th:text="${f.id + ' - ' +
+                     (f.name != null ? f.name : 'Unknown') +
+                     ' (Departure: ' +
+                     (f.departureTime != null ? f.departureTime : 'N/A') +
+                     ')'}">
+            F001 - Flight name (Departure: TIME)
+        </li>
+
+        <!-- If empty -->
+        <li th:if="${#lists.isEmpty(airplane.flights)}">
+            No flights assigned to this airplane.
+        </li>
+
+    </ul>
+</div>
+
+<div class="form-actions">
+    <a th:href="@{/airplanes}" class="btn">Back</a>
+
+    <a th:href="@{'/airplanes/' + ${airplane.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}"
+          method="post" style="display:inline;"
+          onsubmit="return confirm('Are you sure?');">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

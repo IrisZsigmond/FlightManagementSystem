@@ -52,6 +52,11 @@
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
+
+            <form th:action="@{'/noticeboards/' + ${board.id}}"
+                  method="get" style="display:inline;">
+                <button type="submit">View</button>
+            </form>
         </td>
     </tr>
     </tbody>

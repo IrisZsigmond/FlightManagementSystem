@@ -79,4 +79,11 @@ public class TicketController {
         }
         return "redirect:/tickets";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        Ticket ticket = ticketService.findById(id).orElseThrow();
+        model.addAttribute("ticket", ticket);
+        return "tickets/view";
+    }
 }

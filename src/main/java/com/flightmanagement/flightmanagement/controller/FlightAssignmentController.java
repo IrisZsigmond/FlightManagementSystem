@@ -80,4 +80,12 @@ public class FlightAssignmentController {
         }
         return "redirect:/flightassignments";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        FlightAssignment assignment = service.findById(id).orElseThrow();
+        model.addAttribute("assignment", assignment);
+        return "flightassignments/view";
+    }
+
 }

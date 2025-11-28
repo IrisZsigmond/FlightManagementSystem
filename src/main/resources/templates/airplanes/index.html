@@ -9,7 +9,6 @@
 
 <h1>All Airplanes</h1>
 
-<!-- Flash messages -->
 <div th:if="${error}" class="alert error" th:text="${error}"></div>
 <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
@@ -27,32 +26,47 @@
         </tr>
         </thead>
         <tbody>
+
         <tr th:each="airplane : ${airplanes}">
             <td th:text="${airplane.id}">ID</td>
+
             <td th:text="${airplane.number}">Number</td>
+
             <td th:text="${airplane.capacity}">Capacity</td>
 
             <td>
                 <span th:if="${#lists.isEmpty(airplane.flights)}">—</span>
-                <span th:if="${!#lists.isEmpty(airplane.flights)}"
-                      th:each="f, iter : ${airplane.flights}"
-                      th:text="${(f.id != null ? f.id : 'N/A') + (f.name != null ? ' - ' + f.name : '') + (iter.last ? '' : ', ')}">
-                    F001 - Example
+
+                <span th:each="f, iter : ${airplane.flights}"
+                      th:if="${!#lists.isEmpty(airplane.flights)}"
+                      th:text="${f.id +
+                              (f.name != null ? ' - ' + f.name : '') +
+                              (iter.last ? '' : ', ')}">
                 </span>
             </td>
 
             <td class="actions">
+
+                <!-- View -->
+                <a th:href="@{'/airplanes/' + ${airplane.id}}" class="btn">View</a>
+
+                <!-- Edit -->
                 <a th:href="@{'/airplanes/' + ${airplane.id} + '/edit'}" class="btn">Edit</a>
+
+                <!-- Delete -->
                 <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}"
                       method="post" class="inline-form"
                       onsubmit="return confirm('Delete this airplane?');">
                     <button type="submit" class="btn danger">Delete</button>
                 </form>
+
             </td>
         </tr>
+
         <tr th:if="${#lists.isEmpty(airplanes)}">
             <td colspan="5">No airplanes yet.</td>
         </tr>
+
         </tbody>
     </table>
 </div>

@@ -76,4 +76,11 @@ public class PassengerController {
         }
         return "redirect:/passengers";
     }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        Passenger passenger = passengerService.findById(id).orElseThrow();
+        model.addAttribute("passenger", passenger);
+        return "passengers/view";
+    }
 }
