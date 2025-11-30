@@ -9,23 +9,39 @@
 
 <h1>Create Airplane</h1>
 
-<form th:action="@{/airplanes}" th:object="${airplaneForm}" method="post">
+<form th:action="@{/airplanes}"
+      th:object="${airplaneForm}"
+      method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <!-- ID -->
+    <div>
+        <label for="id">ID:</label>
+        <input id="id" type="text" th:field="*{id}" />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label for="number">Number:</label>
-    <input id="number" type="number" th:field="*{number}" required />
+    <!-- NUMBER -->
+    <div>
+        <label for="number">Number:</label>
+        <input id="number" type="number" th:field="*{number}" />
+        <span class="error" th:if="${#fields.hasErrors('number')}"
+              th:errors="*{number}"></span>
+    </div>
 
-    <label for="capacity">Capacity:</label>
-    <input id="capacity" type="number" th:field="*{capacity}" required />
-
-    <!-- Note: Flights are NOT assigned here. They are set on the Flight form via flight.airplaneId. -->
+    <!-- CAPACITY -->
+    <div>
+        <label for="capacity">Capacity:</label>
+        <input id="capacity" type="number" th:field="*{capacity}" />
+        <span class="error" th:if="${#fields.hasErrors('capacity')}"
+              th:errors="*{capacity}"></span>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>
         <a th:href="@{/airplanes}" class="btn secondary">Cancel</a>
     </div>
+
 </form>
 
 </body>

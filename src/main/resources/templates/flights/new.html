@@ -14,27 +14,64 @@
       th:object="${flightForm}"
       method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <!-- ID -->
+    <div>
+        <label for="id">ID:</label>
+        <input id="id" type="text" th:field="*{id}" />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label for="name">Name:</label>
-    <input id="name" type="text" th:field="*{name}" required />
+    <!-- NAME -->
+    <div>
+        <label for="name">Name:</label>
+        <input id="name" type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label for="departureTime">Departure Time (HH:mm):</label>
-    <input id="departureTime" type="text"
-           th:field="*{departureTime}"
-           placeholder="10:45" />
+    <!-- DEPARTURE TIME -->
+    <div>
+        <label for="departureTime">Departure Time (HH:mm):</label>
+        <input id="departureTime" type="text"
+               th:field="*{departureTime}" placeholder="10:45" />
+        <span class="error" th:if="${#fields.hasErrors('departureTime')}"
+              th:errors="*{departureTime}"></span>
+    </div>
 
-    <label for="noticeBoardId">Notice Board ID:</label>
-    <input id="noticeBoardId" type="text" th:field="*{noticeBoardId}" />
+    <!-- NOTICEBOARD DROPDOWN -->
+    <div>
+        <label for="noticeBoardId">Notice Board:</label>
+        <select id="noticeBoardId" th:field="*{noticeBoardId}">
+            <option value="" disabled selected>Select notice board</option>
+            <option th:each="nb : ${noticeBoards}"
+                    th:value="${nb.id}"
+                    th:text="${'(' + nb.id + ') ' + nb.date}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('noticeBoardId')}"
+              th:errors="*{noticeBoardId}"></span>
+    </div>
 
-    <label for="airplaneId">Airplane ID:</label>
-    <input id="airplaneId" type="text" th:field="*{airplaneId}" />
+    <!-- AIRPLANE DROPDOWN -->
+    <div>
+        <label for="airplaneId">Airplane:</label>
+        <select id="airplaneId" th:field="*{airplaneId}">
+            <option value="" disabled selected>Select airplane</option>
+            <option th:each="a : ${airplanes}"
+                    th:value="${a.id}"
+                    th:text="${a.id + ' (no. ' + a.number + ')'}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('airplaneId')}"
+              th:errors="*{airplaneId}"></span>
+    </div>
 
     <div class="form-actions">
-        <button type="submit">Create</button>
+        <button type="submit" class="btn">Create</button>
         <a th:href="@{/flights}" class="btn secondary">Cancel</a>
     </div>
+
 </form>
 
 </body>

@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.dto.AirplaneForm;
 import com.flightmanagement.flightmanagement.mapper.AirplaneMapper;
 import com.flightmanagement.flightmanagement.model.Airplane;
 import com.flightmanagement.flightmanagement.service.AirplaneService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,10 +36,19 @@ public class AirplaneController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("airplaneForm") AirplaneForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("airplaneForm") AirplaneForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            return "airplanes/new";
+        }
+
         Airplane a = airplaneMapper.toEntity(form);
         airplaneService.save(a);
+
         ra.addFlashAttribute("success", "Airplane created.");
         return "redirect:/airplanes";
     }
@@ -51,9 +62,18 @@ public class AirplaneController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("airplaneForm") AirplaneForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("airplaneForm") AirplaneForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            Airplane existing = airplaneService.findById(id).orElseThrow();
+            model.addAttribute("airplane", existing);
+            return "airplanes/edit";
+        }
 
         Airplane existing = airplaneService.findById(id).orElseThrow();
         airplaneMapper.updateEntityFromForm(existing, form);

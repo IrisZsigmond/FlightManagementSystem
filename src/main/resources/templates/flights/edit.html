@@ -14,35 +14,72 @@
       th:object="${flightForm}"
       method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
+    <!-- ID -->
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required />
+    <!-- NAME -->
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label>Departure Time (HH:mm):</label>
-    <input type="text" th:field="*{departureTime}" placeholder="10:45" />
+    <!-- DEPARTURE TIME -->
+    <div>
+        <label>Departure Time (HH:mm):</label>
+        <input type="text" th:field="*{departureTime}" placeholder="10:45" />
+        <span class="error" th:if="${#fields.hasErrors('departureTime')}"
+              th:errors="*{departureTime}"></span>
+    </div>
 
-    <label>Notice Board ID:</label>
-    <input type="text" th:field="*{noticeBoardId}" />
+    <!-- NOTICEBOARD -->
+    <div>
+        <label>Notice Board:</label>
+        <select th:field="*{noticeBoardId}">
+            <option value="" disabled>Select notice board</option>
+            <option th:each="nb : ${noticeBoards}"
+                    th:value="${nb.id}"
+                    th:text="${'(' + nb.id + ') ' + nb.date}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('noticeBoardId')}"
+              th:errors="*{noticeBoardId}"></span>
+    </div>
 
-    <label>Airplane ID:</label>
-    <input type="text" th:field="*{airplaneId}" />
+    <!-- AIRPLANE -->
+    <div>
+        <label>Airplane:</label>
+        <select th:field="*{airplaneId}">
+            <option value="" disabled>Select airplane</option>
+            <option th:each="a : ${airplanes}"
+                    th:value="${a.id}"
+                    th:text="${a.id + ' (no. ' + a.number + ')'}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('airplaneId')}"
+              th:errors="*{airplaneId}"></span>
+    </div>
 
+    <!-- TICKETS -->
     <h3>Assigned Tickets</h3>
     <ul>
         <li th:each="t : ${flight.tickets}"
-            th:text="${t.id + (t.category != null ? ' - ' + t.category : '')}">
-            SAMPLE TICKET
+            th:text="${t.id + ' - ' + t.category}">
         </li>
         <li th:if="${#lists.isEmpty(flight.tickets)}">No tickets assigned.</li>
     </ul>
 
+    <!-- STAFF -->
     <h3>Assigned Staff</h3>
     <ul>
         <li th:each="a : ${flight.flightAssignments}"
-            th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'Unknown staff'}">
-            STAFF
+            th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'Unknown'}">
         </li>
         <li th:if="${#lists.isEmpty(flight.flightAssignments)}">No staff assignments.</li>
     </ul>

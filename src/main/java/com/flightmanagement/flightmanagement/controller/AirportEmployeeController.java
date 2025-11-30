@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.dto.AirportEmployeeForm;
 import com.flightmanagement.flightmanagement.mapper.AirportEmployeeMapper;
 import com.flightmanagement.flightmanagement.model.AirportEmployee;
 import com.flightmanagement.flightmanagement.service.AirportEmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,8 +37,15 @@ public class AirportEmployeeController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            return "airportemployees/new";
+        }
 
         AirportEmployee e = mapper.toEntity(form);
         service.save(e);
@@ -54,9 +63,18 @@ public class AirportEmployeeController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            AirportEmployee existing = service.findById(id).orElseThrow();
+            model.addAttribute("employee", existing);
+            return "airportemployees/edit";
+        }
 
         AirportEmployee existing = service.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
@@ -67,8 +85,7 @@ public class AirportEmployeeController {
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id,
-                         RedirectAttributes ra) {
+    public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
             service.delete(id);
             ra.addFlashAttribute("success", "Airport employee deleted.");
@@ -78,12 +95,11 @@ public class AirportEmployeeController {
         return "redirect:/airportemployees";
     }
 
+
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model) {
         AirportEmployee employee = service.findById(id).orElseThrow();
         model.addAttribute("employee", employee);
         return "airportemployees/view";
     }
-
 }
-

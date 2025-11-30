@@ -4,8 +4,12 @@ import com.flightmanagement.flightmanagement.dto.FlightForm;
 import com.flightmanagement.flightmanagement.mapper.FlightMapper;
 import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.service.FlightService;
+import com.flightmanagement.flightmanagement.service.NoticeBoardService;
+import com.flightmanagement.flightmanagement.service.AirplaneService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -15,11 +19,17 @@ public class FlightController {
 
     private final FlightService flightService;
     private final FlightMapper flightMapper;
+    private final NoticeBoardService noticeBoardService;
+    private final AirplaneService airplaneService;
 
     public FlightController(FlightService flightService,
-                            FlightMapper flightMapper) {
+                            FlightMapper flightMapper,
+                            NoticeBoardService noticeBoardService,
+                            AirplaneService airplaneService) {
         this.flightService = flightService;
         this.flightMapper = flightMapper;
+        this.noticeBoardService = noticeBoardService;
+        this.airplaneService = airplaneService;
     }
 
     @GetMapping
@@ -35,14 +45,27 @@ public class FlightController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("flightForm", new FlightForm());
+        model.addAttribute("noticeBoards", noticeBoardService.findAll());
+        model.addAttribute("airplanes", airplaneService.findAll());
         return "flights/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("flightForm") FlightForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("flightForm") FlightForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+            return "flights/new";
+        }
+
         Flight flight = flightMapper.toEntity(form);
         flightService.save(flight);
+
         ra.addFlashAttribute("success", "Flight created.");
         return "redirect:/flights";
     }
@@ -66,13 +89,28 @@ public class FlightController {
 
         model.addAttribute("flightForm", form);
         model.addAttribute("flight", flight);
+
+        model.addAttribute("noticeBoards", noticeBoardService.findAll());
+        model.addAttribute("airplanes", airplaneService.findAll());
+
         return "flights/edit";
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("flightForm") FlightForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("flightForm") FlightForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            Flight existing = flightService.findById(id).orElseThrow();
+            model.addAttribute("flight", existing);
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+            return "flights/edit";
+        }
 
         Flight existing = flightService.findById(id).orElseThrow();
         flightMapper.updateEntityFromForm(existing, form);

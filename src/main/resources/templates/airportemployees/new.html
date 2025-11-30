@@ -10,24 +10,46 @@
 <h1>Create Airport Employee</h1>
 
 <form th:action="@{/airportemployees}"
-      th:object="${airportEmployeeForm}" method="post">
+      th:object="${airportEmployeeForm}"
+      method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <!-- ID -->
+    <div>
+        <label for="id">ID:</label>
+        <input id="id" type="text" th:field="*{id}" />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label for="name">Name:</label>
-    <input id="name" type="text" th:field="*{name}" required />
+    <!-- NAME -->
+    <div>
+        <label for="name">Name:</label>
+        <input id="name" type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label for="designation">Designation:</label>
-    <input id="designation" type="text" th:field="*{designation}" />
+    <!-- DESIGNATION -->
+    <div>
+        <label for="designation">Designation:</label>
+        <input id="designation" type="text" th:field="*{designation}" />
+        <span class="error" th:if="${#fields.hasErrors('designation')}"
+              th:errors="*{designation}"></span>
+    </div>
 
-    <label for="department">Department:</label>
-    <input id="department" type="text" th:field="*{department}" />
+    <!-- DEPARTMENT -->
+    <div>
+        <label for="department">Department:</label>
+        <input id="department" type="text" th:field="*{department}" />
+        <span class="error" th:if="${#fields.hasErrors('department')}"
+              th:errors="*{department}"></span>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>
         <a th:href="@{/airportemployees}" class="btn secondary">Cancel</a>
     </div>
+
 </form>
 
 </body>
