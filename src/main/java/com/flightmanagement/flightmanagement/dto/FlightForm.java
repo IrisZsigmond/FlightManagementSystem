@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Size;
 public class FlightForm {
 
     @NotBlank(message = "ID is required")
+    @Pattern(
+            regexp = "^F\\d{3}$",
+            message = "ID must follow the format Fxxx (e.g., F001)"
+    )
     private String id;
 
     @NotBlank(message = "Name is required")

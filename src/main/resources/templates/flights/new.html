@@ -14,10 +14,9 @@
       th:object="${flightForm}"
       method="post">
 
-    <!-- ID -->
     <div>
-        <label for="id">ID:</label>
-        <input id="id" type="text" th:field="*{id}" />
+        <label for="id">ID (format Fxxx):</label>
+        <input id="id" type="text" th:field="*{id}" placeholder="F001" />
         <span class="error" th:if="${#fields.hasErrors('id')}"
               th:errors="*{id}"></span>
     </div>
