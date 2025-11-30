@@ -12,7 +12,7 @@
 <form th:action="@{/noticeboards}" th:object="${noticeBoardForm}" method="post">
 
     <!-- ID -->
-    <label for="id">ID (Nxxx):</label>
+    <label for="id">ID (N***):</label>
     <input id="id" type="text" th:field="*{id}" placeholder="N001" />
     <div class="error" th:if="${#fields.hasErrors('id')}"
          th:errors="*{id}"></div>

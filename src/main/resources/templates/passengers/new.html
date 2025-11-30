@@ -11,7 +11,7 @@
 
 <form th:action="@{/passengers}" th:object="${passengerForm}" method="post">
 
-    <label>ID (Pxxx):</label>
+    <label>ID (P***):</label>
     <input type="text" th:field="*{id}" placeholder="P001" />
     <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
 

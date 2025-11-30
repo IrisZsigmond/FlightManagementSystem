@@ -11,15 +11,15 @@
 
 <form th:action="@{/flightassignments}" th:object="${assignmentForm}" method="post">
 
-    <label for="id">Assignment ID (FAxxx):</label>
+    <label for="id">Assignment ID (FA***):</label>
     <input id="id" type="text" th:field="*{id}" placeholder="FA001" />
     <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
 
-    <label for="flightId">Flight ID (Fxxx):</label>
+    <label for="flightId">Flight ID (F***):</label>
     <input id="flightId" type="text" th:field="*{flightId}" placeholder="F001" />
     <span class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></span>
 
-    <label for="airlineEmployeeId">Employee ID (Sxxx):</label>
+    <label for="airlineEmployeeId">Employee ID (S***):</label>
     <input id="airlineEmployeeId" type="text" th:field="*{airlineEmployeeId}" placeholder="E001" />
     <span class="error" th:if="${#fields.hasErrors('airlineEmployeeId')}" th:errors="*{airlineEmployeeId}"></span>
 

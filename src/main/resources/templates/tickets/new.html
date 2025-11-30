@@ -11,15 +11,15 @@
 
 <form th:action="@{/tickets}" th:object="${ticketForm}" method="post">
 
-    <label for="id">ID (Txxx):</label>
+    <label for="id">ID (T***):</label>
     <input id="id" type="text" th:field="*{id}" placeholder="T001" />
     <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
 
-    <label>Passenger ID (Pxxx):</label>
+    <label>Passenger ID (P***):</label>
     <input id="passengerId" type="text" th:field="*{passengerId}" placeholder="P001" />
     <div class="error" th:if="${#fields.hasErrors('passengerId')}" th:errors="*{passengerId}"></div>
 
-    <label>Flight ID (Fxxx):</label>
+    <label>Flight ID (F***):</label>
     <input id="flightId" type="text" th:field="*{flightId}" placeholder="FL001" />
     <div class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></div>
 
