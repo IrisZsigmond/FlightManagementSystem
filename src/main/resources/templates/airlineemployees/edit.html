@@ -10,22 +10,40 @@
 <h1>Edit Airline Employee</h1>
 
 <form th:action="@{'/airlineemployees/' + ${airlineEmployeeForm.id}}"
-      th:object="${airlineEmployeeForm}" method="post">
+      th:object="${airlineEmployeeForm}"
+      method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
+    <!-- ID (read-only) -->
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required />
+    <!-- NAME -->
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label>Role:</label>
-    <select th:field="*{role}">
-        <option th:each="r : ${roles}"
-                th:value="${r}"
-                th:text="${r}">
-        </option>
-    </select>
+    <!-- ROLE -->
+    <div>
+        <label>Role:</label>
+        <select th:field="*{role}">
+            <option value="" disabled>Select role</option>
+            <option th:each="r : ${roles}"
+                    th:value="${r}"
+                    th:text="${r}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('role')}"
+              th:errors="*{role}"></span>
+    </div>
 
+    <!-- ASSIGNMENTS (read-only list) -->
     <h3>Assignments</h3>
     <ul>
         <li th:each="a : ${employee.assignments}"

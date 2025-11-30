@@ -10,21 +10,38 @@
 <h1>Create Airline Employee</h1>
 
 <form th:action="@{/airlineemployees}"
-      th:object="${airlineEmployeeForm}" method="post">
+      th:object="${airlineEmployeeForm}"
+      method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <!-- ID -->
+    <div>
+        <label for="id">ID:</label>
+        <input id="id" type="text" th:field="*{id}" />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label for="name">Name:</label>
-    <input id="name" type="text" th:field="*{name}" required />
+    <!-- NAME -->
+    <div>
+        <label for="name">Name:</label>
+        <input id="name" type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label for="role">Role:</label>
-    <select id="role" th:field="*{role}">
-        <option th:each="r : ${roles}"
-                th:value="${r}"
-                th:text="${r}">
-        </option>
-    </select>
+    <!-- ROLE -->
+    <div>
+        <label for="role">Role:</label>
+        <select id="role" th:field="*{role}">
+            <option value="" disabled selected>Select role</option>
+            <option th:each="r : ${roles}"
+                    th:value="${r}"
+                    th:text="${r}">
+            </option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('role')}"
+              th:errors="*{role}"></span>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>

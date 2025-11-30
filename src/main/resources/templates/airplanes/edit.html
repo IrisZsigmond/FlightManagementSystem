@@ -6,25 +6,47 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+
 <h1>Edit Airplane</h1>
 
 <form th:action="@{'/airplanes/' + ${airplaneForm.id}}"
-      th:object="${airplaneForm}" method="post">
+      th:object="${airplaneForm}"
+      method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
+    <!-- ID -->
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label>Number:</label>
-    <input type="number" th:field="*{number}" required />
+    <!-- NUMBER -->
+    <div>
+        <label>Number:</label>
+        <input type="number" th:field="*{number}" />
+        <span class="error" th:if="${#fields.hasErrors('number')}"
+              th:errors="*{number}"></span>
+    </div>
 
-    <label>Capacity:</label>
-    <input type="number" th:field="*{capacity}" required />
+    <!-- CAPACITY -->
+    <div>
+        <label>Capacity:</label>
+        <input type="number" th:field="*{capacity}" />
+        <span class="error" th:if="${#fields.hasErrors('capacity')}"
+              th:errors="*{capacity}"></span>
+    </div>
 
+    <!-- Assigned flights -->
     <h3>Assigned Flights</h3>
     <ul>
         <li th:each="f : ${airplane.flights}"
-            th:text="${f.id + ' - ' + f.name}">F001 - Example</li>
-        <li th:if="${#lists.isEmpty(airplane.flights)}">No flights assigned.</li>
+            th:text="${f.id + ' - ' + f.name}">
+        </li>
+
+        <li th:if="${#lists.isEmpty(airplane.flights)}">
+            No flights assigned.
+        </li>
     </ul>
 
     <div class="form-actions">

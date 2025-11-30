@@ -5,8 +5,10 @@ import com.flightmanagement.flightmanagement.mapper.AirlineEmployeeMapper;
 import com.flightmanagement.flightmanagement.model.AirlineEmployee;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,8 +40,16 @@ public class AirlineEmployeeController {
 
 
     @PostMapping
-    public String create(@ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("roles", AirlineRole.values());
+            return "airlineemployees/new";
+        }
 
         AirlineEmployee e = mapper.toEntity(form);
         service.save(e);
@@ -47,6 +57,7 @@ public class AirlineEmployeeController {
         ra.addFlashAttribute("success", "Airline employee created.");
         return "redirect:/airlineemployees";
     }
+
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
@@ -58,9 +69,19 @@ public class AirlineEmployeeController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            AirlineEmployee existing = service.findById(id).orElseThrow();
+            model.addAttribute("employee", existing);
+            model.addAttribute("roles", AirlineRole.values());
+            return "airlineemployees/edit";
+        }
 
         AirlineEmployee existing = service.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
@@ -69,6 +90,7 @@ public class AirlineEmployeeController {
         ra.addFlashAttribute("success", "Airline employee updated.");
         return "redirect:/airlineemployees";
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id,
