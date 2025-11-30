@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.dto.PassengerForm;
 import com.flightmanagement.flightmanagement.mapper.PassengerMapper;
 import com.flightmanagement.flightmanagement.model.Passenger;
 import com.flightmanagement.flightmanagement.service.PassengerService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,8 +37,14 @@ public class PassengerController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("passengerForm") PassengerForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("passengerForm") PassengerForm form,
+            BindingResult result,                                                // BindingResult captures validation errors triggered by @Valid
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            return "passengers/new";
+        }
 
         Passenger p = mapper.toEntity(form);
         passengerService.save(p);
@@ -54,9 +62,19 @@ public class PassengerController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("passengerForm") PassengerForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("passengerForm") PassengerForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            // Recărcăm obiectul original pentru afișarea în edit.html
+            Passenger existing = passengerService.findById(id).orElseThrow();
+            model.addAttribute("passenger", existing);
+            return "passengers/edit";
+        }
 
         Passenger existing = passengerService.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
@@ -65,6 +83,7 @@ public class PassengerController {
         ra.addFlashAttribute("success", "Passenger updated.");
         return "redirect:/passengers";
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {

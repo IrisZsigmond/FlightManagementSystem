@@ -187,6 +187,11 @@ input:focus {
     margin-top: 8px;
 }
 
+.error {
+    color: red;
+    font-size: 0.9rem;
+}
+
 /* ========== Utilities ========== */
 .m-0 { margin: 0 !important; }
 .mt-2 { margin-top: 8px !important; }

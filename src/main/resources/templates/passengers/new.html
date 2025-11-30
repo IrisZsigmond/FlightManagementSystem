@@ -11,14 +11,26 @@
 
 <form th:action="@{/passengers}" th:object="${passengerForm}" method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <div>
+        <label>ID</label>
+        <input type="text" th:field="*{id}" />
+        <span class="error" th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label for="name">Name:</label>
-    <input id="name" type="text" th:field="*{name}" required />
+    <div>
+        <label>Name</label>
+        <input type="text" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
 
-    <label for="currency">Currency:</label>
-    <input id="currency" type="text" th:field="*{currency}" placeholder="EUR, USD, RON..." />
+    <div>
+        <label>Currency</label>
+        <input type="text" th:field="*{currency}" />
+        <span class="error" th:if="${#fields.hasErrors('currency')}"
+              th:errors="*{currency}"></span>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>

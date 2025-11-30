@@ -9,36 +9,35 @@
 
 <h1>Edit Passenger</h1>
 
-<form th:action="@{'/passengers/' + ${passengerForm.id}}"
-      th:object="${passengerForm}" method="post">
+<form th:action="@{'/passengers/' + ${passenger.id}}" method="post" th:object="${passengerForm}">
 
+    <!-- ID -->
     <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
+    <input type="text" th:field="*{id}" />
+    <div class="error" th:if="${#fields.hasErrors('id')}"
+         th:errors="*{id}">ID error</div>
 
+    <br/>
+
+    <!-- NAME -->
     <label>Name:</label>
-    <input type="text" th:field="*{name}" required />
+    <input type="text" th:field="*{name}" />
+    <div class="error" th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}">Name error</div>
 
+    <br/>
+
+    <!-- CURRENCY -->
     <label>Currency:</label>
     <input type="text" th:field="*{currency}" />
+    <div class="error" th:if="${#fields.hasErrors('currency')}"
+         th:errors="*{currency}">Currency error</div>
 
-    <h3>Tickets</h3>
-    <ul>
+    <br/>
 
-        <!-- FIXED VERSION -->
-        <li th:each="t : ${passenger.tickets}"
-            th:text="${t.id + ' (flight ' + (t.flight != null ? t.flight.id : 'N/A') + ')'}">
-        </li>
-
-        <li th:if="${passenger.tickets == null or #lists.isEmpty(passenger.tickets)}">
-            No tickets for this passenger.
-        </li>
-    </ul>
-
-    <div class="form-actions">
-        <button type="submit" class="btn">Save</button>
-        <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
-    </div>
+    <button type="submit">Save</button>
 </form>
+
 
 </body>
 </html>
