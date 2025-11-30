@@ -13,14 +13,21 @@
       th:object="${ticketForm}" method="post">
 
     <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
+    <input type="text" th:field="*{id}" disabled />
+    <input type="hidden" th:field="*{id}" />
+    <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
 
     <label>Passenger ID:</label>
-    <input type="text" th:field="*{passengerId}" />
+    <input type="text" th:field="*{passengerId}" disabled />
+    <input type="hidden" th:field="*{passengerId}" />
+    <div class="error" th:if="${#fields.hasErrors('passengerId')}" th:errors="*{passengerId}"></div>
 
     <label>Flight ID:</label>
-    <input type="text" th:field="*{flightId}" />
+    <input type="text" th:field="*{flightId}" disabled />
+    <input type="hidden" th:field="*{flightId}" />
+    <div class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></div>
 
+    <!-- Category -->
     <label>Category:</label>
     <select th:field="*{category}">
         <option th:each="c : ${categories}"
@@ -28,18 +35,22 @@
                 th:text="${c}">
         </option>
     </select>
+    <div class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
 
+    <!-- Price -->
     <label>Price:</label>
-    <input type="number" step="0.01" th:field="*{price}" />
+    <input type="text" th:field="*{price}" />
+    <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
 
+    <!-- Seat Number -->
     <label>Seat Number:</label>
     <input type="text" th:field="*{seatNumber}" />
+    <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div>
 
     <h3>Luggages</h3>
     <ul>
         <li th:each="l : ${ticket.luggages}"
             th:text="${l.id + ' (' + l.status + ', ' + l.size + ')'}">
-            L1 (CHECKED_IN, MEDIUM)
         </li>
         <li th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">
             No luggages for this ticket.
@@ -50,8 +61,8 @@
         <button type="submit">Save</button>
         <a th:href="@{/tickets}">Cancel</a>
     </div>
+
 </form>
 
 </body>
 </html>
-

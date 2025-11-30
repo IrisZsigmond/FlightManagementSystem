@@ -11,26 +11,18 @@
 
 <form th:action="@{/passengers}" th:object="${passengerForm}" method="post">
 
-    <div>
-        <label>ID</label>
-        <input type="text" th:field="*{id}" />
-        <span class="error" th:if="${#fields.hasErrors('id')}"
-              th:errors="*{id}"></span>
-    </div>
+    <label>ID (Pxxx):</label>
+    <input type="text" th:field="*{id}" placeholder="P001" />
+    <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
 
-    <div>
-        <label>Name</label>
-        <input type="text" th:field="*{name}" />
-        <span class="error" th:if="${#fields.hasErrors('name')}"
-              th:errors="*{name}"></span>
-    </div>
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" />
+    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-    <div>
-        <label>Currency</label>
-        <input type="text" th:field="*{currency}" />
-        <span class="error" th:if="${#fields.hasErrors('currency')}"
-              th:errors="*{currency}"></span>
-    </div>
+    <label>Currency:</label>
+    <input type="text" th:field="*{currency}" />
+    <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
+
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>

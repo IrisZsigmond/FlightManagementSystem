@@ -11,13 +11,19 @@
 
 <form th:action="@{/noticeboards}" th:object="${noticeBoardForm}" method="post">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" required />
+    <!-- ID -->
+    <label for="id">ID (Nxxx):</label>
+    <input id="id" type="text" th:field="*{id}" placeholder="N001" />
+    <div class="error" th:if="${#fields.hasErrors('id')}"
+         th:errors="*{id}"></div>
 
+    <!-- Date -->
     <label for="date">Date (yyyy-MM-dd):</label>
     <input id="date" type="text" th:field="*{date}" placeholder="2025-11-18" />
+    <div class="error" th:if="${#fields.hasErrors('date')}"
+         th:errors="*{date}"></div>
 
-    <p>Flights of the day will be automatically associated by their noticeBoardId.</p>
+    <p>Flights of the day are automatically linked by noticeBoardId.</p>
 
     <div class="form-actions">
         <button type="submit" class="btn">Create</button>

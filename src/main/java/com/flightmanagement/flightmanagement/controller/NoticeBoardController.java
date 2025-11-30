@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.dto.NoticeBoardForm;
 import com.flightmanagement.flightmanagement.mapper.NoticeBoardMapper;
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
 import com.flightmanagement.flightmanagement.service.NoticeBoardService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,26 +37,34 @@ public class NoticeBoardController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("noticeBoardForm") NoticeBoardForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("noticeBoardForm") NoticeBoardForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            return "noticeboards/new";
+        }
+
         NoticeBoard nb = mapper.toEntity(form);
         noticeBoardService.save(nb);
         ra.addFlashAttribute("success", "Notice board created.");
         return "redirect:/noticeboards";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
-        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
-        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
-        model.addAttribute("noticeBoard", nb);
-        return "noticeboards/edit";
-    }
-
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("noticeBoardForm") NoticeBoardForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("noticeBoardForm") NoticeBoardForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("noticeBoard", noticeBoardService.findById(id).orElseThrow());
+            return "noticeboards/edit";
+        }
 
         NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
@@ -80,5 +90,13 @@ public class NoticeBoardController {
         NoticeBoard board = noticeBoardService.findById(id).orElseThrow();
         model.addAttribute("board", board);
         return "noticeboards/view";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
+        model.addAttribute("noticeBoard", nb);
+        return "noticeboards/edit";
     }
 }

@@ -4,8 +4,10 @@ import com.flightmanagement.flightmanagement.dto.FlightAssignmentForm;
 import com.flightmanagement.flightmanagement.mapper.FlightAssignmentMapper;
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
 import com.flightmanagement.flightmanagement.service.FlightAssignmentService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,9 +40,15 @@ public class FlightAssignmentController {
 
     @PostMapping
     public String create(
-            @ModelAttribute("assignmentForm") FlightAssignmentForm form,
-            RedirectAttributes ra
+            @Valid @ModelAttribute("assignmentForm") FlightAssignmentForm form,
+            BindingResult result,
+            RedirectAttributes ra,
+            Model model
     ) {
+        if (result.hasErrors()) {
+            return "flightassignments/new";
+        }
+
         FlightAssignment a = mapper.toEntity(form);
         service.save(a);
 
@@ -59,9 +67,17 @@ public class FlightAssignmentController {
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
-            @ModelAttribute("assignmentForm") FlightAssignmentForm form,
-            RedirectAttributes ra
+            @Valid @ModelAttribute("assignmentForm") FlightAssignmentForm form,
+            BindingResult result,
+            RedirectAttributes ra,
+            Model model
     ) {
+        if (result.hasErrors()) {
+            FlightAssignment a = service.findById(id).orElseThrow();
+            model.addAttribute("assignment", a);
+            return "flightassignments/edit";
+        }
+
         FlightAssignment existing = service.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
         service.update(id, existing);

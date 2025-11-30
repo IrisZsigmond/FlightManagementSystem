@@ -6,8 +6,10 @@ import com.flightmanagement.flightmanagement.model.Luggage;
 import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
 import com.flightmanagement.flightmanagement.service.LuggageService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,8 +41,17 @@ public class LuggageController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("luggageForm") LuggageForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("luggageForm") LuggageForm form,
+            BindingResult result,
+            RedirectAttributes ra,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("statuses", LuggageStatus.values());
+            model.addAttribute("sizes", LuggageSize.values());
+            return "luggage/new";
+        }
 
         Luggage luggage = mapper.toEntity(form);
         luggageService.save(luggage);
@@ -60,9 +71,20 @@ public class LuggageController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("luggageForm") LuggageForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("luggageForm") LuggageForm form,
+            BindingResult result,
+            RedirectAttributes ra,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            Luggage existing = luggageService.findById(id).orElseThrow();
+            model.addAttribute("luggage", existing);
+            model.addAttribute("statuses", LuggageStatus.values());
+            model.addAttribute("sizes", LuggageSize.values());
+            return "luggage/edit";
+        }
 
         Luggage existing = luggageService.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);

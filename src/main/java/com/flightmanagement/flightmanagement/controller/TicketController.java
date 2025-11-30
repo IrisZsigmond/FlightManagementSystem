@@ -5,8 +5,10 @@ import com.flightmanagement.flightmanagement.mapper.TicketMapper;
 import com.flightmanagement.flightmanagement.model.Ticket;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.service.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,15 +39,23 @@ public class TicketController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("ticketForm") TicketForm form,
-                         RedirectAttributes ra) {
+    public String create(
+            @Valid @ModelAttribute("ticketForm") TicketForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("categories", TicketCategory.values());
+            return "tickets/new"; // reafișăm formularul cu erori
+        }
 
         Ticket t = mapper.toEntity(form);
         ticketService.save(t);
-
         ra.addFlashAttribute("success", "Ticket created.");
         return "redirect:/tickets";
     }
+
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
@@ -57,9 +67,18 @@ public class TicketController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute("ticketForm") TicketForm form,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("ticketForm") TicketForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("categories", TicketCategory.values());
+            model.addAttribute("ticket", ticketService.findById(id).orElseThrow());
+            return "tickets/edit";
+        }
 
         Ticket existing = ticketService.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
@@ -68,6 +87,7 @@ public class TicketController {
         ra.addFlashAttribute("success", "Ticket updated.");
         return "redirect:/tickets";
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {

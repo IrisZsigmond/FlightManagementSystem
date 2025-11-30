@@ -14,17 +14,18 @@
 
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly />
+    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
 
     <label>Flight ID:</label>
-    <input type="text" th:field="*{flightId}" />
+    <input type="text" th:field="*{flightId}" readonly />
+    <span class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></span>
 
     <label>Employee ID:</label>
-    <input type="text" th:field="*{airlineEmployeeId}" />
+    <input type="text" th:field="*{airlineEmployeeId}" readonly />
+    <span class="error" th:if="${#fields.hasErrors('airlineEmployeeId')}" th:errors="*{airlineEmployeeId}"></span>
 
-    <div class="form-actions">
-        <button type="submit" class="btn">Save</button>
-        <a th:href="@{/flightassignments}" class="btn secondary">Cancel</a>
-    </div>
+    <button type="submit">Save</button>
+    <a th:href="@{/flightassignments}">Cancel</a>
 </form>
 
 </body>

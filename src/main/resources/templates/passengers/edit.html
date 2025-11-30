@@ -13,9 +13,8 @@
 
     <!-- ID -->
     <label>ID:</label>
-    <input type="text" th:field="*{id}" />
-    <div class="error" th:if="${#fields.hasErrors('id')}"
-         th:errors="*{id}">ID error</div>
+    <input type="text" th:field="*{id}" disabled />
+    <input type="hidden" th:field="*{id}" />
 
     <br/>
 
