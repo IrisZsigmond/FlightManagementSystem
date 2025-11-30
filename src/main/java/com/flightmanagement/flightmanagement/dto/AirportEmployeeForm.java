@@ -8,7 +8,7 @@ public class AirportEmployeeForm {
 
     @NotBlank(message = "ID is required")
     @Pattern(regexp = "^S\\d{3}$",
-            message = "ID must follow the format Sxxx (e.g., S001)")
+            message = "ID must follow the format S*** (e.g., S001)")
     private String id;
 
     @NotBlank(message = "Name is required")

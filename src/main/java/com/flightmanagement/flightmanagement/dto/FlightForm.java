@@ -9,7 +9,7 @@ public class FlightForm {
     @NotBlank(message = "ID is required")
     @Pattern(
             regexp = "^F\\d{3}$",
-            message = "ID must follow the format Fxxx (e.g., F001)"
+            message = "ID must follow the format F*** (e.g., F001)"
     )
     private String id;
 

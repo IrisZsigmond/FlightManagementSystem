@@ -6,15 +6,15 @@ import jakarta.validation.constraints.Pattern;
 public class FlightAssignmentForm {
 
     @NotBlank(message = "ID is required")
-    @Pattern(regexp = "^FA\\d{3}$", message = "ID must follow format FAxxx (e.g., FA001)")
+    @Pattern(regexp = "^FA\\d{3}$", message = "ID must follow format FA*** (e.g., FA001)")
     private String id;
 
     @NotBlank(message = "Flight ID is required")
-    @Pattern(regexp = "^F\\d{3}$", message = "Flight ID must follow format Fxxx (e.g., F001)")
+    @Pattern(regexp = "^F\\d{3}$", message = "Flight ID must follow format F*** (e.g., F001)")
     private String flightId;
 
     @NotBlank(message = "Employee ID is required")
-    @Pattern(regexp = "^S\\d{3}$", message = "Employee ID must follow format Exxx (e.g., S001)")
+    @Pattern(regexp = "^S\\d{3}$", message = "Employee ID must follow format E*** (e.g., S001)")
     private String airlineEmployeeId;
 
     public FlightAssignmentForm() {}

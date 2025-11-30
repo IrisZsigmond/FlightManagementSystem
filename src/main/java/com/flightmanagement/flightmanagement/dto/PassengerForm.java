@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 public class PassengerForm {
 
     @NotBlank(message = "ID is required")
-    @Pattern(regexp = "^P\\d{3}$", message = "Passenger ID must be in format P001.")
+    @Pattern(regexp = "^P\\d{3}$", message = "Passenger ID must be in format P*** (e.g. P001)")
     private String id;
 
     @NotBlank(message = "Name is required")

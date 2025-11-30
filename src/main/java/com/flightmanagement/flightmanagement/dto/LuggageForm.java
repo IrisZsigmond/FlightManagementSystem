@@ -6,11 +6,11 @@ import jakarta.validation.constraints.Pattern;
 public class LuggageForm {
 
     @NotBlank(message = "ID is required")
-    @Pattern(regexp = "^L\\d{3}$", message = "ID must follow format Lxxx (e.g., L001)")
+    @Pattern(regexp = "^L\\d{3}$", message = "ID must follow format L*** (e.g., L001)")
     private String id;
 
     @NotBlank(message = "Ticket ID is required")
-    @Pattern(regexp = "^T\\d{3}$", message = "Ticket ID must follow format Txxx (e.g., T001)")
+    @Pattern(regexp = "^T\\d{3}$", message = "Ticket ID must follow format T*** (e.g., T001)")
     private String ticketId;
 
     @NotBlank(message = "Status is required")

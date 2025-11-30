@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 public class NoticeBoardForm {
 
     @NotBlank(message = "NoticeBoard ID is required.")
-    @Pattern(regexp = "^N\\d{3}$", message = "ID must be in format N001.")
+    @Pattern(regexp = "^N\\d{3}$", message = "ID must must match the format N*** (e.g. L001)")
     private String id;
 
     @NotBlank(message = "Date is required.")

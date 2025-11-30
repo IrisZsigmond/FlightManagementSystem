@@ -7,15 +7,15 @@ import jakarta.validation.constraints.Size;
 public class TicketForm {
 
     @NotBlank(message = "ID is required")
-    @Pattern(regexp = "^T\\d{3}$", message = "ID must match the format T001.")
+    @Pattern(regexp = "^T\\d{3}$", message = "ID must match the format T*** (e.g. T001)")
     private String id;
 
     @NotBlank(message = "Passenger ID is required")
-    @Pattern(regexp = "^P\\d{3}$", message = "Passenger ID must match the format P001.")
+    @Pattern(regexp = "^P\\d{3}$", message = "Passenger ID must match the format P*** (e.g. P001)")
     private String passengerId;
 
     @NotBlank(message = "Flight ID is required")
-    @Pattern(regexp = "^F\\d{3}$", message = "Flight ID must match the format F001.")
+    @Pattern(regexp = "^F\\d{3}$", message = "Flight ID must match the format F*** (e.g. F001)")
     private String flightId;
 
     @NotBlank(message = "Category must be selected")
