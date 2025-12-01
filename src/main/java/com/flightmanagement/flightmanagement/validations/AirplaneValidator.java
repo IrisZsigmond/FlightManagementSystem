@@ -38,13 +38,29 @@ public class AirplaneValidator {
         }
     }
 
-    /** 3) Unique number – use at CREATE / UPDATE */
-    public void assertNumberUnique(int number) {
-        airplaneRepository.findByNumber(number)
-                .ifPresent(a -> {
-                    throw new IllegalArgumentException(
-                            "Airplane number '" + number + "' is already used by airplane with ID '" + a.getId() + "'.");
-                });
+    /** 3a) Unique number – CREATE */
+    public void assertNumberUniqueForCreate(int number) {
+        if (airplaneRepository.existsByNumber(number)) {
+            throw new IllegalArgumentException(
+                    "Airplane number '" + number + "' is already used.");
+        }
+    }
+
+    /**
+     * 3b) Unique number – UPDATE (excludem avionul curent).
+     * currentId = id-ul avionului pe care îl edităm.
+     */
+    public void assertNumberUniqueForUpdate(int number, String currentId) {
+        if (currentId == null || currentId.isBlank()) {
+            // fallback defensiv – ne comportăm ca la create
+            assertNumberUniqueForCreate(number);
+            return;
+        }
+
+        if (airplaneRepository.existsByNumberAndIdNot(number, currentId)) {
+            throw new IllegalArgumentException(
+                    "Airplane number '" + number + "' is already used by a different airplane.");
+        }
     }
 
     /** 4) Business-Logic for DELETE – FK with Flight */
