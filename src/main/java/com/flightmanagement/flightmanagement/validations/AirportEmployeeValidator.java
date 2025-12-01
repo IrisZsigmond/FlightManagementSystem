@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 public class AirportEmployeeValidator {
 
     private final AirportEmployeeRepository repo;
+    private final StaffValidator staffValidator;
 
-    public AirportEmployeeValidator(AirportEmployeeRepository repo) {
+    public AirportEmployeeValidator(AirportEmployeeRepository repo, StaffValidator staffValidator) {
         this.repo = repo;
+        this.staffValidator = staffValidator;
     }
 
     /** 1) Existență */
@@ -26,12 +28,8 @@ public class AirportEmployeeValidator {
 
     /** 2) ID unic – doar la CREATE */
     public void assertIdUnique(String id) {
-        if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("Airport employee id cannot be null or blank");
-        }
-        if (repo.existsById(id)) {
-            throw new IllegalStateException("Airport employee id already exists: " + id);
-        }
+        // delegăm logica globală către StaffValidator
+        staffValidator.assertStaffIdUnique(id);
     }
 
     /** 3) Reguli pentru DELETE – momentan nu avem FK-uri, dar lăsăm hook-ul */
