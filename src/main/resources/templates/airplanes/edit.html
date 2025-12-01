@@ -5,54 +5,66 @@
     <title>Edit Airplane</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
+
 <body>
 
 <h1>Edit Airplane</h1>
 
-<form th:action="@{'/airplanes/' + ${airplaneForm.id}}"
+<form th:action="@{'/airplanes/' + ${airplaneId}}"
       th:object="${airplaneForm}"
       method="post">
 
-    <!-- ID -->
+    <!-- GLOBAL ERRORS FROM BindingResult -->
+    <div th:if="${#fields != null and #fields.hasGlobalErrors()}"
+         class="error global-error">
+        <p th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}">
+        </p>
+    </div>
+
+    <!-- GLOBAL ERRORS passed from controller (GET or POST) -->
+    <div th:if="${error}"
+         class="error global-error"
+         th:text="${error}">
+    </div>
+
+    <!-- ID (readonly) -->
     <div>
         <label>ID:</label>
         <input type="text" th:field="*{id}" readonly />
-        <span class="error" th:if="${#fields.hasErrors('id')}"
-              th:errors="*{id}"></span>
+        <div class="error" th:if="${#fields != null and #fields.hasErrors('id')}"
+             th:errors="*{id}"></div>
     </div>
 
     <!-- NUMBER -->
     <div>
         <label>Number:</label>
         <input type="number" th:field="*{number}" />
-        <span class="error" th:if="${#fields.hasErrors('number')}"
-              th:errors="*{number}"></span>
+        <div class="error" th:if="${#fields != null and #fields.hasErrors('number')}"
+             th:errors="*{number}"></div>
     </div>
 
     <!-- CAPACITY -->
     <div>
         <label>Capacity:</label>
         <input type="number" th:field="*{capacity}" />
-        <span class="error" th:if="${#fields.hasErrors('capacity')}"
-              th:errors="*{capacity}"></span>
+        <div class="error" th:if="${#fields != null and #fields.hasErrors('capacity')}"
+             th:errors="*{capacity}"></div>
     </div>
 
-    <!-- Assigned flights -->
     <h3>Assigned Flights</h3>
     <ul>
-        <li th:each="f : ${airplane.flights}"
-            th:text="${f.id + ' - ' + f.name}">
+        <li th:each="f : ${airplane.flights}">
+            <span th:text="${f.id + ' - ' + (f.name != null ? f.name : 'Unknown')}"></span>
         </li>
-
-        <li th:if="${#lists.isEmpty(airplane.flights)}">
-            No flights assigned.
-        </li>
+        <li th:if="${#lists.isEmpty(airplane.flights)}">No flights assigned.</li>
     </ul>
 
     <div class="form-actions">
         <button type="submit" class="btn">Save</button>
         <a th:href="@{/airplanes}" class="btn secondary">Cancel</a>
     </div>
+
 </form>
 
 </body>

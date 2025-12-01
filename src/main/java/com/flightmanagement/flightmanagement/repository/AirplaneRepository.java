@@ -5,9 +5,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @Primary
 public interface AirplaneRepository extends JpaRepository<Airplane, String> {
 
-    // Extra custom queries could be added later if needed
+    Optional<Airplane> findByNumber(int number);
+
+    boolean existsByNumber(int number);
 }

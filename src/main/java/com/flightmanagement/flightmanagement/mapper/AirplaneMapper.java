@@ -4,6 +4,8 @@ import com.flightmanagement.flightmanagement.dto.AirplaneForm;
 import com.flightmanagement.flightmanagement.model.Airplane;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class AirplaneMapper {
 
@@ -24,6 +26,8 @@ public class AirplaneMapper {
     }
 
     public void updateEntityFromForm(Airplane existing, AirplaneForm form) {
+        Objects.requireNonNull(existing);
+        Objects.requireNonNull(form);
         existing.setNumber(form.getNumber());
         existing.setCapacity(form.getCapacity());
     }

@@ -7,17 +7,20 @@ import java.util.Optional;
 
 public interface AirplaneService {
 
+    // Basic CRUD methods:
     Airplane save(Airplane airplane);
 
     List<Airplane> findAll();
-
-    Optional<Airplane> findById(String id);
 
     Airplane update(String id, Airplane updated);
 
     boolean delete(String id);
 
-    // --- Custom logic from the old service ---
+    Optional<Airplane> findById(String id);
+
+    Airplane getById(String id);
+
+    // Custom methods:
     List<Airplane> findByMinCapacity(int minCapacity);
 
     List<Airplane> findAirplaneForFlight(String flightId);

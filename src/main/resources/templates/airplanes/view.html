@@ -11,22 +11,24 @@
 
 <div class="details-container">
 
-    <p><strong>ID:</strong>
+    <p>
+        <strong>ID:</strong>
         <span th:text="${airplane.id}">A001</span>
     </p>
 
-    <p><strong>Number:</strong>
+    <p>
+        <strong>Number:</strong>
         <span th:text="${airplane.number}">10011</span>
     </p>
 
-    <p><strong>Capacity:</strong>
+    <p>
+        <strong>Capacity:</strong>
         <span th:text="${airplane.capacity}">400</span>
     </p>
 
     <h3>Flights Using This Aircraft</h3>
 
     <ul>
-
         <!-- Loop flights -->
         <li th:each="f : ${airplane.flights}"
             th:text="${f.id + ' - ' +
@@ -41,7 +43,6 @@
         <li th:if="${#lists.isEmpty(airplane.flights)}">
             No flights assigned to this airplane.
         </li>
-
     </ul>
 </div>
 
@@ -51,8 +52,11 @@
     <a th:href="@{'/airplanes/' + ${airplane.id} + '/edit'}" class="btn">Edit</a>
 
     <form th:action="@{'/airplanes/' + ${airplane.id} + '/delete'}"
-          method="post" style="display:inline;"
+          method="post"
+          style="display:inline;"
           onsubmit="return confirm('Are you sure?');">
+        <!-- dacă ai Spring Security activ, adaugă și token CSRF -->
+        <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
         <button type="submit" class="btn danger">Delete</button>
     </form>
 </div>
