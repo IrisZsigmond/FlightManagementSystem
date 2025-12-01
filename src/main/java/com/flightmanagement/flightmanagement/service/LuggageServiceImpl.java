@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.model.Luggage;
 import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
 import com.flightmanagement.flightmanagement.repository.LuggageRepository;
+import com.flightmanagement.flightmanagement.validations.LuggageValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +14,20 @@ import java.util.Optional;
 public class LuggageServiceImpl implements LuggageService {
 
     private final LuggageRepository luggageRepository;
+    private final LuggageValidator validator;
 
-    public LuggageServiceImpl(LuggageRepository luggageRepository) {
+    public LuggageServiceImpl(LuggageRepository luggageRepository,
+                              LuggageValidator validator) {
         this.luggageRepository = luggageRepository;
+        this.validator = validator;
     }
 
     @Override
     public Luggage save(Luggage luggage) {
+
+        validator.assertIdUnique(luggage.getId());
+        validator.requireExistingTicket(luggage.getTicket().getId());
+
         return luggageRepository.save(luggage);
     }
 
@@ -35,8 +43,10 @@ public class LuggageServiceImpl implements LuggageService {
 
     @Override
     public Luggage update(String id, Luggage updated) {
-        if (!luggageRepository.existsById(id))
-            throw new IllegalArgumentException("Luggage not found: " + id);
+
+        Luggage existing = validator.requireExisting(id);
+
+        validator.requireExistingTicket(updated.getTicket().getId());
 
         updated.setId(id);
         return luggageRepository.save(updated);
@@ -44,9 +54,19 @@ public class LuggageServiceImpl implements LuggageService {
 
     @Override
     public boolean delete(String id) {
+
+        Luggage existing = validator.requireExisting(id);
+
+        // Dez-atașăm bagajul de la ticket înainte de delete
+        if (existing.getTicket() != null) {
+            existing.setTicket(null);
+            luggageRepository.save(existing); // salvăm actualizarea
+        }
+
         luggageRepository.deleteById(id);
         return true;
     }
+
 
     @Override
     public List<Luggage> findByTicketId(String ticketId) {

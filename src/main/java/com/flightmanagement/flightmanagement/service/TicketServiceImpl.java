@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.service;
 import com.flightmanagement.flightmanagement.model.Ticket;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.repository.TicketRepository;
+import com.flightmanagement.flightmanagement.validations.TicketValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +13,27 @@ import java.util.Optional;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final TicketValidator validator;
 
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository,
+                             TicketValidator validator) {
         this.ticketRepository = ticketRepository;
+        this.validator = validator;
     }
-
-    // --------------- CRUD ------------------
 
     @Override
     public Ticket save(Ticket ticket) {
+
+        validator.assertIdUnique(ticket.getId());
+        validator.requireExistingPassenger(ticket.getPassenger().getId());
+        validator.requireExistingFlight(ticket.getFlight().getId());
+
+        validator.assertSeatAvailable(
+                ticket.getFlight().getId(),
+                ticket.getSeatNumber(),
+                null
+        );
+
         return ticketRepository.save(ticket);
     }
 
@@ -36,20 +49,36 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket update(String id, Ticket updated) {
-        if (!ticketRepository.existsById(id))
-            throw new IllegalArgumentException("Ticket not found: " + id);
+
+        Ticket existing = validator.requireExisting(id);
+
+        validator.requireExistingPassenger(updated.getPassenger().getId());
+        validator.requireExistingFlight(updated.getFlight().getId());
+
+        validator.assertSeatAvailable(
+                updated.getFlight().getId(),
+                updated.getSeatNumber(),
+                id
+        );
 
         updated.setId(id);
         return ticketRepository.save(updated);
     }
-
     @Override
     public boolean delete(String id) {
+
+        validator.requireExisting(id);
+
+        // !!! AICI ERA PROBLEMA !!!
+        validator.assertCanBeDeleted(id);
+
         ticketRepository.deleteById(id);
         return true;
     }
 
-    // --------------- CUSTOM ------------------
+
+
+
 
     @Override
     public List<Ticket> findByPassengerId(String passengerId) {
@@ -68,7 +97,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public double calculateTotalPriceForPassenger(String passengerId) {
-        return findByPassengerId(passengerId).stream()
+        return findByPassengerId(passengerId)
+                .stream()
                 .mapToDouble(Ticket::getPrice)
                 .sum();
     }

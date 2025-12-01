@@ -9,7 +9,9 @@
 
 <h1>Edit Passenger</h1>
 
-<form th:action="@{'/passengers/' + ${passenger.id}}" method="post" th:object="${passengerForm}">
+<form th:action="@{'/passengers/' + ${passenger.id}}"
+      method="post"
+      th:object="${passengerForm}">
 
     <!-- ID -->
     <label>ID:</label>
@@ -22,7 +24,7 @@
     <label>Name:</label>
     <input type="text" th:field="*{name}" />
     <div class="error" th:if="${#fields.hasErrors('name')}"
-         th:errors="*{name}">Name error</div>
+         th:errors="*{name}"></div>
 
     <br/>
 
@@ -30,13 +32,20 @@
     <label>Currency:</label>
     <input type="text" th:field="*{currency}" />
     <div class="error" th:if="${#fields.hasErrors('currency')}"
-         th:errors="*{currency}">Currency error</div>
+         th:errors="*{currency}"></div>
 
     <br/>
 
-    <button type="submit">Save</button>
-</form>
+    <div class="form-actions">
+        <button type="submit">Save</button>
 
+        <!-- BACK BUTTON -->
+        <a th:href="@{/passengers}" class="btn secondary" style="margin-left:10px;">
+            Back
+        </a>
+    </div>
+
+</form>
 
 </body>
 </html>

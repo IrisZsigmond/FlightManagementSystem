@@ -9,6 +9,17 @@
 
 <h1>All Tickets</h1>
 
+<!-- SUCCESS MESSAGE -->
+<div th:if="${success}" style="color: green; font-weight: bold;">
+    <p th:text="${success}"></p>
+</div>
+
+<!-- ERROR MESSAGE -->
+<div th:if="${error}" style="color: red; font-weight: bold;">
+    <p th:text="${error}"></p>
+</div>
+
+
 <a th:href="@{/tickets/new}">Add New Ticket</a>
 
 <table border="1" cellpadding="8" cellspacing="0">

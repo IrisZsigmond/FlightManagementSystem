@@ -45,54 +45,52 @@ public class TicketController {
             Model model,
             RedirectAttributes ra
     ) {
-
         if (result.hasErrors()) {
-
-            // 1. Curățăm câmpurile invalide
-            result.getFieldErrors().forEach(error -> {
-                switch (error.getField()) {
-                    case "id" -> form.setId("");
-                    case "passengerId" -> form.setPassengerId("");
-                    case "flightId" -> form.setFlightId("");
-                    case "category" -> form.setCategory("");
-                    case "price" -> form.setPrice("");
-                    case "seatNumber" -> form.setSeatNumber("");
-                }
-            });
-
-            // 2. Eliminăm BindingResult-ul vechi
-            model.asMap().remove("org.springframework.validation.BindingResult.ticketForm");
-
-            // 3. Creăm unul nou
-            BindingResult newResult =
-                    new org.springframework.validation.BeanPropertyBindingResult(form, "ticketForm");
-
-            result.getFieldErrors().forEach(error ->
-                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
-            );
-
-            // 4. Punem noul BindingResult și formularul
-            model.addAttribute("org.springframework.validation.BindingResult.ticketForm", newResult);
-            model.addAttribute("ticketForm", form);
-
-            // 5. Dropdown categories
             model.addAttribute("categories", TicketCategory.values());
-
             return "tickets/new";
         }
 
-        Ticket t = mapper.toEntity(form);
-        ticketService.save(t);
-        ra.addFlashAttribute("success", "Ticket created.");
-        return "redirect:/tickets";
+        try {
+            Ticket t = mapper.toEntity(form);
+            ticketService.save(t);
+
+            ra.addFlashAttribute("success", "Ticket created.");
+            return "redirect:/tickets";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            }
+            else if (msg.contains("Passenger")) {
+                result.rejectValue("passengerId", "invalid", msg);
+            }
+            else if (msg.contains("Flight")) {
+                result.rejectValue("flightId", "invalid", msg);
+            }
+            else if (msg.contains("Seat")) {
+                result.rejectValue("seatNumber", "duplicate", msg);
+            }
+            else {
+                result.reject("globalError", msg);
+            }
+
+            model.addAttribute("categories", TicketCategory.values());
+            return "tickets/new";
+        }
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        Ticket t = ticketService.findById(id).orElseThrow();
-        model.addAttribute("ticketForm", mapper.toForm(t));
-        model.addAttribute("ticket", t); // pentru panel read-only
+
+        Ticket ticket = ticketService.findById(id).orElseThrow();
+
+        model.addAttribute("ticketForm", mapper.toForm(ticket));
+        model.addAttribute("ticket", ticket);
         model.addAttribute("categories", TicketCategory.values());
+
         return "tickets/edit";
     }
 
@@ -106,45 +104,41 @@ public class TicketController {
     ) {
 
         if (result.hasErrors()) {
+            Ticket existing = ticketService.findById(id).orElseThrow();
+            model.addAttribute("ticket", existing);
+            model.addAttribute("categories", TicketCategory.values());
+            return "tickets/edit";
+        }
 
-            // 1. Curățăm doar câmpurile editabile invalide (ID este readonly)
-            result.getFieldErrors().forEach(error -> {
-                switch (error.getField()) {
-                    case "passengerId" -> form.setPassengerId("");
-                    case "flightId" -> form.setFlightId("");
-                    case "category" -> form.setCategory("");
-                    case "price" -> form.setPrice("");
-                    case "seatNumber" -> form.setSeatNumber("");
-                }
-            });
+        try {
+            Ticket existing = ticketService.findById(id).orElseThrow();
 
-            // 2. Resetăm BindingResult
-            model.asMap().remove("org.springframework.validation.BindingResult.ticketForm");
+            mapper.updateEntityFromForm(existing, form);
+            ticketService.update(id, existing);
 
-            BindingResult newResult =
-                    new org.springframework.validation.BeanPropertyBindingResult(form, "ticketForm");
+            ra.addFlashAttribute("success", "Ticket updated.");
+            return "redirect:/tickets";
 
-            result.getFieldErrors().forEach(error ->
-                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
-            );
+        } catch (IllegalArgumentException | IllegalStateException ex) {
 
-            // 3. Reafișăm datele read-only + dropdown
+            String msg = ex.getMessage();
+
+            if (msg.contains("Passenger")) {
+                result.rejectValue("passengerId", "invalid", msg);
+            } else if (msg.contains("Flight")) {
+                result.rejectValue("flightId", "invalid", msg);
+            } else if (msg.contains("Seat")) {
+                result.rejectValue("seatNumber", "duplicate", msg);
+            } else {
+                result.reject("globalError", msg);
+            }
+
             Ticket existing = ticketService.findById(id).orElseThrow();
             model.addAttribute("ticket", existing);
             model.addAttribute("categories", TicketCategory.values());
 
-            model.addAttribute("org.springframework.validation.BindingResult.ticketForm", newResult);
-            model.addAttribute("ticketForm", form);
-
             return "tickets/edit";
         }
-
-        Ticket existing = ticketService.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        ticketService.update(id, existing);
-
-        ra.addFlashAttribute("success", "Ticket updated.");
-        return "redirect:/tickets";
     }
 
     @PostMapping("/{id}/delete")
@@ -152,7 +146,7 @@ public class TicketController {
         try {
             ticketService.delete(id);
             ra.addFlashAttribute("success", "Ticket deleted.");
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/tickets";

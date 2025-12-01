@@ -17,4 +17,10 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
     List<Ticket> findByFlight_Id(String flightId);
 
     List<Ticket> findByCategory(TicketCategory category);
+
+    boolean existsByPassenger_Id(String passengerId);
+
+    boolean existsBySeatNumberAndFlight_Id(String seatNumber, String flightId);
+
+    boolean existsBySeatNumberAndFlight_IdAndIdNot(String seatNumber, String flightId, String excludeId);
 }

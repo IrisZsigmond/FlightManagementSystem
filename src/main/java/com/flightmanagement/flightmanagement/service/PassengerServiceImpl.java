@@ -2,64 +2,81 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
 import com.flightmanagement.flightmanagement.repository.PassengerRepository;
+import com.flightmanagement.flightmanagement.validations.PassengerValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PassengerServiceImpl implements PassengerService {
 
     private final PassengerRepository passengerRepository;
+    private final PassengerValidator passengerValidator;
     private final TicketService ticketService;
 
     public PassengerServiceImpl(PassengerRepository passengerRepository,
+                                PassengerValidator passengerValidator,
                                 TicketService ticketService) {
         this.passengerRepository = passengerRepository;
+        this.passengerValidator = passengerValidator;
         this.ticketService = ticketService;
     }
 
-    // ---------------- CRUD ----------------
-
     @Override
     public Passenger save(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        passengerValidator.assertIdUnique(passenger.getId());
+
         return passengerRepository.save(passenger);
     }
 
     @Override
-    public List<Passenger> findAll() {
-        return passengerRepository.findAll();
-    }
-
-    @Override
-    public Optional<Passenger> findById(String id) {
-        return passengerRepository.findById(id);
-    }
-
-    @Override
     public Passenger update(String id, Passenger updated) {
-        if (!passengerRepository.existsById(id))
-            throw new IllegalArgumentException("Passenger not found: " + id);
+        if (updated == null) {
+            throw new IllegalArgumentException("Updated passenger cannot be null.");
+        }
 
-        updated.setId(id);
-        return passengerRepository.save(updated);
+        Passenger existing = passengerValidator.requireExisting(id);
+
+        existing.setName(updated.getName());
+        existing.setCurrency(updated.getCurrency());
+
+        return passengerRepository.save(existing);
     }
 
     @Override
     public boolean delete(String id) {
-        var tickets = ticketService.findByPassengerId(id);
-        if (!tickets.isEmpty()) {
-            throw new IllegalStateException(
-                    "Cannot delete passenger '" + id +
-                            "' because tickets are still assigned (" + tickets.size() + ")."
-            );
-        }
+        if (id == null || id.isBlank()) return false;
+
+        passengerValidator.requireExisting(id);
+        passengerValidator.assertCanBeDeleted(id);
 
         passengerRepository.deleteById(id);
         return true;
     }
 
-    // ---------------- CUSTOM ----------------
+    @Override
+    @Transactional(readOnly = true)
+    public List<Passenger> findAll() {
+        return passengerRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Passenger> findById(String id) {
+        return passengerRepository.findById(id);
+    }
+
+    @Override
+    public Passenger getById(String id) {
+        return passengerValidator.requireExisting(id);
+    }
 
     @Override
     public List<Passenger> findByName(String name) {
@@ -72,18 +89,10 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public int countTickets(String passengerId) {
-        return passengerRepository.findById(passengerId)
-                .map(p -> p.getTickets() != null ? p.getTickets().size() : 0)
-                .orElse(0);
-    }
-
-    @Override
     public Optional<Passenger> findWithTickets(String id) {
-        return passengerRepository.findById(id)
-                .map(p -> {
-                    p.setTickets(ticketService.findByPassengerId(id));
-                    return p;
-                });
+        return passengerRepository.findById(id).map(p -> {
+            p.setTickets(ticketService.findByPassengerId(id));
+            return p;
+        });
     }
 }
