@@ -9,23 +9,47 @@
 
 <h1>Edit Flight Assignment</h1>
 
-<form th:action="@{'/flightassignments/' + ${assignmentForm.id}}"
-      th:object="${assignmentForm}" method="post">
+<form th:action="@{'/flightassignments/' + ${assignmentId}}"
+      th:object="${assignmentForm}"
+      method="post">
 
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" readonly />
-    <span class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
+    <!-- GLOBAL ERRORS -->
+    <div th:if="${#fields.hasGlobalErrors()}" class="error global-error">
+        <p th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
 
-    <label>Flight ID:</label>
-    <input type="text" th:field="*{flightId}" readonly />
-    <span class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></span>
+    <!-- ID -->
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly />
+        <span class="error"
+              th:if="${#fields.hasErrors('id')}"
+              th:errors="*{id}"></span>
+    </div>
 
-    <label>Employee ID:</label>
-    <input type="text" th:field="*{airlineEmployeeId}" readonly />
-    <span class="error" th:if="${#fields.hasErrors('airlineEmployeeId')}" th:errors="*{airlineEmployeeId}"></span>
+    <!-- Flight ID -->
+    <div>
+        <label>Flight ID:</label>
+        <input type="text" th:field="*{flightId}" readonly />
+        <span class="error"
+              th:if="${#fields.hasErrors('flightId')}"
+              th:errors="*{flightId}"></span>
+    </div>
 
-    <button type="submit">Save</button>
-    <a th:href="@{/flightassignments}">Cancel</a>
+    <!-- Employee ID -->
+    <div>
+        <label>Employee ID:</label>
+        <input type="text" th:field="*{airlineEmployeeId}" readonly />
+        <span class="error"
+              th:if="${#fields.hasErrors('airlineEmployeeId')}"
+              th:errors="*{airlineEmployeeId}"></span>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/flightassignments}" class="btn secondary">Cancel</a>
+    </div>
 </form>
 
 </body>
