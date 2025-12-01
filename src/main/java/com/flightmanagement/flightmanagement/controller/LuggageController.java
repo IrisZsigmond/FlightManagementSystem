@@ -53,12 +53,33 @@ public class LuggageController {
             return "luggage/new";
         }
 
-        Luggage luggage = mapper.toEntity(form);
-        luggageService.save(luggage);
+        try {
+            Luggage luggage = mapper.toEntity(form);
+            luggageService.save(luggage);
 
-        ra.addFlashAttribute("success", "Luggage created.");
-        return "redirect:/luggages";
+            ra.addFlashAttribute("success", "Luggage created.");
+            return "redirect:/luggages";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            }
+            else if (msg.contains("Ticket")) {
+                result.rejectValue("ticketId", "invalid", msg);
+            }
+            else {
+                result.reject("globalError", msg);
+            }
+
+            model.addAttribute("statuses", LuggageStatus.values());
+            model.addAttribute("sizes", LuggageSize.values());
+            return "luggage/new";
+        }
     }
+
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
@@ -78,32 +99,88 @@ public class LuggageController {
             RedirectAttributes ra,
             Model model
     ) {
+
+        // --- VALIDĂRI DE FORM ---
         if (result.hasErrors()) {
+
+            // curățăm câmpurile invalide
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "ticketId" -> form.setTicketId("");
+                    case "status"   -> form.setStatus("");
+                    case "size"     -> form.setSize("");
+                }
+            });
+
+            // înlocuim BindingResult-ul
+            model.asMap().remove("org.springframework.validation.BindingResult.luggageForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "luggageForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
             Luggage existing = luggageService.findById(id).orElseThrow();
             model.addAttribute("luggage", existing);
+            model.addAttribute("org.springframework.validation.BindingResult.luggageForm", newResult);
+            model.addAttribute("luggageForm", form);
             model.addAttribute("statuses", LuggageStatus.values());
             model.addAttribute("sizes", LuggageSize.values());
+
             return "luggage/edit";
         }
 
-        Luggage existing = luggageService.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        luggageService.update(id, existing);
 
-        ra.addFlashAttribute("success", "Luggage updated.");
-        return "redirect:/luggages";
+        // --- SERVICIUL + VALIDATORUL ---
+        try {
+
+            Luggage existing = luggageService.findById(id).orElseThrow();
+
+            mapper.updateEntityFromForm(existing, form);
+
+            luggageService.update(id, existing);
+
+            ra.addFlashAttribute("success", "Luggage updated.");
+            return "redirect:/luggages";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage() != null ? ex.getMessage() : "Could not update luggage.";
+
+            // mapăm mesajele către field-urile corecte
+            if (msg.contains("Ticket")) {
+                result.rejectValue("ticketId", "invalid", msg);
+            } else if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);  // în mod normal nu se modifică ID la update
+            } else {
+                result.reject("globalError", msg);
+            }
+
+            Luggage existing = luggageService.findById(id).orElseThrow();
+
+            model.addAttribute("luggage", existing);
+            model.addAttribute("luggageForm", form);
+            model.addAttribute("statuses", LuggageStatus.values());
+            model.addAttribute("sizes", LuggageSize.values());
+
+            return "luggage/edit";
+        }
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
             luggageService.delete(id);
             ra.addFlashAttribute("success", "Luggage deleted.");
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException | IllegalStateException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/luggages";
     }
+
 
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model) {

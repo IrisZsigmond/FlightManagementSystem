@@ -15,11 +15,11 @@ public class PassengerMapper {
         return p;
     }
 
-    public PassengerForm toForm(Passenger passenger) {
+    public PassengerForm toForm(Passenger p) {
         PassengerForm form = new PassengerForm();
-        form.setId(passenger.getId());
-        form.setName(passenger.getName());
-        form.setCurrency(passenger.getCurrency());
+        form.setId(p.getId());
+        form.setName(p.getName());
+        form.setCurrency(p.getCurrency());
         return form;
     }
 

@@ -47,10 +47,40 @@ public class NoticeBoardController {
             return "noticeboards/new";
         }
 
-        NoticeBoard nb = mapper.toEntity(form);
-        noticeBoardService.save(nb);
-        ra.addFlashAttribute("success", "Notice board created.");
-        return "redirect:/noticeboards";
+        try {
+            NoticeBoard nb = mapper.toEntity(form);
+            noticeBoardService.save(nb);
+
+            ra.addFlashAttribute("success", "Notice board created.");
+            return "redirect:/noticeboards";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage() != null ? ex.getMessage() : "Cannot create NoticeBoard.";
+
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            }
+            else if (msg.toLowerCase().contains("date")) {   // <-- FIX
+                result.rejectValue("date", "duplicate", msg);
+            }
+            else {
+                result.reject("globalError", msg);
+            }
+
+            return "noticeboards/new";
+        }
+    }
+
+
+
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
+        model.addAttribute("noticeBoard", nb);
+        return "noticeboards/edit";
     }
 
     @PostMapping("/{id}")
@@ -62,17 +92,42 @@ public class NoticeBoardController {
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
-            model.addAttribute("noticeBoard", noticeBoardService.findById(id).orElseThrow());
+            NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
+            model.addAttribute("noticeBoard", existing);
             return "noticeboards/edit";
         }
 
-        NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        noticeBoardService.update(id, existing);
+        try {
+            NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
+            mapper.updateEntityFromForm(existing, form);
+            noticeBoardService.update(id, existing);
 
-        ra.addFlashAttribute("success", "Notice board updated.");
-        return "redirect:/noticeboards";
+            ra.addFlashAttribute("success", "Notice board updated.");
+            return "redirect:/noticeboards";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            // Dacă e conflict pe ID (deși la update ID e readonly)
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            }
+            // 🔥 AICI ESTE FIX-UL IMPORTANT
+            else if (msg.toLowerCase().contains("date")) {
+                result.rejectValue("date", "duplicate", msg);
+            }
+            else {
+                result.reject("globalError", msg);
+            }
+
+            NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
+            model.addAttribute("noticeBoard", existing);
+            return "noticeboards/edit";
+        }
+
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
@@ -90,13 +145,5 @@ public class NoticeBoardController {
         NoticeBoard board = noticeBoardService.findById(id).orElseThrow();
         model.addAttribute("board", board);
         return "noticeboards/view";
-    }
-
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
-        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
-        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
-        model.addAttribute("noticeBoard", nb);
-        return "noticeboards/edit";
     }
 }

@@ -47,22 +47,50 @@ public class TicketController {
     ) {
         if (result.hasErrors()) {
             model.addAttribute("categories", TicketCategory.values());
-            return "tickets/new"; // reafișăm formularul cu erori
+            return "tickets/new";
         }
 
-        Ticket t = mapper.toEntity(form);
-        ticketService.save(t);
-        ra.addFlashAttribute("success", "Ticket created.");
-        return "redirect:/tickets";
-    }
+        try {
+            Ticket t = mapper.toEntity(form);
+            ticketService.save(t);
 
+            ra.addFlashAttribute("success", "Ticket created.");
+            return "redirect:/tickets";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            }
+            else if (msg.contains("Passenger")) {
+                result.rejectValue("passengerId", "invalid", msg);
+            }
+            else if (msg.contains("Flight")) {
+                result.rejectValue("flightId", "invalid", msg);
+            }
+            else if (msg.contains("Seat")) {
+                result.rejectValue("seatNumber", "duplicate", msg);
+            }
+            else {
+                result.reject("globalError", msg);
+            }
+
+            model.addAttribute("categories", TicketCategory.values());
+            return "tickets/new";
+        }
+    }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
-        Ticket t = ticketService.findById(id).orElseThrow();
-        model.addAttribute("ticketForm", mapper.toForm(t));
-        model.addAttribute("ticket", t);
+
+        Ticket ticket = ticketService.findById(id).orElseThrow();
+
+        model.addAttribute("ticketForm", mapper.toForm(ticket));
+        model.addAttribute("ticket", ticket);
         model.addAttribute("categories", TicketCategory.values());
+
         return "tickets/edit";
     }
 
@@ -74,27 +102,51 @@ public class TicketController {
             Model model,
             RedirectAttributes ra
     ) {
+
         if (result.hasErrors()) {
+            Ticket existing = ticketService.findById(id).orElseThrow();
+            model.addAttribute("ticket", existing);
             model.addAttribute("categories", TicketCategory.values());
-            model.addAttribute("ticket", ticketService.findById(id).orElseThrow());
             return "tickets/edit";
         }
 
-        Ticket existing = ticketService.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        ticketService.update(id, existing);
+        try {
+            Ticket existing = ticketService.findById(id).orElseThrow();
 
-        ra.addFlashAttribute("success", "Ticket updated.");
-        return "redirect:/tickets";
+            mapper.updateEntityFromForm(existing, form);
+            ticketService.update(id, existing);
+
+            ra.addFlashAttribute("success", "Ticket updated.");
+            return "redirect:/tickets";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("Passenger")) {
+                result.rejectValue("passengerId", "invalid", msg);
+            } else if (msg.contains("Flight")) {
+                result.rejectValue("flightId", "invalid", msg);
+            } else if (msg.contains("Seat")) {
+                result.rejectValue("seatNumber", "duplicate", msg);
+            } else {
+                result.reject("globalError", msg);
+            }
+
+            Ticket existing = ticketService.findById(id).orElseThrow();
+            model.addAttribute("ticket", existing);
+            model.addAttribute("categories", TicketCategory.values());
+
+            return "tickets/edit";
+        }
     }
-
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
             ticketService.delete(id);
             ra.addFlashAttribute("success", "Ticket deleted.");
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/tickets";

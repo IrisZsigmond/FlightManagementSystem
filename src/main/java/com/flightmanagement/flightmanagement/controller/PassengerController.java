@@ -16,51 +16,76 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PassengerController {
 
     private final PassengerService passengerService;
-    private final PassengerMapper mapper;
+    private final PassengerMapper passengerMapper;
 
     public PassengerController(PassengerService passengerService,
-                               PassengerMapper mapper) {
+                               PassengerMapper passengerMapper) {
         this.passengerService = passengerService;
-        this.mapper = mapper;
+        this.passengerMapper = passengerMapper;
     }
 
+    // LIST
     @GetMapping
     public String index(Model model) {
         model.addAttribute("passengers", passengerService.findAll());
         return "passengers/index";
     }
 
+    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("passengerForm", new PassengerForm());
+        if (!model.containsAttribute("passengerForm")) {
+            model.addAttribute("passengerForm", new PassengerForm());
+        }
         return "passengers/new";
     }
 
+    // CREATE SUBMIT
     @PostMapping
     public String create(
             @Valid @ModelAttribute("passengerForm") PassengerForm form,
-            BindingResult result,                                                // BindingResult captures validation errors triggered by @Valid
+            BindingResult result,
+            Model model,
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
             return "passengers/new";
         }
 
-        Passenger p = mapper.toEntity(form);
-        passengerService.save(p);
+        try {
+            Passenger passenger = passengerMapper.toEntity(form);
+            passengerService.save(passenger);
 
-        ra.addFlashAttribute("success", "Passenger created.");
-        return "redirect:/passengers";
+            ra.addFlashAttribute("success", "Passenger created.");
+            return "redirect:/passengers";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            result.rejectValue("id", "duplicate", ex.getMessage());
+            return "passengers/new";
+        }
     }
 
+    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
-        Passenger p = passengerService.findById(id).orElseThrow();
-        model.addAttribute("passengerForm", mapper.toForm(p));
-        model.addAttribute("passenger", p);
-        return "passengers/edit";
+    public String edit(@PathVariable String id,
+                       Model model,
+                       RedirectAttributes ra) {
+
+        try {
+            Passenger passenger = passengerService.getById(id);
+
+            model.addAttribute("passengerForm", passengerMapper.toForm(passenger));
+            model.addAttribute("passenger", passenger);
+
+            return "passengers/edit";
+
+        } catch (RuntimeException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/passengers";
+        }
     }
 
+    // EDIT SUBMIT
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -70,36 +95,61 @@ public class PassengerController {
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
-            // Recărcăm obiectul original pentru afișarea în edit.html
-            Passenger existing = passengerService.findById(id).orElseThrow();
-            model.addAttribute("passenger", existing);
+            Passenger passenger = passengerService.getById(id);
+            model.addAttribute("passenger", passenger);
             return "passengers/edit";
         }
 
-        Passenger existing = passengerService.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        passengerService.update(id, existing);
+        try {
+            Passenger existing = passengerService.getById(id);
+            passengerMapper.updateEntityFromForm(existing, form);
 
-        ra.addFlashAttribute("success", "Passenger updated.");
-        return "redirect:/passengers";
+            passengerService.update(id, existing);
+
+            ra.addFlashAttribute("success", "Passenger updated.");
+            return "redirect:/passengers";
+
+        } catch (RuntimeException ex) {
+            result.reject("globalError", ex.getMessage());
+            Passenger passenger = passengerService.getById(id);
+            model.addAttribute("passenger", passenger);
+            return "passengers/edit";
+        }
     }
 
-
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id, RedirectAttributes ra) {
+    public String delete(@PathVariable String id,
+                         RedirectAttributes ra) {
+
         try {
-            passengerService.delete(id);
-            ra.addFlashAttribute("success", "Passenger deleted.");
-        } catch (Exception ex) {
+            boolean deleted = passengerService.delete(id);
+            if (deleted) {
+                ra.addFlashAttribute("success", "Passenger deleted.");
+            } else {
+                ra.addFlashAttribute("error", "Passenger not found.");
+            }
+
+        } catch (RuntimeException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
+
         return "redirect:/passengers";
     }
 
+    // VIEW DETAILS
     @GetMapping("/{id}")
-    public String view(@PathVariable String id, Model model) {
-        Passenger passenger = passengerService.findById(id).orElseThrow();
-        model.addAttribute("passenger", passenger);
-        return "passengers/view";
+    public String view(@PathVariable String id,
+                       Model model,
+                       RedirectAttributes ra) {
+
+        try {
+            Passenger p = passengerService.getById(id);
+            model.addAttribute("passenger", p);
+            return "passengers/view";
+        } catch (RuntimeException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/passengers";
+        }
     }
 }

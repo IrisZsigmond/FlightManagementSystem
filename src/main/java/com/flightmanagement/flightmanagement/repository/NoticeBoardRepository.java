@@ -12,6 +12,9 @@ import java.util.List;
 @Primary
 public interface NoticeBoardRepository extends JpaRepository<NoticeBoard, String> {
 
-    // Custom query for findByDate
     List<NoticeBoard> findByDate(LocalDate date);
+
+    boolean existsByDate(LocalDate date);
+
+    boolean existsByDateAndIdNot(LocalDate date, String id);
 }

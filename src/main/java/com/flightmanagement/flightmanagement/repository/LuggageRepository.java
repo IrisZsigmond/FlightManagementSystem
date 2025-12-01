@@ -18,4 +18,6 @@ public interface LuggageRepository extends JpaRepository<Luggage, String> {
     List<Luggage> findByStatus(LuggageStatus status);
 
     List<Luggage> findBySize(LuggageSize size);
+
+    boolean existsByTicket_Id(String id);
 }
