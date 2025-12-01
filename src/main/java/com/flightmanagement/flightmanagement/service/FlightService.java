@@ -18,6 +18,7 @@ public interface FlightService {
 
     boolean delete(String id);
 
+    Flight getById(String id);
     // Custom methods:
     List<Flight> findByAirplaneId(String airplaneId);
 
