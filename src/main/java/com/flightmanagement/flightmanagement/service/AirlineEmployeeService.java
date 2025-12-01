@@ -11,13 +11,15 @@ public interface AirlineEmployeeService {
 
     AirlineEmployee save(AirlineEmployee employee);
 
-    List<AirlineEmployee> findAll();
-
-    Optional<AirlineEmployee> findById(String id);
-
     AirlineEmployee update(String id, AirlineEmployee updated);
 
     boolean delete(String id);
+
+    List<AirlineEmployee> findAll();
+
+    AirlineEmployee getById(String id);
+
+    Optional<AirlineEmployee> findById(String id);
 
     List<AirlineEmployee> findByRole(AirlineRole role);
 

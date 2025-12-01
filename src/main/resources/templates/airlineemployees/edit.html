@@ -9,15 +9,21 @@
 
 <h1>Edit Airline Employee</h1>
 
-<form th:action="@{'/airlineemployees/' + ${airlineEmployeeForm.id}}"
-      th:object="${airlineEmployeeForm}"
+<form th:action="@{'/airlineemployees/' + ${employeeId}}"
+      th:object="${employeeForm}"
       method="post">
+
+    <!-- EROARE GLOBALA (daca avem result.reject("globalError", ...)) -->
+    <div th:if="${#fields.hasGlobalErrors()}" class="error global-error">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
 
     <!-- ID (read-only) -->
     <div>
         <label>ID:</label>
         <input type="text" th:field="*{id}" readonly />
-        <span class="error" th:if="${#fields.hasErrors('id')}"
+        <span class="error"
+              th:if="${#fields.hasErrors('id')}"
               th:errors="*{id}"></span>
     </div>
 
@@ -25,7 +31,8 @@
     <div>
         <label>Name:</label>
         <input type="text" th:field="*{name}" />
-        <span class="error" th:if="${#fields.hasErrors('name')}"
+        <span class="error"
+              th:if="${#fields.hasErrors('name')}"
               th:errors="*{name}"></span>
     </div>
 
@@ -39,7 +46,8 @@
                     th:text="${r}">
             </option>
         </select>
-        <span class="error" th:if="${#fields.hasErrors('role')}"
+        <span class="error"
+              th:if="${#fields.hasErrors('role')}"
               th:errors="*{role}"></span>
     </div>
 
@@ -47,7 +55,7 @@
     <h3>Assignments</h3>
     <ul>
         <li th:each="a : ${employee.assignments}"
-            th:text="${a.id + ' (flight ' + a.flight.id + ')'}">
+            th:text="${a.id + ' (flight ' + (a.flight != null ? a.flight.id : 'N/A') + ')'}">
         </li>
 
         <li th:if="${employee.assignments == null or #lists.isEmpty(employee.assignments)}">

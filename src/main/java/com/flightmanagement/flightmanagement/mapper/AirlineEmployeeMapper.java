@@ -5,6 +5,8 @@ import com.flightmanagement.flightmanagement.model.AirlineEmployee;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class AirlineEmployeeMapper {
 
@@ -27,6 +29,9 @@ public class AirlineEmployeeMapper {
     }
 
     public void updateEntityFromForm(AirlineEmployee existing, AirlineEmployeeForm form) {
+        Objects.requireNonNull(existing);
+        Objects.requireNonNull(form);
+
         existing.setName(form.getName());
         existing.setRole(AirlineRole.valueOf(form.getRole()));
     }

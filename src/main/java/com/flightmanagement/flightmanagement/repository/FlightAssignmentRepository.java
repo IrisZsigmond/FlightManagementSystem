@@ -14,4 +14,6 @@ public interface FlightAssignmentRepository extends JpaRepository<FlightAssignme
     List<FlightAssignment> findByFlight_Id(String flightId);
 
     List<FlightAssignment> findByAirlineEmployee_Id(String employeeId);
+
+    boolean existsByAirlineEmployee_Id(String airlineEmployeeId);
 }
