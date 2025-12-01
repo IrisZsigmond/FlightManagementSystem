@@ -44,6 +44,28 @@ public class NoticeBoardController {
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
+
+            // curățăm câmpurile invalide
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "id" -> form.setId("");
+                    case "date" -> form.setDate("");
+                }
+            });
+
+            // resetăm BindingResult-ul
+            model.asMap().remove("org.springframework.validation.BindingResult.noticeBoardForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "noticeBoardForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            model.addAttribute("org.springframework.validation.BindingResult.noticeBoardForm", newResult);
+            model.addAttribute("noticeBoardForm", form);
+
             return "noticeboards/new";
         }
 
@@ -51,6 +73,14 @@ public class NoticeBoardController {
         noticeBoardService.save(nb);
         ra.addFlashAttribute("success", "Notice board created.");
         return "redirect:/noticeboards";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
+        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
+        model.addAttribute("noticeBoard", nb);
+        return "noticeboards/edit";
     }
 
     @PostMapping("/{id}")
@@ -62,7 +92,28 @@ public class NoticeBoardController {
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
-            model.addAttribute("noticeBoard", noticeBoardService.findById(id).orElseThrow());
+
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "date" -> form.setDate("");
+                    // ID este readonly → nu îl golim
+                }
+            });
+
+            model.asMap().remove("org.springframework.validation.BindingResult.noticeBoardForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "noticeBoardForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
+            model.addAttribute("noticeBoard", existing);
+            model.addAttribute("org.springframework.validation.BindingResult.noticeBoardForm", newResult);
+            model.addAttribute("noticeBoardForm", form);
+
             return "noticeboards/edit";
         }
 
@@ -90,13 +141,5 @@ public class NoticeBoardController {
         NoticeBoard board = noticeBoardService.findById(id).orElseThrow();
         model.addAttribute("board", board);
         return "noticeboards/view";
-    }
-
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
-        NoticeBoard nb = noticeBoardService.findById(id).orElseThrow();
-        model.addAttribute("noticeBoardForm", mapper.toForm(nb));
-        model.addAttribute("noticeBoard", nb);
-        return "noticeboards/edit";
     }
 }

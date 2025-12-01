@@ -45,9 +45,40 @@ public class TicketController {
             Model model,
             RedirectAttributes ra
     ) {
+
         if (result.hasErrors()) {
+
+            // 1. Curățăm câmpurile invalide
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "id" -> form.setId("");
+                    case "passengerId" -> form.setPassengerId("");
+                    case "flightId" -> form.setFlightId("");
+                    case "category" -> form.setCategory("");
+                    case "price" -> form.setPrice("");
+                    case "seatNumber" -> form.setSeatNumber("");
+                }
+            });
+
+            // 2. Eliminăm BindingResult-ul vechi
+            model.asMap().remove("org.springframework.validation.BindingResult.ticketForm");
+
+            // 3. Creăm unul nou
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "ticketForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            // 4. Punem noul BindingResult și formularul
+            model.addAttribute("org.springframework.validation.BindingResult.ticketForm", newResult);
+            model.addAttribute("ticketForm", form);
+
+            // 5. Dropdown categories
             model.addAttribute("categories", TicketCategory.values());
-            return "tickets/new"; // reafișăm formularul cu erori
+
+            return "tickets/new";
         }
 
         Ticket t = mapper.toEntity(form);
@@ -56,12 +87,11 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
-
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
         Ticket t = ticketService.findById(id).orElseThrow();
         model.addAttribute("ticketForm", mapper.toForm(t));
-        model.addAttribute("ticket", t);
+        model.addAttribute("ticket", t); // pentru panel read-only
         model.addAttribute("categories", TicketCategory.values());
         return "tickets/edit";
     }
@@ -74,9 +104,38 @@ public class TicketController {
             Model model,
             RedirectAttributes ra
     ) {
+
         if (result.hasErrors()) {
+
+            // 1. Curățăm doar câmpurile editabile invalide (ID este readonly)
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "passengerId" -> form.setPassengerId("");
+                    case "flightId" -> form.setFlightId("");
+                    case "category" -> form.setCategory("");
+                    case "price" -> form.setPrice("");
+                    case "seatNumber" -> form.setSeatNumber("");
+                }
+            });
+
+            // 2. Resetăm BindingResult
+            model.asMap().remove("org.springframework.validation.BindingResult.ticketForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "ticketForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            // 3. Reafișăm datele read-only + dropdown
+            Ticket existing = ticketService.findById(id).orElseThrow();
+            model.addAttribute("ticket", existing);
             model.addAttribute("categories", TicketCategory.values());
-            model.addAttribute("ticket", ticketService.findById(id).orElseThrow());
+
+            model.addAttribute("org.springframework.validation.BindingResult.ticketForm", newResult);
+            model.addAttribute("ticketForm", form);
+
             return "tickets/edit";
         }
 
@@ -87,7 +146,6 @@ public class TicketController {
         ra.addFlashAttribute("success", "Ticket updated.");
         return "redirect:/tickets";
     }
-
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {

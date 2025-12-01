@@ -97,12 +97,34 @@ public class PassengerController {
             RedirectAttributes ra
     ) {
         if (result.hasErrors()) {
-            // Recărcăm obiectul original pentru afișarea în edit.html
+
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "name" -> form.setName("");
+                    case "currency" -> form.setCurrency("");
+                }
+            });
+
             Passenger existing = passengerService.findById(id).orElseThrow();
             model.addAttribute("passenger", existing);
+
+            model.asMap().remove("org.springframework.validation.BindingResult.passengerForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "passengerForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            model.addAttribute("org.springframework.validation.BindingResult.passengerForm", newResult);
+
+            model.addAttribute("passengerForm", form);
+
             return "passengers/edit";
         }
 
+        // Dacă nu există erori – facem update
         Passenger existing = passengerService.findById(id).orElseThrow();
         mapper.updateEntityFromForm(existing, form);
         passengerService.update(id, existing);
@@ -110,6 +132,7 @@ public class PassengerController {
         ra.addFlashAttribute("success", "Passenger updated.");
         return "redirect:/passengers";
     }
+
 
 
 

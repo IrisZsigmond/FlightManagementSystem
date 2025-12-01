@@ -48,8 +48,30 @@ public class LuggageController {
             Model model
     ) {
         if (result.hasErrors()) {
+
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "id" -> form.setId("");
+                    case "ticketId" -> form.setTicketId("");
+                    case "status" -> form.setStatus("");
+                    case "size" -> form.setSize("");
+                }
+            });
+
+            model.asMap().remove("org.springframework.validation.BindingResult.luggageForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "luggageForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
+            model.addAttribute("org.springframework.validation.BindingResult.luggageForm", newResult);
+            model.addAttribute("luggageForm", form);
             model.addAttribute("statuses", LuggageStatus.values());
             model.addAttribute("sizes", LuggageSize.values());
+
             return "luggage/new";
         }
 
@@ -79,10 +101,31 @@ public class LuggageController {
             Model model
     ) {
         if (result.hasErrors()) {
+
+            result.getFieldErrors().forEach(error -> {
+                switch (error.getField()) {
+                    case "ticketId" -> form.setTicketId("");
+                    case "status" -> form.setStatus("");
+                    case "size" -> form.setSize("");
+                }
+            });
+
+            model.asMap().remove("org.springframework.validation.BindingResult.luggageForm");
+
+            BindingResult newResult =
+                    new org.springframework.validation.BeanPropertyBindingResult(form, "luggageForm");
+
+            result.getFieldErrors().forEach(error ->
+                    newResult.rejectValue(error.getField(), "", error.getDefaultMessage())
+            );
+
             Luggage existing = luggageService.findById(id).orElseThrow();
             model.addAttribute("luggage", existing);
+            model.addAttribute("org.springframework.validation.BindingResult.luggageForm", newResult);
+            model.addAttribute("luggageForm", form);
             model.addAttribute("statuses", LuggageStatus.values());
             model.addAttribute("sizes", LuggageSize.values());
+
             return "luggage/edit";
         }
 
