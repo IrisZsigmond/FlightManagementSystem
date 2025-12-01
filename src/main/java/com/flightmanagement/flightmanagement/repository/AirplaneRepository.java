@@ -14,4 +14,6 @@ public interface AirplaneRepository extends JpaRepository<Airplane, String> {
     Optional<Airplane> findByNumber(int number);
 
     boolean existsByNumber(int number);
+
+    boolean existsByNumberAndIdNot(int number, String id);
 }

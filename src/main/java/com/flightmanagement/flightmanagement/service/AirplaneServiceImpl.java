@@ -38,8 +38,8 @@ public class AirplaneServiceImpl implements AirplaneService {
         // ID unic
         airplaneValidator.assertIdUnique(airplane.getId());
 
-        // Number unic (create -> nu excludem pe nimeni)
-        airplaneValidator.assertNumberUnique(airplane.getNumber());
+        // Number unic - CREATE
+        airplaneValidator.assertNumberUniqueForCreate(airplane.getNumber());
 
         return airplaneRepository.save(airplane);
     }
@@ -55,7 +55,7 @@ public class AirplaneServiceImpl implements AirplaneService {
         Airplane existing = airplaneValidator.requireExisting(id);
 
         // verificăm number unic, excluzând avionul curent
-        airplaneValidator.assertNumberUnique(updated.getNumber());
+        airplaneValidator.assertNumberUniqueForUpdate(updated.getNumber(), id);
 
         // actualizăm doar câmpurile editabile
         existing.setNumber(updated.getNumber());
@@ -63,6 +63,7 @@ public class AirplaneServiceImpl implements AirplaneService {
 
         return airplaneRepository.save(existing);
     }
+
 
 
     // READ
