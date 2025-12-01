@@ -4,7 +4,9 @@ import com.flightmanagement.flightmanagement.model.AirlineEmployee;
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.repository.AirlineEmployeeRepository;
+import com.flightmanagement.flightmanagement.validations.AirlineEmployeeValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,52 +17,79 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
 
     private final AirlineEmployeeRepository repo;
     private final FlightAssignmentService assignmentService;
+    private final AirlineEmployeeValidator employeeValidator;
 
     public AirlineEmployeeServiceImpl(
             AirlineEmployeeRepository repo,
-            FlightAssignmentService assignmentService) {
+            FlightAssignmentService assignmentService, AirlineEmployeeValidator employeeValidator) {
         this.repo = repo;
         this.assignmentService = assignmentService;
+        this.employeeValidator = employeeValidator;
     }
 
     // ------------------ CRUD -------------------
 
+    // CREATE
     @Override
     public AirlineEmployee save(AirlineEmployee employee) {
+        if (employee == null) {
+            throw new IllegalArgumentException("Airline employee cannot be null");
+        }
+
+        employeeValidator.assertIdUnique(employee.getId());
+
         return repo.save(employee);
     }
 
+    // UPDATE
     @Override
+    public AirlineEmployee update(String id, AirlineEmployee updated) {
+        if (updated == null) {
+            throw new IllegalArgumentException("Updated airline employee cannot be null");
+        }
+
+        AirlineEmployee existing = employeeValidator.requireExisting(id);
+
+        existing.setName(updated.getName());
+        existing.setRole(updated.getRole());
+
+        return repo.save(existing);
+    }
+
+    // DELETE
+    @Override
+    public boolean delete(String id) {
+        if (id == null || id.isBlank()) {
+            return false;
+        }
+
+        Optional<AirlineEmployee> optional = repo.findById(id);
+        if (optional.isEmpty()) {
+            return false;
+        }
+
+        employeeValidator.assertCanBeDeleted(id);
+        repo.deleteById(id);
+        return true;
+    }
+
+    // READ
+
+    @Override
+    @Transactional(readOnly = true)
     public List<AirlineEmployee> findAll() {
         return repo.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public AirlineEmployee getById(String id) {
+        return employeeValidator.requireExisting(id);
+    }
+
+    @Override
     public Optional<AirlineEmployee> findById(String id) {
         return repo.findById(id);
-    }
-
-    @Override
-    public AirlineEmployee update(String id, AirlineEmployee updated) {
-        if (!repo.existsById(id)) {
-            throw new IllegalArgumentException("Airline employee not found: " + id);
-        }
-        updated.setId(id);
-        return repo.save(updated);
-    }
-
-    @Override
-    public boolean delete(String id) {
-        List<FlightAssignment> assignments = assignmentService.findByAirlineEmployeeId(id);
-
-        if (!assignments.isEmpty()) {
-            throw new IllegalStateException(
-                    "Cannot delete airline employee '" + id +
-                            "' because assignments still exist (" + assignments.size() + ").");
-        }
-
-        repo.deleteById(id);
-        return true;
     }
 
     // ------------------ Custom queries -------------------

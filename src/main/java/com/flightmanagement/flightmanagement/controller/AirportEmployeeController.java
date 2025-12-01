@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.dto.AirportEmployeeForm;
 import com.flightmanagement.flightmanagement.mapper.AirportEmployeeMapper;
 import com.flightmanagement.flightmanagement.model.AirportEmployee;
 import com.flightmanagement.flightmanagement.service.AirportEmployeeService;
+import com.flightmanagement.flightmanagement.service.AirportEmployeeServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,12 +31,16 @@ public class AirportEmployeeController {
         return "airportemployees/index";
     }
 
+    // CREATE - form
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("airportEmployeeForm", new AirportEmployeeForm());
+        if (!model.containsAttribute("airportEmployeeForm")) {
+            model.addAttribute("airportEmployeeForm", new AirportEmployeeForm());
+        }
         return "airportemployees/new";
     }
 
+    // CREATE - submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
@@ -43,25 +48,56 @@ public class AirportEmployeeController {
             Model model,
             RedirectAttributes ra
     ) {
+        // 1) Bean Validation pe DTO
         if (result.hasErrors()) {
             return "airportemployees/new";
         }
 
-        AirportEmployee e = mapper.toEntity(form);
-        service.save(e);
+        try {
+            // 2) DTO -> Entity
+            AirportEmployee e = mapper.toEntity(form);
 
-        ra.addFlashAttribute("success", "Airport employee created.");
-        return "redirect:/airportemployees";
+            // 3) service (include validator)
+            service.save(e);
+
+            ra.addFlashAttribute("success", "Airport employee created.");
+            return "redirect:/airportemployees";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            String msg = ex.getMessage() != null ? ex.getMessage() : "Could not create airport employee.";
+
+            // mapare pe câmpuri, dacă putem
+            if (msg.contains("id already exists") || msg.contains("Airport employee id")) {
+                result.rejectValue("id", "duplicate", msg);
+            } else {
+                result.reject("globalError", msg);
+            }
+
+            return "airportemployees/new";
+        }
     }
 
+    // EDIT - form
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
-        AirportEmployee e = service.findById(id).orElseThrow();
-        model.addAttribute("airportEmployeeForm", mapper.toForm(e));
-        model.addAttribute("employee", e);
-        return "airportemployees/edit";
+    public String edit(@PathVariable String id,
+                       Model model,
+                       RedirectAttributes ra) {
+        try {
+            AirportEmployee e = ((AirportEmployeeServiceImpl) service).getById(id);
+            AirportEmployeeForm form = mapper.toForm(e);
+
+            model.addAttribute("airportEmployeeForm", form);
+            model.addAttribute("employeeId", id);
+            model.addAttribute("employee", e);
+            return "airportemployees/edit";
+
+        } catch (RuntimeException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/airportemployees";
+        }
     }
 
+    // EDIT - submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -70,36 +106,63 @@ public class AirportEmployeeController {
             Model model,
             RedirectAttributes ra
     ) {
+        // 1) Bean Validation
         if (result.hasErrors()) {
-            AirportEmployee existing = service.findById(id).orElseThrow();
+            AirportEmployee existing = ((AirportEmployeeServiceImpl) service).getById(id);
+            model.addAttribute("employeeId", id);
             model.addAttribute("employee", existing);
             return "airportemployees/edit";
         }
 
-        AirportEmployee existing = service.findById(id).orElseThrow();
-        mapper.updateEntityFromForm(existing, form);
-        service.update(id, existing);
+        try {
+            AirportEmployee existing = ((AirportEmployeeServiceImpl) service).getById(id);
 
-        ra.addFlashAttribute("success", "Airport employee updated.");
-        return "redirect:/airportemployees";
+            mapper.updateEntityFromForm(existing, form);
+
+            service.update(id, existing);
+
+            ra.addFlashAttribute("success", "Airport employee updated.");
+            return "redirect:/airportemployees";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            String msg = ex.getMessage() != null ? ex.getMessage() : "Could not update airport employee.";
+
+            result.reject("globalError", msg);
+
+            AirportEmployee existing = ((AirportEmployeeServiceImpl) service).getById(id);
+            model.addAttribute("employeeId", id);
+            model.addAttribute("employee", existing);
+
+            return "airportemployees/edit";
+        }
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
-            service.delete(id);
-            ra.addFlashAttribute("success", "Airport employee deleted.");
+            boolean deleted = service.delete(id);
+            if (deleted) {
+                ra.addFlashAttribute("success", "Airport employee deleted.");
+            } else {
+                ra.addFlashAttribute("error", "Airport employee not found or already deleted.");
+            }
         } catch (Exception ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/airportemployees";
     }
 
-
     @GetMapping("/{id}")
-    public String view(@PathVariable String id, Model model) {
-        AirportEmployee employee = service.findById(id).orElseThrow();
-        model.addAttribute("employee", employee);
-        return "airportemployees/view";
+    public String view(@PathVariable String id,
+                       Model model,
+                       RedirectAttributes ra) {
+        try {
+            AirportEmployee employee = ((AirportEmployeeServiceImpl) service).getById(id);
+            model.addAttribute("employee", employee);
+            return "airportemployees/view";
+        } catch (RuntimeException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/airportemployees";
+        }
     }
 }
