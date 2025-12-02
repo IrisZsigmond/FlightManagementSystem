@@ -9,38 +9,56 @@
 
 <h1>Create Luggage</h1>
 
-<form th:action="@{/luggages}" th:object="${luggageForm}" method="post">
+<div class="card mt-4 edit-card">
 
-    <label for="id">ID:</label>
-    <input id="id" type="text" th:field="*{id}" placeholder="L001" />
-    <span class="error" th:if="${#fields.hasErrors('id')}"
-          th:errors="*{id}"></span>
+    <form th:action="@{/luggages}"
+          th:object="${luggageForm}"
+          method="post"
+          class="form-grid">
 
-    <label for="ticketId">Ticket ID:</label>
-    <input id="ticketId" type="text" th:field="*{ticketId}" placeholder="T001" />
-    <span class="error" th:if="${#fields.hasErrors('ticketId')}"
-          th:errors="*{ticketId}"></span>
+        <!-- ID -->
+        <div>
+            <label for="id">ID:</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="L001" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
 
-    <label for="status">Status:</label>
-    <select id="status" th:field="*{status}">
-        <option th:each="s : ${statuses}"
-                th:text="${s}" th:value="${s}"></option>
-    </select>
-    <span class="error" th:if="${#fields.hasErrors('status')}"
-          th:errors="*{status}"></span>
+        <!-- Ticket -->
+        <div>
+            <label for="ticketId">Ticket ID:</label>
+            <input id="ticketId" type="text" th:field="*{ticketId}" placeholder="T001" />
+            <div class="error" th:if="${#fields.hasErrors('ticketId')}" th:errors="*{ticketId}"></div>
+        </div>
 
-    <label for="size">Size:</label>
-    <select id="size" th:field="*{size}">
-        <option th:each="sz : ${sizes}"
-                th:text="${sz}" th:value="${sz}"></option>
-    </select>
-    <span class="error" th:if="${#fields.hasErrors('size')}"
-          th:errors="*{size}"></span>
+        <!-- Status -->
+        <div>
+            <label for="status">Status:</label>
+            <select id="status" th:field="*{status}">
+                <option th:each="s : ${statuses}"
+                        th:value="${s}" th:text="${s}"></option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+        </div>
 
-    <button type="submit">Create</button>
-    <a th:href="@{/luggages}">Cancel</a>
-</form>
+        <!-- Size -->
+        <div>
+            <label for="size">Size:</label>
+            <select id="size" th:field="*{size}">
+                <option th:each="sz : ${sizes}"
+                        th:value="${sz}" th:text="${sz}"></option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('size')}" th:errors="*{size}"></div>
+        </div>
 
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button class="btn" type="submit">Create</button>
+            <a th:href="@{/luggages}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

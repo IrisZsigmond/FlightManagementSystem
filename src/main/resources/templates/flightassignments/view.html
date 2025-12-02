@@ -9,35 +9,37 @@
 
 <h1>Flight Assignment Details</h1>
 
-<div class="details-container">
+<div class="card mt-4 details-card">
 
-    <p><strong>ID:</strong>
+    <p>
+        <strong>ID:</strong>
         <span th:text="${assignment.id}">FA1</span>
     </p>
 
-    <p><strong>Flight:</strong>
-        <span th:if="${assignment.flight != null}"
-              th:text="${assignment.flight.id}">FL1</span>
-        <span th:if="${assignment.flight == null}">N/A</span>
+    <p>
+        <strong>Flight:</strong>
+        <span th:text="${assignment.flight != null ? assignment.flight.id : 'N/A'}">F01</span>
     </p>
 
-    <p><strong>Airline Employee:</strong>
-        <span th:if="${assignment.airlineEmployee != null}"
-              th:text="${assignment.airlineEmployee.id + ' - ' + assignment.airlineEmployee.name}">
-            EMP1 - John Doe
+    <p>
+        <strong>Airline Employee:</strong>
+        <span th:text="${assignment.airlineEmployee != null
+                        ? assignment.airlineEmployee.id + ' - ' + assignment.airlineEmployee.name
+                        : 'N/A'}">
         </span>
-        <span th:if="${assignment.airlineEmployee == null}">N/A</span>
     </p>
 
 </div>
 
-<div class="form-actions">
+<div class="form-actions mt-3">
     <a th:href="@{/flightassignments}" class="btn">Back</a>
 
     <a th:href="@{'/flightassignments/' + ${assignment.id} + '/edit'}" class="btn">Edit</a>
 
     <form th:action="@{'/flightassignments/' + ${assignment.id} + '/delete'}"
-          method="post" style="display:inline;">
+          method="post"
+          class="inline-form"
+          onsubmit="return confirm('Delete this assignment?');">
         <button type="submit" class="btn danger">Delete</button>
     </form>
 </div>

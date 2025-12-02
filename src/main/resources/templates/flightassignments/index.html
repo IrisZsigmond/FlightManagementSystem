@@ -9,44 +9,53 @@
 
 <h1>All Flight Assignments</h1>
 
-<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+<!-- ERROR -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/flightassignments/new}">Add New Assignment</a>
+<!-- SUCCESS -->
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Flight ID</th>
-        <th>Employee ID</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="a : ${assignments}">
-        <td th:text="${a.id}">ID</td>
+<a th:href="@{/flightassignments/new}" class="btn">Add New Assignment</a>
 
-        <!-- folosim a.flight.id -->
-        <td th:text="${a.flight != null ? a.flight.id : 'N/A'}">Flight ID</td>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Flight</th>
+            <th>Employee</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
 
-        <!-- folosim a.airlineEmployee.id -->
-        <td th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'N/A'}">Employee ID</td>
+        <tbody>
+        <tr th:each="a : ${assignments}">
+            <td th:text="${a.id}">ID</td>
 
-        <td>
-            <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
+            <td th:text="${a.flight != null ? a.flight.id : 'N/A'}">Flight</td>
 
-            <form th:action="@{'/flightassignments/' + ${a.id}}"
-                  method="get" style="display:inline;">
-                <button type="submit">View</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <td th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'N/A'}">Employee</td>
+
+            <td class="actions">
+
+                <a th:href="@{'/flightassignments/' + ${a.id}}" class="btn">View</a>
+
+                <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
+                      method="post" class="inline-form"
+                      onsubmit="return confirm('Delete this assignment?');">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(assignments)}">
+            <td colspan="4">No assignments yet.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

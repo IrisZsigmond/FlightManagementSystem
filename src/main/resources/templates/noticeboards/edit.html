@@ -9,36 +9,50 @@
 
 <h1>Edit Notice Board</h1>
 
-<form th:action="@{'/noticeboards/' + ${noticeBoardForm.id}}"
-      th:object="${noticeBoardForm}" method="post">
+<div class="card mt-4 edit-card">
 
-    <!-- ID (readonly) -->
-    <label>ID:</label>
-    <input type="text" th:field="*{id}" disabled />
-    <input type="hidden" th:field="*{id}" />
+    <form th:action="@{'/noticeboards/' + ${noticeBoardForm.id}}"
+          th:object="${noticeBoardForm}"
+          method="post"
+          class="form-grid">
 
-    <!-- Date -->
-    <label>Date (yyyy-MM-dd):</label>
-    <input type="text" th:field="*{date}" />
-    <div class="error" th:if="${#fields.hasErrors('date')}"
-         th:errors="*{date}"></div>
+        <!-- ID readonly -->
+        <div>
+            <label>ID:</label>
+            <input type="text" th:field="*{id}" disabled />
+            <input type="hidden" th:field="*{id}" />
+        </div>
 
-    <h3>Flights of the Day</h3>
-    <ul>
-        <li th:each="f : ${noticeBoard.flightsOfTheDay}"
-            th:text="${f.id + ' - ' + f.name}">
-        </li>
+        <!-- DATE -->
+        <div>
+            <label>Date (yyyy-MM-dd):</label>
+            <input type="text" th:field="*{date}" />
+            <div class="error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+        </div>
 
-        <li th:if="${noticeBoard.flightsOfTheDay == null or #lists.isEmpty(noticeBoard.flightsOfTheDay)}">
-            No flights assigned to this board.
-        </li>
-    </ul>
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Flights of the Day</h3>
 
-    <div class="form-actions">
-        <button type="submit" class="btn">Save</button>
-        <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
-    </div>
-</form>
+            <ul class="mt-2">
+                <li th:each="f : ${noticeBoard.flightsOfTheDay}"
+                    th:text="${f.id + ' - ' + f.name}">
+                </li>
+
+                <li th:if="${noticeBoard.flightsOfTheDay == null or #lists.isEmpty(noticeBoard.flightsOfTheDay)}">
+                    No flights assigned to this board.
+                </li>
+            </ul>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

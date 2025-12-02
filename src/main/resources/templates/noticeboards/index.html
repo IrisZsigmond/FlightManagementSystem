@@ -9,58 +9,69 @@
 
 <h1>All Notice Boards</h1>
 
-<!-- Flash messages -->
-<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+<!-- ERROR -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/noticeboards/new}">Add New Notice Board</a>
+<!-- SUCCESS -->
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Date</th>
-        <th>Flights of the Day</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="board : ${noticeboards}">
-        <td th:text="${board.id}">ID</td>
-        <td th:text="${board.date}">Date</td>
+<!-- ADD BUTTON -->
+<a th:href="@{/noticeboards/new}" class="btn">Add New Notice Board</a>
 
-        <!-- Flights of the day: show id + name, comma-separated -->
-        <td>
-            <span th:if="${board.flightsOfTheDay == null or #lists.isEmpty(board.flightsOfTheDay)}">
-                No flights assigned.
-            </span>
-            <span th:if="${board.flightsOfTheDay != null and !#lists.isEmpty(board.flightsOfTheDay)}">
-                <span th:each="f, iterStat : ${board.flightsOfTheDay}">
-                    <span th:text="${f.id + ' - ' + f.name}">FL1 - Sample Flight</span>
-                    <span th:if="${!iterStat.last}">, </span>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Flights of the Day</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="board : ${noticeboards}">
+            <td th:text="${board.id}">ID</td>
+            <td th:text="${board.date}">Date</td>
+
+            <!-- Flights -->
+            <td>
+                <span th:if="${board.flightsOfTheDay == null or #lists.isEmpty(board.flightsOfTheDay)}">
+                    No flights assigned.
                 </span>
-            </span>
-        </td>
 
-        <td>
-            <form th:action="@{'/noticeboards/' + ${board.id} + '/edit'}"
-                  method="get" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
+                <span th:if="${board.flightsOfTheDay != null and !#lists.isEmpty(board.flightsOfTheDay)}">
+                    <span th:each="f,iter : ${board.flightsOfTheDay}">
+                        <span th:text="${f.id + ' - ' + f.name}">FL1 - Example</span>
+                        <span th:if="${!iter.last}">, </span>
+                    </span>
+                </span>
+            </td>
 
-            <form th:action="@{'/noticeboards/' + ${board.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
+            <!-- ACTIONS -->
+            <td class="actions">
 
-            <form th:action="@{'/noticeboards/' + ${board.id}}"
-                  method="get" style="display:inline;">
-                <button type="submit">View</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                <a th:href="@{'/noticeboards/' + ${board.id}}" class="btn">View</a>
+
+                <a th:href="@{'/noticeboards/' + ${board.id} + '/edit'}" class="btn">Edit</a>
+
+                <form th:action="@{'/noticeboards/' + ${board.id} + '/delete'}"
+                      method="post"
+                      class="inline-form"
+                      onsubmit="return confirm('Delete this notice board?');">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(noticeboards)}">
+            <td colspan="4">No notice boards yet.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

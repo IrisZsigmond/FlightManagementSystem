@@ -9,26 +9,43 @@
 
 <h1>Create Passenger</h1>
 
-<form th:action="@{/passengers}" th:object="${passengerForm}" method="post">
+<div class="card mt-4 edit-card">
 
-    <label>ID (P***):</label>
-    <input type="text" th:field="*{id}" placeholder="P001" />
-    <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+    <form th:action="@{/passengers}"
+          th:object="${passengerForm}"
+          method="post"
+          class="form-grid">
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" />
-    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        <!-- ID -->
+        <div>
+            <label for="id">ID (P***):</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="P001" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
 
-    <label>Currency:</label>
-    <input type="text" th:field="*{currency}" />
-    <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
+        <!-- Name -->
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" type="text" th:field="*{name}" placeholder="John Doe" />
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
 
+        <!-- Currency -->
+        <div>
+            <label for="currency">Currency:</label>
+            <input id="currency" type="text" th:field="*{currency}" placeholder="USD" />
+            <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
+        </div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn">Create</button>
-        <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
-    </div>
-</form>
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button class="btn" type="submit">Create</button>
+            <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

@@ -9,29 +9,34 @@
 
 <h1>Airport Employee Details</h1>
 
-<div class="details-container">
+<div class="card mt-4 details-card">
 
-    <p><strong>ID:</strong> <span th:text="${employee.id}">EMP01</span></p>
+    <p><strong>ID:</strong>
+        <span th:text="${employee.id}">EMP01</span>
+    </p>
 
-    <p><strong>Name:</strong> <span th:text="${employee.name}">John Doe</span></p>
+    <p><strong>Name:</strong>
+        <span th:text="${employee.name}">John Doe</span>
+    </p>
 
     <p><strong>Designation:</strong>
-        <span th:text="${employee.designation}"></span>
+        <span th:text="${employee.designation}">Officer</span>
     </p>
 
     <p><strong>Department:</strong>
-        <span th:text="${employee.department}"></span>
+        <span th:text="${employee.department}">Security</span>
     </p>
 
 </div>
 
-<div class="form-actions">
+<div class="form-actions mt-3">
     <a th:href="@{/airportemployees}" class="btn">Back</a>
 
     <a th:href="@{'/airportemployees/' + ${employee.id} + '/edit'}" class="btn">Edit</a>
 
     <form th:action="@{'/airportemployees/' + ${employee.id} + '/delete'}"
-          method="post" style="display:inline;">
+          method="post" class="inline-form"
+          onsubmit="return confirm('Delete this employee?');">
         <button type="submit" class="btn danger">Delete</button>
     </form>
 </div>

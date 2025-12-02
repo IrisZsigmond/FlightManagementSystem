@@ -2,55 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Luggage List</title>
+    <title>Luggages</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
-<h1>All Luggage</h1>
+<h1>All Luggages</h1>
 
-<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+<!-- ERROR -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/luggages/new}">Add New Luggage</a>
+<!-- SUCCESS -->
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Ticket</th>
-        <th>Status</th>
-        <th>Size</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+<!-- ADD button -->
+<a th:href="@{/luggages/new}" class="btn">Add New Luggage</a>
 
-    <tbody>
-    <tr th:each="l : ${luggages}">
-        <td th:text="${l.id}">ID</td>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ticket</th>
+            <th>Status</th>
+            <th>Size</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
 
-        <!-- Show ticket.id safely -->
-        <td th:text="${l.ticket != null ? l.ticket.id : 'N/A'}">Ticket</td>
+        <tbody>
+        <tr th:each="l : ${luggages}">
+            <td th:text="${l.id}">ID</td>
 
-        <td th:text="${l.status}">Status</td>
-        <td th:text="${l.size}">Size</td>
+            <td th:text="${l.ticket != null ? l.ticket.id : 'N/A'}">Ticket</td>
 
-        <td>
-            <form th:action="@{'/luggages/' + ${l.id} + '/edit'}" method="get" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
+            <td th:text="${l.status}">Status</td>
+            <td th:text="${l.size}">Size</td>
 
-            <form th:action="@{'/luggages/' + ${l.id} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
+            <td class="actions">
 
-            <form th:action="@{'/luggages/' + ${l.id}}" method="get" style="display:inline;">
-                <button type="submit">View</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                <a th:href="@{'/luggages/' + ${l.id}}" class="btn">View</a>
+
+                <a th:href="@{'/luggages/' + ${l.id} + '/edit'}" class="btn">Edit</a>
+
+                <form th:action="@{'/luggages/' + ${l.id} + '/delete'}"
+                      method="post"
+                      class="inline-form"
+                      onsubmit="return confirm('Delete this luggage?');">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(luggages)}">
+            <td colspan="5">No luggages yet.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

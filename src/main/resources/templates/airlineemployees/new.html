@@ -9,55 +9,57 @@
 
 <h1>Create Airline Employee</h1>
 
-<form th:action="@{/airlineemployees}"
-      th:object="${airlineEmployeeForm}"
-      method="post">
+<div class="card mt-4 edit-card">
 
-    <!-- GLOBAL ERRORS (ex: din validator / service) -->
-    <div th:if="${#fields.hasGlobalErrors()}" class="error global-error">
-        <p th:each="err : ${#fields.globalErrors()}"
-           th:text="${err}"></p>
-    </div>
+    <form th:action="@{/airlineemployees}"
+          th:object="${airlineEmployeeForm}"
+          method="post"
+          class="form-grid">
 
-    <!-- ID -->
-    <div>
-        <label for="id">ID (format S***):</label>
-        <input id="id" type="text" th:field="*{id}" placeholder="S001" />
-        <span class="error"
-              th:if="${#fields.hasErrors('id')}"
-              th:errors="*{id}"></span>
-    </div>
+        <!-- GLOBAL ERRORS -->
+        <div style="grid-column: 1 / -1;">
+            <div th:if="${#fields.hasGlobalErrors()}" class="error">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
+        </div>
 
-    <!-- NAME -->
-    <div>
-        <label for="name">Name:</label>
-        <input id="name" type="text" th:field="*{name}" />
-        <span class="error"
-              th:if="${#fields.hasErrors('name')}"
-              th:errors="*{name}"></span>
-    </div>
+        <!-- ID -->
+        <div>
+            <label for="id">ID (format S***):</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="S001"/>
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
 
-    <!-- ROLE -->
-    <div>
-        <label for="role">Role:</label>
-        <select id="role" th:field="*{role}">
-            <option value="" disabled selected>Select role</option>
+        <!-- NAME -->
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" type="text" th:field="*{name}"/>
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
 
-            <option th:each="r : ${roles}"
-                    th:value="${r}"
-                    th:text="${r}">
-            </option>
-        </select>
-        <span class="error"
-              th:if="${#fields.hasErrors('role')}"
-              th:errors="*{role}"></span>
-    </div>
+        <!-- ROLE -->
+        <div>
+            <label for="role">Role:</label>
+            <select id="role" th:field="*{role}">
+                <option value="" disabled selected>Select role</option>
 
-    <div class="form-actions">
-        <button type="submit" class="btn">Create</button>
-        <a th:href="@{/airlineemployees}" class="btn secondary">Cancel</a>
-    </div>
-</form>
+                <option th:each="r : ${roles}"
+                        th:value="${r}"
+                        th:text="${r}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Create</button>
+            <a th:href="@{/airlineemployees}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

@@ -9,54 +9,64 @@
 
 <h1>All Airline Employees</h1>
 
-<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+<!-- ERROR -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/airlineemployees/new}">Add New Airline Employee</a>
+<!-- SUCCESS -->
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Role</th>
-        <th>Assignments (IDs)</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="e : ${employees}">
-        <td th:text="${e.id}">ID</td>
-        <td th:text="${e.name}">Name</td>
-        <td th:text="${e.role}">Role</td>
-        <td>
-            <span th:if="${e.assignments == null or #lists.isEmpty(e.assignments)}">-</span>
-            <span th:if="${e.assignments != null and !#lists.isEmpty(e.assignments)}">
-                <span th:each="a, iter : ${e.assignments}">
-                    <span th:text="${a.id}">ASSIGN_ID</span>
-                    <span th:if="${!iter.last}">, </span>
+<a th:href="@{/airlineemployees/new}" class="btn">Add New Airline Employee</a>
+
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Assignments</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="e : ${employees}">
+            <td th:text="${e.id}">ID</td>
+            <td th:text="${e.name}">Name</td>
+            <td th:text="${e.role}">Role</td>
+
+            <td>
+                <span th:if="${e.assignments == null or #lists.isEmpty(e.assignments)}">—</span>
+
+                <span th:each="a, iter : ${e.assignments}"
+                      th:if="${!#lists.isEmpty(e.assignments)}"
+                      th:text="${a.id + (iter.last ? '' : ', ')}">
                 </span>
-            </span>
-        </td>
-        <td>
-            <form th:action="@{'/airlineemployees/' + ${e.id} + '/edit'}"
-                  method="get" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
+            </td>
 
-            <form th:action="@{'/airlineemployees/' + ${e.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
+            <td class="actions">
 
-            <form th:action="@{'/airlineemployees/' + ${e.id}}" method="get" style="display:inline;">
-                <button type="submit">View</button>
-            </form>
+                <a th:href="@{'/airlineemployees/' + ${e.id}}" class="btn">View</a>
 
-        </td>
-    </tr>
-    </tbody>
-</table>
+                <a th:href="@{'/airlineemployees/' + ${e.id} + '/edit'}" class="btn">Edit</a>
+
+                <form th:action="@{'/airlineemployees/' + ${e.id} + '/delete'}"
+                      class="inline-form"
+                      method="post"
+                      onsubmit="return confirm('Delete this employee?');">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(employees)}">
+            <td colspan="5">No airline employees yet.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

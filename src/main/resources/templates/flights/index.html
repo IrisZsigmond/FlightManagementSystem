@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Flights List</title>
+    <title>Flights</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
@@ -10,55 +10,64 @@
 
 <h1>All Flights</h1>
 
-<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+<!-- ERROR -->
+<div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/flights/new}">Add New Flight</a>
+<!-- SUCCESS -->
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Departure Time</th>
-        <th>Airplane ID</th>
-        <th>Notice Board ID</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+<a th:href="@{/flights/new}" class="btn">Add New Flight</a>
 
-    <tbody>
-    <tr th:each="flight : ${flights}">
-        <td th:text="${flight.id}">ID</td>
-        <td th:text="${flight.name}">Name</td>
-        <td th:text="${flight.departureTime}">Departure Time</td>
+<div class="table-wrap mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Departure Time</th>
+            <th>Airplane</th>
+            <th>Notice Board</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
 
-        <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
-            Airplane ID
-        </td>
+        <tbody>
+        <tr th:each="flight : ${flights}">
+            <td th:text="${flight.id}">ID</td>
+            <td th:text="${flight.name}">Name</td>
+            <td th:text="${flight.departureTime}">Time</td>
 
-        <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
-            Notice Board ID
-        </td>
+            <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
+                Airplane
+            </td>
 
-        <td>
-            <form th:action="@{'/flights/' + ${flight.id} + '/edit'}"
-                  method="get" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
+            <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
+                Notice Board
+            </td>
 
-            <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
+            <td class="actions">
 
-            <form th:action="@{'/flights/' + ${flight.id}}" method="get" style="display:inline;">
-                <button type="submit">View</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                <a th:href="@{'/flights/' + ${flight.id}}" class="btn">View</a>
+
+                <a th:href="@{'/flights/' + ${flight.id} + '/edit'}" class="btn">Edit</a>
+
+                <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
+                      class="inline-form"
+                      method="post"
+                      onsubmit="return confirm('Delete this flight?');">
+                    <button type="submit" class="btn danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(flights)}">
+            <td colspan="6">No flights yet.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>
