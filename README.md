@@ -114,14 +114,14 @@ Controllers **must not** contain business rules.
 ---
 
 ## Pattern Used
-
+```
 | Layer | Responsibility |
 |-------|----------------|
 | **EntityService Interface** | Declares CRUD + domain operations |
 | **EntityServiceImpl** | Implements logic, calls validators, orchestrates repositories |
 | **Validator** | Ensures domain correctness before persistence |
 | **Repository** | Provides database access using JPA |
-
+```
 This ensures maintainable, testable, and clean architecture.
 
 ---
@@ -167,11 +167,11 @@ This prevents business logic duplication.
 ## Why StaffValidator Ensures Global Staff ID Uniqueness
 
 Since all staff types share a single table:
-
+```
 Staff (parent)
 ├── AirlineEmployee
 └── AirportEmployee
-
+```
 
 IDs must be globally unique.
 
@@ -305,7 +305,7 @@ These enable:
 ---
 
 # Project Structure Overview
-
+```
 src/main/java
 ├── controller
 ├── dto
@@ -318,6 +318,6 @@ src/main/java
 src/main/resources
 ├── templates
 ├── application.properties
-
+```
 
 This enforces strict architectural layering and maintainability.
