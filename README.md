@@ -1,124 +1,323 @@
-# Repository Implementation
+# Flight Management System – Architectural Overview
 
-## Why Generics `<T, ID>` Are Used
-The base repository is implemented using Java generics `<T, ID>` to make it reusable and type-safe for different entity types.
+## Purpose
 
-- `T` = entity type (e.g., Airplane, Luggage, Passenger)
-- `ID` = identifier type (e.g., String)
+This project implements a complete Flight Management System using Spring Boot, Spring MVC, Spring Data JPA, Hibernate ORM, Thymeleaf, and a modular layered architecture.
 
-Using generics:
-- prevents code duplication
-- ensures compile-time type safety
-- keeps implementation clean, maintainable, extendable
+It follows industry standards for:
 
----
-
-## Why Data Is Stored in a `ConcurrentHashMap`
-The in-memory repositories use `ConcurrentHashMap` for storage instead of HashMap or List.
-
-Motivations:
-- thread-safe read/write in multi-threaded Spring Boot environment
-- avoids race conditions
-- prevents data corruption
-- internal fine-grained locking
-
-Performance benefits:
-- O(1) average access time for get/put/remove
-- safe for concurrent HTTP requests
-- no null keys/values
+- separation of concerns  
+- domain logic encapsulation  
+- robust validation  
 
 ---
 
-## Why `Function<T, ID>` Is Used
-Repositories receive a `Function<T, ID>` called **idExtractor**, which extracts an entity’s ID.
+# Repository Layer (JpaRepository): Purpose & Behavior
 
-This allows the generic repository to be independent of entity structure.
+## Why `JpaRepository<T, ID>` Is Used
 
----
+`JpaRepository<T, ID>` is a Spring Data abstraction that provides:
 
-## Why `final` Is Important
-- immutable references
-- improves thread safety
-- clear design intent
-- recommended practice for dependency injection
+- out-of-the-box CRUD operations  
+- pagination and sorting  
+- dynamic query derivation  
+- automatic implementation via Hibernate  
 
----
+Using `JpaRepository` ensures:
 
-## Why `findById` Returns `Optional`
-`Optional` makes absence explicit and prevents:
-- null checks
-- NullPointerExceptions
-
-Supports functional idioms (`map`, `orElse`, `ifPresent`)
+- less boilerplate code  
+- clean data access  
+- tight ORM integration  
+- transaction-aware repository calls  
 
 ---
 
-## Why `findAll()` Returns a Defensive Copy
-`new ArrayList<>(store.values())` protects repository state.
+## Why ORM (Hibernate / JPA) Is Used
+
+Hibernate is used as the JPA provider to map Java classes to relational database tables.
 
 Benefits:
-- encapsulation
-- thread-safety snapshot
-- no accidental external modification
+
+- object-relational mapping without SQL boilerplate  
+- automatic schema generation  
+- management of relationships (OneToMany, ManyToOne, inheritance)  
+- caching and lazy loading  
+- transaction management  
+
+This allows the domain model to remain expressive and database-independent.
 
 ---
 
-## Annotations Used
+## Why Hibernate Inheritance Is Used for `Staff`
 
-| Annotation | Purpose |
-|---|---|
-| `@Repository` | Marks class as data-access component, enables bean detection and exception translation |
-| `@Primary` | Selects default implementation when multiple beans exist |
+`Staff` is the parent entity for:
+
+- AirlineEmployee  
+- AirportEmployee  
+
+Using:
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorValue
+
+
+ensures:
+
+- a single table for all staff  
+- unified ID restrictions  
+- clean polymorphism  
+- efficient queries  
+
+This enables cross-validation of ID uniqueness across all staff types.
 
 ---
 
-## Why Base Repository Does Not Have `@Repository`
-`BaseRepositoryInMemory<T,ID>` is generic — Spring cannot instantiate generic beans.
+## Why Real Database Integration Matters
 
-Concrete repositories (e.g. AirplaneRepositoryInMemory) provide:
-- concrete type parameters
-- idExtractor
+A real relational database (MySQL or PostgreSQL) provides:
+
+- data persistence  
+- referential integrity  
+- enforceable constraints  
+- reliable transactional behavior  
+
+Connection is configured through:
+
+- `spring.datasource.url`  
+- `spring.datasource.username`  
+- `spring.datasource.password`  
+- `spring.jpa.*`  
+
+Hibernate manages:
+
+- SQL generation  
+- entity state transitions  
+- dirty checking  
+- transaction boundaries  
 
 ---
 
 # Service Layer: Structure & Rationale
 
-The service layer creates a clean boundary between controllers and repositories.
+## Purpose of the Service Layer
 
-Architecture Pattern:
+The service layer acts between controllers and repositories and handles:
 
-| Layer | Description |
-|---|---|
-| BaseService `<T,ID>` | Generic CRUD contract interface |
-| BaseServiceImpl `<T,ID>` | Abstract reusable implementation of BaseService |
-| Entity Service Interface | Extends BaseService and declares domain-specific logic |
-| Entity Service Impl | Extends BaseServiceImpl and implements domain logic |
+- business logic  
+- transactional guarantees  
+- validator invocation  
+- multi-entity interactions  
+- protection from invalid data  
 
-### Benefits
-
-- no duplicate CRUD logic
-- strict layering
-- testability
-- type-safe
-- easy extensibility (new entities are easy to add)
-- repository implementation can change without affecting services/controllers
+Controllers **must not** contain business rules.
 
 ---
 
-# Why GlobalBindingConfig Is Used
+## Pattern Used
 
-Some domain models contain `List<T>`.  
-HTML text inputs only send Strings.  
-Spring cannot do this conversion automatically.
+| Layer | Responsibility |
+|-------|----------------|
+| **EntityService Interface** | Declares CRUD + domain operations |
+| **EntityServiceImpl** | Implements logic, calls validators, orchestrates repositories |
+| **Validator** | Ensures domain correctness before persistence |
+| **Repository** | Provides database access using JPA |
 
-### Purpose
-Use `@ControllerAdvice` and `WebDataBinder` to globally register type converters.
+This ensures maintainable, testable, and clean architecture.
 
-### What it does
-These converters transform a comma-separated string like **"A1, A2, A3"** → into a `List<T>` when saving form input, and convert a `List<T>` back into **"A1, A2, A3"** when rendering values back into forms.
+---
 
-### Benefits
-- controllers remain clean
-- forms stay simple text-based
-- models remain properly typed (objects, not strings)
-- consistent processing across entire application
+## Why Services Use `@Transactional`
+
+`@Transactional` guarantees:
+
+- atomic operations  
+- rollback on failure  
+- consistent database state  
+- correct lazy-loading behavior  
+
+Read operations use:
+
+@Transactional(readOnly = true)
+
+
+which improves performance and JDBC efficiency.
+
+---
+
+# Validation Layer: Purpose & Behavior
+
+## Why Custom Validators Are Needed
+
+Bean Validation (`@NotBlank`, `@Pattern`, etc.) validates only **user input**.  
+Business rules require additional logic.
+
+Validators enforce:
+
+- unique ID constraints  
+- unique airplane numbers  
+- existence of foreign-key references  
+- deletion rules based on relationships  
+- cross-entity constraints  
+- domain consistency rules  
+
+This prevents business logic duplication.
+
+---
+
+## Why StaffValidator Ensures Global Staff ID Uniqueness
+
+Since all staff types share a single table:
+
+Staff (parent)
+├── AirlineEmployee
+└── AirportEmployee
+
+
+IDs must be globally unique.
+
+`StaffValidator.assertStaffIdUnique()` prevents:
+
+- duplicate IDs across different staff types  
+- cross-table inconsistencies  
+- database uniqueness violations  
+
+---
+
+# DTOs & Mapping Layer
+
+## Why DTOs (Form Objects) Are Used
+
+DTOs ensure:
+
+- controllers never expose entities directly  
+- input-level validation  
+- safe mapping and transformation  
+- protection from invalid fields  
+
+---
+
+## Why We Use Mappers
+
+Centralized mapping provides:
+
+- no repetitive conversion code  
+- cleaner controllers  
+- isolated transformation logic  
+- fewer side effects  
+
+---
+
+# Controller Layer: Role & Behavior
+
+## Why Controllers Use `@Valid` and `BindingResult`
+
+Controllers handle:
+
+- HTTP requests  
+- form binding  
+- Bean Validation  
+- error propagation  
+- view rendering  
+
+Errors from:
+
+- Bean Validation  
+- Service layer  
+- Custom Validators  
+
+are attached to fields or added as global errors.
+
+This ensures proper UI feedback.
+
+---
+
+# Templates (Thymeleaf): Purpose & Behavior
+
+## Why Thymeleaf Is Used
+
+Thymeleaf provides:
+
+- Spring MVC integration  
+- statically analyzable templates  
+- automatic form binding  
+- field-level error reporting via `#fields.hasErrors`  
+
+Perfect for server-rendered CRUD applications.
+
+---
+
+# Error Handling Strategy
+
+## Why Explicit Exceptions Are Used
+
+Validators and services throw:
+
+- `IllegalArgumentException`  
+- `IllegalStateException`  
+
+This helps controllers distinguish:
+
+- validation errors  
+- business rule violations  
+- missing references  
+
+And map them cleanly to UI messages.
+
+---
+
+# Entity Relationships and ORM Mapping
+
+## Why JPA Annotations Are Used for Relationships
+
+Entities mirror the domain model:
+
+- Airplane → Flights  
+- AirlineEmployee → FlightAssignments  
+- Flight → Tickets  
+- NoticeBoard → Flights  
+
+ORM benefits:
+
+- enforced referential integrity  
+- no manual JOINs  
+- automatic cascading & lazy loading  
+- database-level consistency  
+
+---
+
+# Database Connectivity
+
+## Why `application.properties` Controls Hibernate Behavior
+
+Key properties:
+
+- `spring.jpa.hibernate.ddl-auto`  
+- `spring.jpa.show-sql`  
+- `spring.jpa.properties.hibernate.format_sql`  
+
+These enable:
+
+- schema generation  
+- SQL debugging  
+- formatted output  
+- clean configuration without XML  
+
+---
+
+# Project Structure Overview
+
+src/main/java
+├── controller
+├── dto
+├── mapper
+├── model
+├── repository
+├── service
+├── validations
+
+src/main/resources
+├── templates
+├── application.properties
+
+
+This enforces strict architectural layering and maintainability.
