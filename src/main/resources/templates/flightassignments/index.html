@@ -34,11 +34,6 @@
         <td th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'N/A'}">Employee ID</td>
 
         <td>
-            <form th:action="@{'/flightassignments/' + ${a.id} + '/edit'}"
-                  method="get" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
-
             <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
                   method="post" style="display:inline;">
                 <button type="submit">Delete</button>
