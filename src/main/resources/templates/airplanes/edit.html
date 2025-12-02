@@ -14,55 +14,67 @@
       th:object="${airplaneForm}"
       method="post">
 
-    <!-- GLOBAL ERRORS FROM BindingResult -->
-    <div th:if="${#fields != null and #fields.hasGlobalErrors()}"
-         class="error global-error">
-        <p th:each="err : ${#fields.globalErrors()}"
-           th:text="${err}">
-        </p>
-    </div>
+    <!-- GLOBAL ERROR (ex: from service) -->
+    <div class="error global-error" th:if="${error}" th:text="${error}"></div>
 
-    <!-- GLOBAL ERRORS passed from controller (GET or POST) -->
-    <div th:if="${error}"
-         class="error global-error"
-         th:text="${error}">
-    </div>
+    <!-- ==================================== -->
+    <!-- ID (readonly)                        -->
+    <!-- ==================================== -->
 
-    <!-- ID (readonly) -->
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly />
-        <div class="error" th:if="${#fields != null and #fields.hasErrors('id')}"
-             th:errors="*{id}"></div>
-    </div>
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" disabled />
+    <input type="hidden" th:field="*{id}" />
 
-    <!-- NUMBER -->
-    <div>
-        <label>Number:</label>
-        <input type="number" th:field="*{number}" />
-        <div class="error" th:if="${#fields != null and #fields.hasErrors('number')}"
-             th:errors="*{number}"></div>
-    </div>
+    <div class="error" th:if="${#fields.hasErrors('id')}"
+         th:errors="*{id}"></div>
 
-    <!-- CAPACITY -->
-    <div>
-        <label>Capacity:</label>
-        <input type="number" th:field="*{capacity}" />
-        <div class="error" th:if="${#fields != null and #fields.hasErrors('capacity')}"
-             th:errors="*{capacity}"></div>
-    </div>
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- NUMBER                                -->
+    <!-- ==================================== -->
+
+    <label>Number:</label>
+    <input type="number" th:field="*{number}" />
+
+    <div class="error" th:if="${#fields.hasErrors('number')}"
+         th:errors="*{number}"></div>
+
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- CAPACITY                              -->
+    <!-- ==================================== -->
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" />
+
+    <div class="error" th:if="${#fields.hasErrors('capacity')}"
+         th:errors="*{capacity}"></div>
+
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- ASSIGNED FLIGHTS                      -->
+    <!-- ==================================== -->
 
     <h3>Assigned Flights</h3>
     <ul>
         <li th:each="f : ${airplane.flights}">
             <span th:text="${f.id + ' - ' + (f.name != null ? f.name : 'Unknown')}"></span>
         </li>
-        <li th:if="${#lists.isEmpty(airplane.flights)}">No flights assigned.</li>
+
+        <li th:if="${#lists.isEmpty(airplane.flights)}">
+            No flights assigned.
+        </li>
     </ul>
 
     <div class="form-actions">
         <button type="submit" class="btn">Save</button>
-        <a th:href="@{/airplanes}" class="btn secondary">Cancel</a>
+
+        <a th:href="@{/airplanes}" class="btn secondary" style="margin-left:10px;">
+            Cancel
+        </a>
     </div>
 
 </form>
