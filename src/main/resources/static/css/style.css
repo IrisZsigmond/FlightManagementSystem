@@ -207,3 +207,18 @@ input:focus {
 /* ========== Small helper for inline delete forms in table ========== */
 .inline-form { display: inline-block; margin: 0; }
 .inline-form button { margin: 0; }
+
+.details-card p,
+.details-card strong,
+.details-card span,
+.details-card li {
+    color: var(--text) !important;
+}
+
+.edit-card p,
+.edit-card label,
+.edit-card strong,
+.edit-card span,
+.edit-card li {
+    color: var(--text) !important;
+}
