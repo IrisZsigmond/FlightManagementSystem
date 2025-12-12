@@ -70,6 +70,7 @@ h2 { font-size: clamp(1.25rem, 2vw, 1.6rem); }
 p, label, th, td, a, button, input { font-size: 1rem; }
 
 /* ========== Actions (top bar) ========== */
+/* Clasa generală pentru butoanele de acțiune și layout-ul lor în paginile de listă */
 .actions {
     display: flex;
     gap: 12px;
@@ -145,6 +146,8 @@ form {
     display: grid;
     gap: 14px;
 }
+
+/* Forme cu două coloane (folosite pentru CRUD) */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -163,7 +166,8 @@ label {
 
 input[type="text"],
 input[type="number"],
-input[type="time"] {
+input[type="time"],
+select { /* Adăugat select pentru a fi consistent */
     width: 100%;
     appearance: none;
     background: var(--panel);
@@ -175,7 +179,7 @@ input[type="time"] {
     transition: border .15s ease, box-shadow .15s ease;
 }
 input::placeholder { color: #9ca3af; }
-input:focus {
+input:focus, select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
 }
@@ -188,11 +192,30 @@ input:focus {
 }
 
 .error {
-    color: red;
+    color: var(--danger);
     font-size: 0.9rem;
 }
 
-/* ========== Utilities ========== */
+/* Alerte de Succes/Eroare */
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin: 16px 0;
+    font-weight: 600;
+}
+.alert.success {
+    background: rgba(40, 167, 69, 0.1); /* Verde deschis */
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+.alert.error {
+    background: rgba(220, 38, 38, 0.1); /* Roșu deschis */
+    border: 1px solid var(--danger);
+    color: var(--danger);
+}
+
+
+/* ========== Utilities (Mărginile) ========== */
 .m-0 { margin: 0 !important; }
 .mt-2 { margin-top: 8px !important; }
 .mt-3 { margin-top: 12px !important; }
@@ -203,22 +226,72 @@ input:focus {
 .mb-4 { margin-bottom: 16px !important; }
 .p-4 { padding: 16px !important; }
 .center { display: flex; align-items: center; justify-content: center; }
-
-/* ========== Small helper for inline delete forms in table ========== */
 .inline-form { display: inline-block; margin: 0; }
 .inline-form button { margin: 0; }
 
+/* Asigură-te că textul din cardurile de detalii/editare este vizibil */
 .details-card p,
 .details-card strong,
 .details-card span,
-.details-card li {
-    color: var(--text) !important;
-}
-
+.details-card li,
 .edit-card p,
 .edit-card label,
 .edit-card strong,
 .edit-card span,
 .edit-card li {
     color: var(--text) !important;
+}
+
+/* ========================================================= */
+/* === STILURI PENTRU HOME PAGE (DASHBOARD) === */
+/* ========================================================= */
+
+.main-title {
+    margin-bottom: 24px;
+}
+
+/* Grid-ul de Carduri pe pagina Home */
+.entity-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Link-ul care încorporează cardul (folosind clasa .card existentă) */
+.entity-link-card {
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 24px;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.entity-link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15); /* Umbră mai pronunțată la hover */
+}
+
+.entity-link-card h3 {
+    color: var(--primary); /* Titlu albastru */
+    margin-bottom: 8px;
+}
+
+.entity-link-card p {
+    color: var(--muted); /* Descriere gri (coerent cu label-urile) */
+    font-size: 0.95rem;
+}
+
+/* Stiluri de margine laterală (pentru a evidenția secțiunile) */
+.primary-border-left {
+    border-left: 5px solid var(--primary);
+}
+
+/* Informații Footer pe pagina Home */
+.app-info-footer {
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
 }
