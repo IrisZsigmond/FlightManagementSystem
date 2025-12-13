@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Sort;
+
 
 @Controller
 @RequestMapping("/noticeboards")
@@ -25,10 +27,27 @@ public class NoticeBoardController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("noticeboards", noticeBoardService.findAll());
+    public String index(
+            @RequestParam(defaultValue = "date") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("desc")
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Sort sortObj = Sort.by(direction, sort);
+
+        model.addAttribute("noticeboards", noticeBoardService.findAll(sortObj));
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
         return "noticeboards/index";
     }
+
 
     @GetMapping("/new")
     public String form(Model model) {

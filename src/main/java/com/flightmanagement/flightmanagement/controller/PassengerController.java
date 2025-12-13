@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Sort;
 
 @Controller
 @RequestMapping("/passengers")
@@ -26,10 +27,23 @@ public class PassengerController {
 
     // LIST
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("passengers", passengerService.findAll());
+    public String index(
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        Sort.Direction direction = Sort.Direction.fromString(dir);
+
+        model.addAttribute("passengers",
+                passengerService.findAll(Sort.by(direction, sort)));
+
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
         return "passengers/index";
     }
+
 
     // CREATE FORM
     @GetMapping("/new")
@@ -44,7 +58,7 @@ public class PassengerController {
     @PostMapping
     public String create(
             @Valid @ModelAttribute("passengerForm") PassengerForm form,
-            BindingResult result,
+            BindingResult result,           // BindingResult captures validation errors triggered by @Valid
             Model model,
             RedirectAttributes ra
     ) {

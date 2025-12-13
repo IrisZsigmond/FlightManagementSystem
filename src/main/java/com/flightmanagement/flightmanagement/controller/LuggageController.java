@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Sort;
+
 
 @Controller
 @RequestMapping("/luggages")
@@ -27,10 +29,34 @@ public class LuggageController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("luggages", luggageService.findAll());
+    public String index(
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        String sortProperty = switch (sort) {
+            case "id" -> "id";
+            case "ticket" -> "ticket.id";
+            case "status" -> "status";
+            case "size" -> "size";
+            default -> "id";
+        };
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("desc")
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Sort sortObj = Sort.by(direction, sortProperty);
+
+        model.addAttribute("luggages", luggageService.findAll(sortObj));
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
         return "luggage/index";
     }
+
 
     @GetMapping("/new")
     public String form(Model model) {

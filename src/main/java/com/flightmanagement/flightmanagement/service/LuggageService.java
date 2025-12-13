@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.service;
 import com.flightmanagement.flightmanagement.model.Luggage;
 import com.flightmanagement.flightmanagement.model.enums.LuggageSize;
 import com.flightmanagement.flightmanagement.model.enums.LuggageStatus;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,9 @@ public interface LuggageService {
     Luggage save(Luggage luggage);
 
     List<Luggage> findAll();
+
+    // ⭐ SORT
+    List<Luggage> findAll(Sort sort);
 
     Optional<Luggage> findById(String id);
 

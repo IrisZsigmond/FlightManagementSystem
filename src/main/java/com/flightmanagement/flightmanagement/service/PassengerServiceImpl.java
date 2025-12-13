@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.service;
 import com.flightmanagement.flightmanagement.model.Passenger;
 import com.flightmanagement.flightmanagement.repository.PassengerRepository;
 import com.flightmanagement.flightmanagement.validations.PassengerValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,36 +28,22 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Passenger save(Passenger passenger) {
-        if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
-        }
-
         passengerValidator.assertIdUnique(passenger.getId());
-
         return passengerRepository.save(passenger);
     }
 
     @Override
     public Passenger update(String id, Passenger updated) {
-        if (updated == null) {
-            throw new IllegalArgumentException("Updated passenger cannot be null.");
-        }
-
         Passenger existing = passengerValidator.requireExisting(id);
-
         existing.setName(updated.getName());
         existing.setCurrency(updated.getCurrency());
-
         return passengerRepository.save(existing);
     }
 
     @Override
     public boolean delete(String id) {
-        if (id == null || id.isBlank()) return false;
-
         passengerValidator.requireExisting(id);
         passengerValidator.assertCanBeDeleted(id);
-
         passengerRepository.deleteById(id);
         return true;
     }
@@ -67,8 +54,14 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerRepository.findAll();
     }
 
+    // 🔥 SORT
     @Override
     @Transactional(readOnly = true)
+    public List<Passenger> findAll(Sort sort) {
+        return passengerRepository.findAll(sort);
+    }
+
+    @Override
     public Optional<Passenger> findById(String id) {
         return passengerRepository.findById(id);
     }

@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.repository.NoticeBoardRepository;
 import com.flightmanagement.flightmanagement.validations.NoticeBoardValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -104,5 +105,11 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         if (date == null) return List.of();
         return noticeBoardRepository.findByDate(date);
     }
+
+    @Override
+    public List<NoticeBoard> findAll(Sort sort) {
+        return noticeBoardRepository.findAll(sort);
+    }
+
 }
 

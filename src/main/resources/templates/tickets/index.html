@@ -7,90 +7,181 @@
 </head>
 <body>
 
-<h1>All Tickets</h1>
+<div class="container">
 
-<!-- MESAJ EROARE -->
-<div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <h1>All Tickets</h1>
 
-<!-- MESAJ SUCCES -->
-<div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<!-- BUTON ADD, STILAT CA LA AIRPLANES -->
-<a th:href="@{/tickets/new}" class="btn">Add New Ticket</a>
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Passenger</th>
-            <th>Flight</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Seat Number</th>
-            <th>Luggages</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+    <div class="page-actions">
+        <a th:href="@{/tickets/new}" class="btn">Add New Ticket</a>
+    </div>
 
-        <tbody>
-        <tr th:each="ticket : ${tickets}">
+    <form th:action="@{/tickets}" method="get" class="sort-form mt-4 form-grid">
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
 
-            <td th:text="${ticket.id}">ID</td>
+        <div>
+            <label for="minPrice">Price From:</label>
+            <input id="minPrice"
+                   name="minPrice"
+                   type="number"
+                   placeholder="Min Price"
+                   th:value="${filterMinPrice}" />
+        </div>
 
-            <!-- PASSENGER ID -->
-            <td th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}">
-                Passenger ID
-            </td>
+        <div>
+            <label for="maxPrice">Price To:</label>
+            <input id="maxPrice"
+                   name="maxPrice"
+                   type="number"
+                   placeholder="Max Price"
+                   th:value="${filterMaxPrice}" />
+        </div>
 
-            <!-- FLIGHT ID -->
-            <td th:text="${ticket.flight != null ? ticket.flight.id : 'N/A'}">
-                Flight ID
-            </td>
+        <div style="grid-column: 1 / -1;">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="">-- All Categories --</option>
+                <option th:each="c : ${categories}"
+                        th:value="${c}"
+                        th:text="${c}"
+                        th:selected="${filterCategory == c}">CATEGORY</option>
+            </select>
+        </div>
 
-            <td th:text="${ticket.category}">Category</td>
-            <td th:text="${ticket.price}">Price</td>
-            <td th:text="${ticket.seatNumber}">Seat Number</td>
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Filter</button>
+            <a class="btn secondary" th:href="@{/tickets}">Reset Filter</a>
+        </div>
+    </form>
 
-            <!-- LUGGAGES -->
-            <td>
-                <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">—</span>
+    <form th:action="@{/tickets}" method="get" class="sort-form mt-4 actions" style="justify-content: flex-start; gap: 1rem;">
+        <input type="hidden" name="minPrice" th:value="${filterMinPrice}" />
+        <input type="hidden" name="maxPrice" th:value="${filterMaxPrice}" />
+        <input type="hidden" name="category" th:value="${filterCategory}" />
 
-                <span th:if="${ticket.luggages != null and !#lists.isEmpty(ticket.luggages)}">
-                    <span th:each="l, iterStat : ${ticket.luggages}">
-                        <span th:text="${l.id}">LUGGAGE_ID</span>
-                        <span th:if="${!iterStat.last}">, </span>
+        <label for="sort" class="m-0">Sort by:</label>
+
+        <select id="sort" name="sort" class="input-sm">
+            <option value="id" th:selected="${sort=='id'}">ID</option>
+            <option value="category" th:selected="${sort=='category'}">Category</option>
+            <option value="price" th:selected="${sort=='price'}">Price</option>
+            <option value="seatNumber" th:selected="${sort=='seatNumber'}">Seat Number</option>
+        </select>
+
+        <select id="dir" name="dir" class="input-sm">
+            <option value="asc" th:selected="${dir=='asc'}">Ascending</option>
+            <option value="desc" th:selected="${dir=='desc'}">Descending</option>
+        </select>
+
+        <button type="submit" class="btn btn-sm">Sort</button>
+    </form>
+
+    <div class="table-wrap mt-4">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>
+                    <a class="th-link"
+                       th:href="@{/tickets(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            minPrice=${filterMinPrice},
+                            maxPrice=${filterMaxPrice},
+                            category=${filterCategory}
+                        )}">
+                        ID <span th:if="${sort=='id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>Passenger</th>
+                <th>Flight</th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/tickets(
+                            sort='category',
+                            dir=${sort=='category' ? reverseDir : 'asc'},
+                            minPrice=${filterMinPrice},
+                            maxPrice=${filterMaxPrice},
+                            category=${filterCategory}
+                        )}">
+                        Category <span th:if="${sort=='category'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/tickets(
+                            sort='price',
+                            dir=${sort=='price' ? reverseDir : 'asc'},
+                            minPrice=${filterMinPrice},
+                            maxPrice=${filterMaxPrice},
+                            category=${filterCategory}
+                        )}">
+                        Price <span th:if="${sort=='price'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/tickets(
+                            sort='seatNumber',
+                            dir=${sort=='seatNumber' ? reverseDir : 'asc'},
+                            minPrice=${filterMinPrice},
+                            maxPrice=${filterMaxPrice},
+                            category=${filterCategory}
+                        )}">
+                        Seat Number <span th:if="${sort=='seatNumber'}" th:text="${dir=='seatNumber' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>Luggages</th>
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="ticket : ${tickets}">
+                <td th:text="${ticket.id}"></td>
+
+                <td th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}"></td>
+                <td th:text="${ticket.flight != null ? ticket.flight.id : 'N/A'}"></td>
+
+                <td th:text="${ticket.category}"></td>
+                <td th:text="${ticket.price}"></td>
+                <td th:text="${ticket.seatNumber}"></td>
+
+                <td>
+                    <span th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">—</span>
+                    <span th:each="l, iter : ${ticket.luggages}">
+                        <span th:text="${l.id}"></span><span th:if="${!iter.last}">, </span>
                     </span>
-                </span>
-            </td>
+                </td>
 
-            <!-- ACTIONS, CA LA AIRPLANES -->
-            <td class="actions">
+                <td class="actions">
+                    <a th:href="@{'/tickets/' + ${ticket.id}}" class="btn btn-sm action">View</a>
+                    <a th:href="@{'/tickets/' + ${ticket.id} + '/edit'}" class="btn btn-sm action">Edit</a>
 
-                <!-- View (blue) -->
-                <a th:href="@{'/tickets/' + ${ticket.id}}" class="btn">View</a>
+                    <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}"
+                          method="post"
+                          class="inline-form"
+                          onsubmit="return confirm('Delete this ticket?');">
+                        <button type="submit" class="btn btn-sm action-danger danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
 
-                <!-- Edit (blue) -->
-                <a th:href="@{'/tickets/' + ${ticket.id} + '/edit'}" class="btn">Edit</a>
+            <tr th:if="${#lists.isEmpty(tickets)}">
+                <td colspan="8">No tickets yet.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-                <!-- Delete (red) -->
-                <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}"
-                      method="post"
-                      class="inline-form"
-                      onsubmit="return confirm('Delete this ticket?');">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
-
-            </td>
-
-        </tr>
-
-        <tr th:if="${#lists.isEmpty(tickets)}">
-            <td colspan="8">No tickets yet.</td>
-        </tr>
-
-        </tbody>
-    </table>
 </div>
 
 </body>

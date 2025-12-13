@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.model.Ticket;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
 import com.flightmanagement.flightmanagement.repository.TicketRepository;
 import com.flightmanagement.flightmanagement.validations.TicketValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +24,6 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket save(Ticket ticket) {
-
         validator.assertIdUnique(ticket.getId());
         validator.requireExistingPassenger(ticket.getPassenger().getId());
         validator.requireExistingFlight(ticket.getFlight().getId());
@@ -43,13 +43,17 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public List<Ticket> findAll(Sort sort) {
+        return ticketRepository.findAll(sort);
+    }
+
+    @Override
     public Optional<Ticket> findById(String id) {
         return ticketRepository.findById(id);
     }
 
     @Override
     public Ticket update(String id, Ticket updated) {
-
         Ticket existing = validator.requireExisting(id);
 
         validator.requireExistingPassenger(updated.getPassenger().getId());
@@ -64,21 +68,14 @@ public class TicketServiceImpl implements TicketService {
         updated.setId(id);
         return ticketRepository.save(updated);
     }
+
     @Override
     public boolean delete(String id) {
-
         validator.requireExisting(id);
-
-        // !!! AICI ERA PROBLEMA !!!
         validator.assertCanBeDeleted(id);
-
         ticketRepository.deleteById(id);
         return true;
     }
-
-
-
-
 
     @Override
     public List<Ticket> findByPassengerId(String passengerId) {

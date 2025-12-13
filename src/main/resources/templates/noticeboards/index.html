@@ -18,12 +18,47 @@
 <!-- ADD BUTTON -->
 <a th:href="@{/noticeboards/new}" class="btn">Add New Notice Board</a>
 
+<!-- SORT FORM -->
+<form th:action="@{/noticeboards}" method="get" class="sort-form mt-4">
+    <label for="sort">Sort by:</label>
+
+    <select name="sort" id="sort" class="input-sm">
+        <option value="date" th:selected="${sort == 'date'}">Date</option>
+        <option value="id" th:selected="${sort == 'id'}">ID</option>
+    </select>
+
+    <select name="dir" id="dir" class="input-sm">
+        <option value="asc" th:selected="${dir == 'asc'}">Ascending</option>
+        <option value="desc" th:selected="${dir == 'desc'}">Descending</option>
+    </select>
+
+    <button type="submit" class="btn btn-sm">Sort</button>
+</form>
+
 <div class="table-wrap mt-4">
     <table>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Date</th>
+            <!-- ID -->
+            <th>
+                <a class="th-link"
+                   th:href="@{/noticeboards(sort='id', dir=${sort=='id' ? reverseDir : 'asc'})}">
+                    ID
+                    <span th:if="${sort=='id'}"
+                          th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <!-- DATE -->
+            <th>
+                <a class="th-link"
+                   th:href="@{/noticeboards(sort='date', dir=${sort=='date' ? reverseDir : 'asc'})}">
+                    Date
+                    <span th:if="${sort=='date'}"
+                          th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
             <th>Flights of the Day</th>
             <th>Actions</th>
         </tr>
@@ -50,7 +85,6 @@
 
             <!-- ACTIONS -->
             <td class="actions">
-
                 <a th:href="@{'/noticeboards/' + ${board.id}}" class="btn">View</a>
 
                 <a th:href="@{'/noticeboards/' + ${board.id} + '/edit'}" class="btn">Edit</a>
@@ -61,7 +95,6 @@
                       onsubmit="return confirm('Delete this notice board?');">
                     <button type="submit" class="btn danger">Delete</button>
                 </form>
-
             </td>
         </tr>
 

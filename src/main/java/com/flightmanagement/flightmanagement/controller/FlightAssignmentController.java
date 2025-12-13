@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Sort;
+
 
 @Controller
 @RequestMapping("/flightassignments")
@@ -27,10 +29,33 @@ public class FlightAssignmentController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("assignments", service.findAll());
+    public String index(
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        String sortProperty = switch (sort) {
+            case "id" -> "id";
+            case "flight" -> "flight.id";
+            case "employee" -> "airlineEmployee.id";
+            default -> "id";
+        };
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("desc")
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Sort sortObj = Sort.by(direction, sortProperty);
+
+        model.addAttribute("assignments", service.findAll(sortObj));
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
         return "flightassignments/index";
     }
+
 
     @GetMapping("/new")
     public String form(Model model) {

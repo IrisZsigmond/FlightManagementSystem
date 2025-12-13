@@ -1,6 +1,7 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ public interface PassengerService {
     boolean delete(String id);
 
     List<Passenger> findAll();
+    List<Passenger> findAll(Sort sort);   // 🔥 NOU
 
     Optional<Passenger> findById(String id);
 

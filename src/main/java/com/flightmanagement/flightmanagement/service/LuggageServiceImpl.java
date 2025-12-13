@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 public class LuggageServiceImpl implements LuggageService {
@@ -82,4 +84,10 @@ public class LuggageServiceImpl implements LuggageService {
     public List<Luggage> findBySize(LuggageSize size) {
         return luggageRepository.findBySize(size);
     }
+
+    @Override
+    public List<Luggage> findAll(Sort sort) {
+        return luggageRepository.findAll(sort);
+    }
+
 }

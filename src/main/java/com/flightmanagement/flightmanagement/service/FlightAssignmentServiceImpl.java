@@ -7,6 +7,8 @@ import com.flightmanagement.flightmanagement.repository.FlightAssignmentReposito
 import com.flightmanagement.flightmanagement.validations.FlightAssignmentValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -130,4 +132,11 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         if (employeeId == null || employeeId.isBlank()) return List.of();
         return repo.findByAirlineEmployee_Id(employeeId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FlightAssignment> findAll(Sort sort) {
+        return repo.findAll(sort);
+    }
+
 }
