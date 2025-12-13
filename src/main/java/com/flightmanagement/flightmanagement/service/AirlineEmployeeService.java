@@ -2,6 +2,8 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.AirlineEmployee;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
+import org.springframework.data.domain.Sort;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,8 @@ public interface AirlineEmployeeService {
     AirlineEmployee getById(String id);
 
     Optional<AirlineEmployee> findById(String id);
+
+    List<AirlineEmployee> findAll(Sort sort);
 
     List<AirlineEmployee> findByRole(AirlineRole role);
 

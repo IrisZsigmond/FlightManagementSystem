@@ -6,6 +6,7 @@ import com.flightmanagement.flightmanagement.model.AirlineEmployee;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.service.AirlineEmployeeService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,10 +26,31 @@ public class AirlineEmployeeController {
         this.employeeMapper = employeeMapper;
     }
 
-    // LIST
+    // LIST + SORT
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("employees", employeeService.findAll());
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir
+    ) {
+        // nur sichtbare Spalten erlauben
+        if (!sort.equals("id") && !sort.equals("name") && !sort.equals("role")) {
+            sort = "id";
+        }
+        if (!dir.equalsIgnoreCase("asc") && !dir.equalsIgnoreCase("desc")) {
+            dir = "asc";
+        }
+
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort springSort = Sort.by(direction, sort);
+
+        model.addAttribute("employees", employeeService.findAll(springSort));
+
+        // damit die View toggle/pfeile kann
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
         return "airlineemployees/index";
     }
 

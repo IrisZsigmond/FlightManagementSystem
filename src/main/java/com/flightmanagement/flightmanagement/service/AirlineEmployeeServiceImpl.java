@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.model.FlightAssignment;
 import com.flightmanagement.flightmanagement.model.enums.AirlineRole;
 import com.flightmanagement.flightmanagement.repository.AirlineEmployeeRepository;
 import com.flightmanagement.flightmanagement.validations.AirlineEmployeeValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,6 +80,12 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
     @Transactional(readOnly = true)
     public List<AirlineEmployee> findAll() {
         return repo.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AirlineEmployee> findAll(Sort sort) {
+        return repo.findAll(sort);
     }
 
     @Override
