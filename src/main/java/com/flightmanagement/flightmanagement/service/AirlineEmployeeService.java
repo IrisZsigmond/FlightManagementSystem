@@ -25,9 +25,7 @@ public interface AirlineEmployeeService {
 
     List<AirlineEmployee> findAll(Sort sort);
 
-    List<AirlineEmployee> findByRole(AirlineRole role);
-
-    List<AirlineEmployee> findByAnyRole(Set<AirlineRole> roles);
+    List<AirlineEmployee> search(String name, List<AirlineRole> roles, Sort sort);
 
     List<AirlineEmployee> findByAssignmentId(String assignmentId);
 

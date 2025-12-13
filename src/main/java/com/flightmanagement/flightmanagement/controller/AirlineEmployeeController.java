@@ -30,10 +30,12 @@ public class AirlineEmployeeController {
     @GetMapping
     public String index(
             Model model,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) java.util.List<AirlineRole> roles,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
-        // nur sichtbare Spalten erlauben
+        // whitelist sort
         if (!sort.equals("id") && !sort.equals("name") && !sort.equals("role")) {
             sort = "id";
         }
@@ -44,15 +46,24 @@ public class AirlineEmployeeController {
         Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort springSort = Sort.by(direction, sort);
 
-        model.addAttribute("employees", employeeService.findAll(springSort));
+        // FILTER + SORT together (prin service)
+        model.addAttribute("employees", employeeService.search(name, roles, springSort));
 
-        // damit die View toggle/pfeile kann
+        // pentru toggle/pfeile de sort
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equalsIgnoreCase("asc") ? "desc" : "asc");
 
+        // pentru a păstra valorile în form după filtrare
+        model.addAttribute("filterName", name);
+        model.addAttribute("filterRoles", roles == null ? java.util.List.of() : roles);
+
+        // pentru checkbox list în UI
+        model.addAttribute("roles", AirlineRole.values());
+
         return "airlineemployees/index";
     }
+
 
     // CREATE - form
     @GetMapping("/new")

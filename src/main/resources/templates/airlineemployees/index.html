@@ -22,8 +22,46 @@
         <a th:href="@{/airlineemployees/new}" class="btn">Add New Airline Employee</a>
     </div>
 
+    <!-- FILTER FORM -->
+    <form th:action="@{/airlineemployees}" method="get" class="sort-form mt-4">
+        <!-- keep current sorting while filtering -->
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
+
+        <label for="name">Search Name:</label>
+        <input id="name"
+               name="name"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. John"
+               th:value="${filterName}" />
+
+        <span class="ml-2">Roles:</span>
+        <span th:each="r : ${roles}" class="ml-2">
+            <label style="display:inline-flex; gap:6px; align-items:center;">
+                <input type="checkbox"
+                       name="roles"
+                       th:value="${r}"
+                       th:checked="${filterRoles.contains(r)}" />
+                <span th:text="${r}">ROLE</span>
+            </label>
+        </span>
+
+        <button type="submit" class="btn btn-sm">Filter</button>
+
+        <!-- reset to defaults -->
+        <a class="btn btn-sm btn-secondary" th:href="@{/airlineemployees}">Reset</a>
+    </form>
+
     <!-- Sort form (compact) -->
     <form th:action="@{/airlineemployees}" method="get" class="sort-form mt-4">
+        <!-- keep filters while sorting -->
+        <input type="hidden" name="name" th:value="${filterName}" />
+        <!-- preserve selected roles -->
+        <div th:each="rr : ${filterRoles}">
+            <input type="hidden" name="roles" th:value="${rr}" />
+        </div>
+
         <label for="sort">Sortieren nach:</label>
 
         <select id="sort" name="sort" class="input-sm">
@@ -48,21 +86,36 @@
                 <!-- ID sticky column + click-sort -->
                 <th class="sticky-col">
                     <a class="th-link"
-                       th:href="@{/airlineemployees(sort='id', dir=${sort=='id' ? reverseDir : 'asc'})}">
+                       th:href="@{/airlineemployees(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            roles=${filterRoles}
+                        )}">
                         ID <span th:if="${sort=='id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/airlineemployees(sort='name', dir=${sort=='name' ? reverseDir : 'asc'})}">
+                       th:href="@{/airlineemployees(
+                            sort='name',
+                            dir=${sort=='name' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            roles=${filterRoles}
+                        )}">
                         Name <span th:if="${sort=='name'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/airlineemployees(sort='role', dir=${sort=='role' ? reverseDir : 'asc'})}">
+                       th:href="@{/airlineemployees(
+                            sort='role',
+                            dir=${sort=='role' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            roles=${filterRoles}
+                        )}">
                         Role <span th:if="${sort=='role'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>

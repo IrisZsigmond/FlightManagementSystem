@@ -102,13 +102,27 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
     // ------------------ Custom queries -------------------
 
     @Override
-    public List<AirlineEmployee> findByRole(AirlineRole role) {
-        return repo.findByRole(role);
-    }
+    @Transactional(readOnly = true)
+    public List<AirlineEmployee> search(String name, List<AirlineRole> roles, Sort sort) {
 
-    @Override
-    public List<AirlineEmployee> findByAnyRole(Set<AirlineRole> roles) {
-        return repo.findByRoleIn(roles.stream().toList());
+        Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.ASC, "id");
+
+        boolean hasName = name != null && !name.trim().isBlank();
+        boolean hasRoles = roles != null && !roles.isEmpty();
+
+        if (hasName && hasRoles) {
+            return repo.findByNameContainingIgnoreCaseAndRoleIn(name.trim(), roles, safeSort);
+        }
+
+        if (hasName) {
+            return repo.findByNameContainingIgnoreCase(name.trim(), safeSort);
+        }
+
+        if (hasRoles) {
+            return repo.findByRoleIn(roles, safeSort);
+        }
+
+        return repo.findAll(safeSort);
     }
 
     @Override
