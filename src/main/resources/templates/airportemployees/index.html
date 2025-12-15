@@ -7,57 +7,194 @@
 </head>
 <body>
 
-<h1>All Airport Employees</h1>
+<div class="container">
 
-<!-- ERROR -->
-<div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <h1>All Airport Employees</h1>
 
-<!-- SUCCESS -->
-<div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <!-- ERROR -->
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/airportemployees/new}" class="btn">Add New Airport Employee</a>
+    <!-- SUCCESS -->
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+    <!-- Top bar -->
+    <div class="page-actions">
+        <a th:href="@{/airportemployees/new}" class="btn">Add New Airport Employee</a>
+    </div>
 
-        <tbody>
-        <tr th:each="e : ${employees}">
-            <td th:text="${e.id}">ID</td>
-            <td th:text="${e.name}">Name</td>
-            <td th:text="${e.designation}">Designation</td>
-            <td th:text="${e.department}">Department</td>
+    <!-- FILTER FORM (keeps current sorting) -->
+    <form th:action="@{/airportemployees}" method="get" class="sort-form mt-4">
+        <!-- keep current sorting while filtering -->
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
 
-            <td class="actions">
+        <label for="name">Search Name:</label>
+        <input id="name"
+               name="name"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. John"
+               th:value="${filterName}" />
 
-                <a th:href="@{'/airportemployees/' + ${e.id}}" class="btn">View</a>
+        <label for="department">Department:</label>
+        <input id="department"
+               name="department"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. Security"
+               th:value="${filterDepartment}" />
 
-                <a th:href="@{'/airportemployees/' + ${e.id} + '/edit'}" class="btn">Edit</a>
+        <label for="designation">Designation:</label>
+        <input id="designation"
+               name="designation"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. Manager"
+               th:value="${filterDesignation}" />
 
-                <form th:action="@{'/airportemployees/' + ${e.id} + '/delete'}"
-                      method="post" class="inline-form"
-                      onsubmit="return confirm('Delete this employee?');">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
+        <button type="submit" class="btn btn-sm">Filter</button>
 
-            </td>
-        </tr>
+        <!-- reset to defaults -->
+        <a class="btn btn-sm btn-secondary" th:href="@{/airportemployees}">Reset</a>
+    </form>
 
-        <tr th:if="${#lists.isEmpty(employees)}">
-            <td colspan="5">No employees found.</td>
-        </tr>
+    <!-- SORT FORM (keeps filters) -->
+    <form th:action="@{/airportemployees}" method="get" class="sort-form mt-4">
+        <!-- keep filters while sorting -->
+        <input type="hidden" name="name" th:value="${filterName}" />
+        <input type="hidden" name="department" th:value="${filterDepartment}" />
+        <input type="hidden" name="designation" th:value="${filterDesignation}" />
 
-        </tbody>
-    </table>
+        <label for="sort">Sortieren nach:</label>
+
+        <select id="sort" name="sort" class="input-sm">
+            <option value="id" th:selected="${sort=='id'}">ID</option>
+            <option value="name" th:selected="${sort=='name'}">Name</option>
+            <option value="designation" th:selected="${sort=='designation'}">Designation</option>
+            <option value="department" th:selected="${sort=='department'}">Department</option>
+        </select>
+
+        <select id="dir" name="dir" class="input-sm">
+            <option value="asc" th:selected="${dir=='asc'}">Aufsteigend</option>
+            <option value="desc" th:selected="${dir=='desc'}">Absteigend</option>
+        </select>
+
+        <button type="submit" class="btn btn-sm">Sortieren</button>
+    </form>
+
+    <div class="table-wrap mt-4">
+        <!-- IMPORTANT: class for enterprise features -->
+        <table class="data-table">
+            <thead>
+            <tr>
+                <!-- ID sticky column + click-sort (preserves filters) -->
+                <th class="sticky-col">
+                    <a class="th-link"
+                       th:href="@{/airportemployees(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            department=${filterDepartment},
+                            designation=${filterDesignation}
+                        )}">
+                        ID <span th:if="${sort=='id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/airportemployees(
+                            sort='name',
+                            dir=${sort=='name' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            department=${filterDepartment},
+                            designation=${filterDesignation}
+                        )}">
+                        Name <span th:if="${sort=='name'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/airportemployees(
+                            sort='designation',
+                            dir=${sort=='designation' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            department=${filterDepartment},
+                            designation=${filterDesignation}
+                        )}">
+                        Designation <span th:if="${sort=='designation'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/airportemployees(
+                            sort='department',
+                            dir=${sort=='department' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            department=${filterDepartment},
+                            designation=${filterDesignation}
+                        )}">
+                        Department <span th:if="${sort=='department'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="e : ${employees}">
+                <!-- ID sticky column -->
+                <td class="sticky-col" th:text="${e.id}">ID</td>
+
+                <td th:text="${e.name}">Name</td>
+                <td th:text="${e.designation}">Designation</td>
+                <td th:text="${e.department}">Department</td>
+
+                <!-- actions aligned + uniform buttons -->
+                <td class="actions">
+                    <a th:href="@{'/airportemployees/' + ${e.id}}"
+                       class="btn btn-sm action">View</a>
+
+                    <a th:href="@{'/airportemployees/' + ${e.id} + '/edit'}"
+                       class="btn btn-sm action">Edit</a>
+
+                    <form th:action="@{'/airportemployees/' + ${e.id} + '/delete'}"
+                          class="inline-form"
+                          method="post"
+                          onsubmit="return confirm('Delete this employee?');">
+                        <button type="submit" class="btn btn-sm action-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(employees)}">
+                <td colspan="5">No employees found.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
+<!-- Sticky header shadow on scroll -->
+<script>
+    (function () {
+        const table = document.querySelector("table.data-table");
+        if (!table) return;
+
+        const onScroll = () => {
+            if (window.scrollY > 8) table.classList.add("is-stuck");
+            else table.classList.remove("is-stuck");
+        };
+
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+</script>
 
 </body>
 </html>

@@ -8,65 +8,173 @@
 
 <body>
 
-<h1>All Flights</h1>
+<div class="container">
 
-<!-- ERROR -->
-<div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <h1>All Flights</h1>
 
-<!-- SUCCESS -->
-<div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <!-- ERROR -->
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-<a th:href="@{/flights/new}" class="btn">Add New Flight</a>
+    <!-- SUCCESS -->
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-<div class="table-wrap mt-4">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Departure Time</th>
-            <th>Airplane</th>
-            <th>Notice Board</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+    <!-- Top bar -->
+    <div class="page-actions">
+        <a th:href="@{/flights/new}" class="btn">Add New Flight</a>
+    </div>
 
-        <tbody>
-        <tr th:each="flight : ${flights}">
-            <td th:text="${flight.id}">ID</td>
-            <td th:text="${flight.name}">Name</td>
-            <td th:text="${flight.departureTime}">Time</td>
+    <!-- FILTER FORM (keeps sorting) -->
+    <form th:action="@{/flights}" method="get" class="sort-form mt-4">
+        <!-- keep current sorting -->
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
 
-            <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
-                Airplane
-            </td>
+        <label for="name">Flight Name:</label>
+        <input id="name"
+               name="name"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. LH123"
+               th:value="${filterName}" />
 
-            <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
-                Notice Board
-            </td>
+        <!-- Enterprise time interval -->
+        <label for="startTime">Departure from:</label>
+        <input id="startTime"
+               name="startTime"
+               type="time"
+               class="input-sm"
+               th:value="${filterStartTime}" />
 
-            <td class="actions">
+        <label for="endTime">to:</label>
+        <input id="endTime"
+               name="endTime"
+               type="time"
+               class="input-sm"
+               th:value="${filterEndTime}" />
 
-                <a th:href="@{'/flights/' + ${flight.id}}" class="btn">View</a>
+        <button type="submit" class="btn btn-sm">Filter</button>
 
-                <a th:href="@{'/flights/' + ${flight.id} + '/edit'}" class="btn">Edit</a>
+        <a class="btn btn-sm btn-secondary" th:href="@{/flights}">Reset</a>
+    </form>
 
-                <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
-                      class="inline-form"
-                      method="post"
-                      onsubmit="return confirm('Delete this flight?');">
-                    <button type="submit" class="btn danger">Delete</button>
-                </form>
+    <!-- SORT FORM (keeps filters) -->
+    <form th:action="@{/flights}" method="get" class="sort-form mt-4">
+        <!-- keep filters -->
+        <input type="hidden" name="name" th:value="${filterName}" />
+        <input type="hidden" name="startTime" th:value="${filterStartTime}" />
+        <input type="hidden" name="endTime" th:value="${filterEndTime}" />
 
-            </td>
-        </tr>
+        <label for="sort">Sortieren nach:</label>
 
-        <tr th:if="${#lists.isEmpty(flights)}">
-            <td colspan="6">No flights yet.</td>
-        </tr>
+        <select id="sort" name="sort" class="input-sm">
+            <option value="id" th:selected="${sort=='id'}">ID</option>
+            <option value="name" th:selected="${sort=='name'}">Name</option>
+            <option value="departureTime" th:selected="${sort=='departureTime'}">
+                Departure Time
+            </option>
+        </select>
 
-        </tbody>
-    </table>
+        <select id="dir" name="dir" class="input-sm">
+            <option value="asc" th:selected="${dir=='asc'}">Aufsteigend</option>
+            <option value="desc" th:selected="${dir=='desc'}">Absteigend</option>
+        </select>
+
+        <button type="submit" class="btn btn-sm">Sortieren</button>
+    </form>
+
+    <div class="table-wrap mt-4">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <!-- ID sticky column -->
+                <th class="sticky-col">
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        ID <span th:if="${sort=='id'}"
+                                 th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='name',
+                            dir=${sort=='name' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        Name <span th:if="${sort=='name'}"
+                                   th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='departureTime',
+                            dir=${sort=='departureTime' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        Departure Time
+                        <span th:if="${sort=='departureTime'}"
+                              th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>Airplane</th>
+                <th>Notice Board</th>
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="flight : ${flights}">
+                <td class="sticky-col" th:text="${flight.id}">ID</td>
+                <td th:text="${flight.name}">Name</td>
+                <td th:text="${flight.departureTime}">Time</td>
+
+                <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
+                    Airplane
+                </td>
+
+                <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
+                    Notice Board
+                </td>
+
+                <td class="actions">
+                    <a th:href="@{'/flights/' + ${flight.id}}"
+                       class="btn btn-sm action">View</a>
+
+                    <a th:href="@{'/flights/' + ${flight.id} + '/edit'}"
+                       class="btn btn-sm action">Edit</a>
+
+                    <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
+                          class="inline-form"
+                          method="post"
+                          onsubmit="return confirm('Delete this flight?');">
+                        <button type="submit"
+                                class="btn btn-sm action-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(flights)}">
+                <td colspan="6">No flights yet.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 </body>

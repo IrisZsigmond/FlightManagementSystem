@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/airlineemployees")
 public class AirlineEmployeeController {
@@ -26,12 +28,12 @@ public class AirlineEmployeeController {
         this.employeeMapper = employeeMapper;
     }
 
-    // LIST + SORT
+    // LIST + SORT + FILTER
     @GetMapping
     public String index(
             Model model,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) java.util.List<AirlineRole> roles,
+            @RequestParam(required = false) List<AirlineRole> roles,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
@@ -46,7 +48,7 @@ public class AirlineEmployeeController {
         Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort springSort = Sort.by(direction, sort);
 
-        // FILTER + SORT together (prin service)
+        // FILTER + SORT together (through service)
         model.addAttribute("employees", employeeService.search(name, roles, springSort));
 
         // pentru toggle/pfeile de sort

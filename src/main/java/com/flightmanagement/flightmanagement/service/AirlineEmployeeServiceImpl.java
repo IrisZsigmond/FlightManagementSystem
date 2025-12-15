@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
@@ -75,7 +74,6 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
     }
 
     // READ
-
     @Override
     @Transactional(readOnly = true)
     public List<AirlineEmployee> findAll() {

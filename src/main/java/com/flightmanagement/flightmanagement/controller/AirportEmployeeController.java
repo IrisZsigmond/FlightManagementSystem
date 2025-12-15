@@ -6,6 +6,7 @@ import com.flightmanagement.flightmanagement.model.AirportEmployee;
 import com.flightmanagement.flightmanagement.service.AirportEmployeeService;
 import com.flightmanagement.flightmanagement.service.AirportEmployeeServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +26,40 @@ public class AirportEmployeeController {
         this.mapper = mapper;
     }
 
+    // LIST + SORT + FILTER
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("employees", service.findAll());
+    public String index(
+            Model model,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String designation,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir
+    ){
+        // whitelist sort
+        if (!sort.equals("id") && !sort.equals("name") && !sort.equals("department") && !sort.equals("designation")) {
+            sort = "id";
+        }
+        if (!dir.equalsIgnoreCase("asc") && !dir.equalsIgnoreCase("desc")) {
+            dir = "asc";
+        }
+
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort springSort = Sort.by(direction, sort);
+
+        // FILTER + SORT together (through service)
+        model.addAttribute("employees", service.search(name, department, designation, springSort));
+
+        // pentru toggle/pfeile de sort
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir", dir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // pentru a păstra valorile în form după filtrare
+        model.addAttribute("filterName", name);
+        model.addAttribute("filterDepartment", department);
+        model.addAttribute("filterDesignation", designation);
+
         return "airportemployees/index";
     }
 

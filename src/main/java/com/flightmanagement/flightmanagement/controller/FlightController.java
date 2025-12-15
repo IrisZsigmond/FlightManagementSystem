@@ -7,11 +7,14 @@ import com.flightmanagement.flightmanagement.service.AirplaneService;
 import com.flightmanagement.flightmanagement.service.FlightService;
 import com.flightmanagement.flightmanagement.service.NoticeBoardService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalTime;
 
 @Controller
 @RequestMapping("/flights")
@@ -34,10 +37,68 @@ public class FlightController {
 
     // INDEX
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("flights", flightService.findAll());
+    public String index(Model model,
+                        @RequestParam(required = false) String name,
+                        @RequestParam(required = false) String startTime,
+                        @RequestParam(required = false) String endTime,
+                        @RequestParam(defaultValue = "id") String sort,
+                        @RequestParam(defaultValue = "asc") String dir
+    ) {
+
+        /* ================= SORT WHITELIST ================= */
+        if (!sort.equals("id")
+                && !sort.equals("name")
+                && !sort.equals("departureTime")) {
+            sort = "id";
+        }
+
+        if (!dir.equalsIgnoreCase("asc") && !dir.equalsIgnoreCase("desc")) {
+            dir = "asc";
+        }
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort springSort = Sort.by(direction, sort);
+
+        /* ================= TIME PARSING (SAFE) ================= */
+        LocalTime start = null;
+        LocalTime end = null;
+
+        if (startTime != null && !startTime.isBlank()) {
+            try {
+                start = LocalTime.parse(startTime); // expects HH:mm
+            } catch (Exception ex) {
+                model.addAttribute("error", "Start time must be in format HH:mm.");
+            }
+        }
+
+        if (endTime != null && !endTime.isBlank()) {
+            try {
+                end = LocalTime.parse(endTime);
+            } catch (Exception ex) {
+                model.addAttribute("error", "End time must be in format HH:mm.");
+            }
+        }
+
+        /* ================= FILTER + SORT ================= */
+        model.addAttribute(
+                "flights",
+                flightService.search(name, start, end, springSort)
+        );
+
+        /* ================= UI STATE ================= */
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir",
+                dir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        model.addAttribute("filterName", name);
+        model.addAttribute("filterStartTime", startTime);
+        model.addAttribute("filterEndTime", endTime);
+
         return "flights/index";
     }
+
 
     // CREATE form
     @GetMapping("/new")

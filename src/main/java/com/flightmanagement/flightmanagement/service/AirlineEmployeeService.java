@@ -10,22 +10,24 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface AirlineEmployeeService {
-
+    /// CRUD
     AirlineEmployee save(AirlineEmployee employee);
+
+    List<AirlineEmployee> findAll();
 
     AirlineEmployee update(String id, AirlineEmployee updated);
 
     boolean delete(String id);
 
-    List<AirlineEmployee> findAll();
-
-    AirlineEmployee getById(String id);
-
-    Optional<AirlineEmployee> findById(String id);
-
+    /// Sorting and Searching
     List<AirlineEmployee> findAll(Sort sort);
 
     List<AirlineEmployee> search(String name, List<AirlineRole> roles, Sort sort);
+
+    /// Other Queries
+    AirlineEmployee getById(String id);
+
+    Optional<AirlineEmployee> findById(String id);
 
     List<AirlineEmployee> findByAssignmentId(String assignmentId);
 
