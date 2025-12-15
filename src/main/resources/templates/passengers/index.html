@@ -16,6 +16,8 @@
     <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
     <div class="page-actions">
+        <a th:href="@{/}" class="btn btn-secondary">Home</a>
+
         <a th:href="@{/passengers/new}" class="btn">Add New Passenger</a>
     </div>
 
