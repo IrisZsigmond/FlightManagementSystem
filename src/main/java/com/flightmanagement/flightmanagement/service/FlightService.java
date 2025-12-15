@@ -1,6 +1,7 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Flight;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -12,27 +13,26 @@ public interface FlightService {
 
     List<Flight> findAll();
 
-    Optional<Flight> findById(String id);
 
     Flight update(String id, Flight updated);
 
     boolean delete(String id);
 
     Flight getById(String id);
+
+    // Sorting and Filtering
+    List<Flight> findAll(Sort sort);
+
+    List<Flight> findByNameContainingIgnoreCase(String name, Sort sort);
+
+    List<Flight> findByDepartureTimeBetween(LocalTime startTime, LocalTime endTime, Sort sort);
+
+    List<Flight> findByNameContainingIgnoreCaseAndDepartureTimeBetween(String name, LocalTime startTime, LocalTime endTime, Sort sort);
+
+    List<Flight> search(String name, LocalTime startTime, LocalTime endTime, Sort sort);
+
     // Custom methods:
-    List<Flight> findByAirplaneId(String airplaneId);
-
-    Optional<Flight> findWithTicketsAndAssignments(String id);
-
-    List<Flight> findUnassigned();
+    Optional<Flight> findById(String id);
 
     List<Flight> findByNoticeBoardId(String noticeBoardId);
-
-    List<Flight> findByNameContains(String term);
-
-    List<Flight> findByDepartureBetween(LocalTime from, LocalTime to);
-
-    List<Flight> findByTicketId(String ticketId);
-
-    List<Flight> findByStaffId(String staffId);
 }

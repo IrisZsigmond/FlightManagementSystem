@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.mapper.AirplaneMapper;
 import com.flightmanagement.flightmanagement.model.Airplane;
 import com.flightmanagement.flightmanagement.service.AirplaneService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,14 +27,66 @@ public class AirplaneController {
 
 
     /* ===================================
-                LIST
+             LIST + SORT + FILTER
        =================================== */
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("airplanes", airplaneService.findAll());
+    public String index(Model model,
+                        @RequestParam(required = false) String number,
+                        @RequestParam(required = false) String capacity,
+                        @RequestParam(defaultValue = "id") String sort,
+                        @RequestParam(defaultValue = "asc") String dir
+    ) {
+        // ---------------- SORT WHITELIST ----------------
+        if (!sort.equals("id") && !sort.equals("number") && !sort.equals("capacity")) {
+            sort = "id";
+        }
+        if (!dir.equalsIgnoreCase("asc") && !dir.equalsIgnoreCase("desc")) {
+            dir = "asc";
+        }
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort springSort = Sort.by(direction, sort);
+
+        // ---------------- FILTER PARSING (SAFE) ----------------
+        Integer numberValue = null;
+        Integer capacityValue = null;
+
+        if (number != null && !number.isBlank()) {
+            try {
+                numberValue = Integer.parseInt(number);
+            } catch (NumberFormatException ex) {
+                model.addAttribute("error", "Airplane number must be a numeric value.");
+            }
+        }
+
+        if (capacity != null && !capacity.isBlank()) {
+            try {
+                capacityValue = Integer.parseInt(capacity);
+            } catch (NumberFormatException ex) {
+                model.addAttribute("error", "Capacity must be a numeric value.");
+            }
+        }
+
+        // ---------------- FILTER + SORT ----------------
+        model.addAttribute(
+                "airplanes",
+                airplaneService.search(numberValue, capacityValue, springSort)
+        );
+
+        // ---------------- UI STATE ----------------
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir",
+                dir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        model.addAttribute("filterNumber", number);
+        model.addAttribute("filterCapacity", capacity);
+
         return "airplanes/index";
     }
+
 
 
     /* ===================================

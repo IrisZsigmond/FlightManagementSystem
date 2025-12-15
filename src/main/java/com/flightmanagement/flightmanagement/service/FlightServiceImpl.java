@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
 import com.flightmanagement.flightmanagement.repository.FlightRepository;
 import com.flightmanagement.flightmanagement.validations.FlightValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,16 +55,6 @@ public class FlightServiceImpl implements FlightService {
 
     // READ
     @Override
-    public Optional<Flight> findById(String id) {
-        return flightRepository.findById(id);
-    }
-
-    @Override
-    public Flight getById(String id) {
-        return validator.requireExisting(id);
-    }
-
-    @Override
     public List<Flight> findAll() {
         return flightRepository.findAll();
     }
@@ -107,58 +98,57 @@ public class FlightServiceImpl implements FlightService {
         return true;
     }
 
-    // CUSTOM BELOW
     @Override
-    public List<Flight> findByAirplaneId(String airplaneId) {
-        return flightRepository.findByAirplane_Id(airplaneId);
+    public List<Flight> findByNameContainingIgnoreCase(String name, Sort sort) {
+        return flightRepository.findByNameContainingIgnoreCase(name, sort);
     }
 
     @Override
-    public Optional<Flight> findWithTicketsAndAssignments(String id) {
+    public List<Flight> findByDepartureTimeBetween(LocalTime startTime, LocalTime endTime, Sort sort) {
+        return flightRepository.findByDepartureTimeBetween(startTime, endTime, sort);
+    }
+
+    @Override
+    public List<Flight> findByNameContainingIgnoreCaseAndDepartureTimeBetween(String name, LocalTime startTime, LocalTime endTime, Sort sort) {
+        return flightRepository.findByNameContainingIgnoreCaseAndDepartureTimeBetween(name, startTime, endTime, sort);
+    }
+
+    @Override
+    public List<Flight> search(String name, LocalTime startTime, LocalTime endTime, Sort sort) {
+        Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.ASC, "id");
+
+        boolean hasName = name != null && !name.trim().isBlank();
+        boolean hasstartTime = startTime != null;
+        boolean hasendTime = endTime != null;
+
+        if (hasName && hasstartTime && hasendTime) {
+            return flightRepository.findByNameContainingIgnoreCaseAndDepartureTimeBetween(name, startTime, endTime, safeSort);
+        } else if (hasName) {
+            return flightRepository.findByNameContainingIgnoreCase(name, safeSort);
+        } else if (hasstartTime && hasendTime) {
+            return flightRepository.findByDepartureTimeBetween(startTime, endTime, safeSort);
+        } else {
+            return flightRepository.findAll(safeSort);
+        }
+    }
+
+    @Override
+    public Optional<Flight> findById(String id) {
         return flightRepository.findById(id);
     }
 
     @Override
-    public List<Flight> findUnassigned() {
-        return flightRepository.findAll().stream()
-                .filter(f -> f.getAirplane() == null)
-                .toList();
-    }
-
-    @Override
     public List<Flight> findByNoticeBoardId(String noticeBoardId) {
-        return flightRepository.findAll().stream()
-                .filter(f -> f.getNoticeBoard() != null &&
-                        noticeBoardId.equals(f.getNoticeBoard().getId()))
-                .toList();
+        return flightRepository.findByAirplane_Id(noticeBoardId);
     }
 
     @Override
-    public List<Flight> findByNameContains(String term) {
-        if (term == null || term.isBlank()) return List.of();
-        String search = term.toLowerCase();
-        return flightRepository.findAll().stream()
-                .filter(f -> f.getName() != null &&
-                        f.getName().toLowerCase().contains(search))
-                .toList();
+    public Flight getById(String id) {
+        return validator.requireExisting(id);
     }
 
     @Override
-    public List<Flight> findByDepartureBetween(LocalTime from, LocalTime to) {
-        return flightRepository.findAll().stream()
-                .filter(f -> f.getDepartureTime() != null &&
-                        !f.getDepartureTime().isBefore(from) &&
-                        !f.getDepartureTime().isAfter(to))
-                .toList();
-    }
-
-    @Override
-    public List<Flight> findByTicketId(String ticketId) {
-        return flightRepository.findAll(); // handled in controller if needed
-    }
-
-    @Override
-    public List<Flight> findByStaffId(String staffId) {
-        return List.of(); // depends on assignment service (not included here)
+    public List<Flight> findAll(Sort sort) {
+        return flightRepository.findAll(sort);
     }
 }

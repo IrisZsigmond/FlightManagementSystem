@@ -3,6 +3,7 @@ package com.flightmanagement.flightmanagement.service;
 import com.flightmanagement.flightmanagement.model.AirportEmployee;
 import com.flightmanagement.flightmanagement.repository.AirportEmployeeRepository;
 import com.flightmanagement.flightmanagement.validations.AirportEmployeeValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +53,7 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
         return repo.findById(id);
     }
 
-    /** helper folosit de controller, similar cu getById de la Airline/Airplane */
+    /** helper folosit de controller */
     @Transactional(readOnly = true)
     public AirportEmployee getById(String id) {
         return validator.requireExisting(id);
@@ -93,26 +94,36 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
         return true;
     }
 
-    // ------------ Custom ------------
-
     @Override
     @Transactional(readOnly = true)
-    public List<AirportEmployee> findByDepartment(String department) {
-        if (department == null || department.isBlank()) return List.of();
-        return repo.findByDepartmentIgnoreCase(department);
+    public List<AirportEmployee> findAll(Sort sort) {
+        return repo.findAll(sort);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<AirportEmployee> findByDesignation(String designation) {
-        if (designation == null || designation.isBlank()) return List.of();
-        return repo.findByDesignationIgnoreCase(designation);
-    }
+    public List<AirportEmployee> search(String name, String department, String designation, Sort sort) {
+        Sort safeSort = sort != null ? sort : Sort.by(Sort.Direction.ASC, "id");
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<AirportEmployee> findByNameContains(String term) {
-        if (term == null || term.isBlank()) return List.of();
-        return repo.findByNameContainingIgnoreCase(term);
+        boolean hasName = name != null && !name.isBlank();
+        boolean hasDepartment = department != null && !department.isBlank();
+        boolean hasDesignation = designation != null && !designation.isBlank();
+
+        if (hasName && hasDepartment && hasDesignation) {
+            return repo.findByNameContainingIgnoreCaseAndDepartmentContainingIgnoreCaseAndDesignationContainingIgnoreCase(name.trim(), department.trim(), designation.trim(), safeSort);
+        } else if (hasName && hasDepartment) {
+            return repo.findByNameContainingIgnoreCaseAndDepartmentContainingIgnoreCase(name.trim(), department.trim(), safeSort);
+        } else if (hasName && hasDesignation) {
+            return repo.findByNameContainingIgnoreCaseAndDesignationContainingIgnoreCase(name.trim(), designation.trim(), safeSort);
+        } else if (hasDepartment && hasDesignation) {
+            return repo.findByDepartmentContainingIgnoreCaseAndDesignationContainingIgnoreCase(department.trim(), designation.trim(), safeSort);
+        } else if (hasName) {
+            return repo.findByNameContainingIgnoreCase(name.trim(), safeSort);
+        } else if (hasDepartment) {
+            return repo.findByDepartmentContainingIgnoreCase(department.trim(), safeSort);
+        } else if (hasDesignation) {
+            return repo.findByDesignationContainingIgnoreCase(designation.trim(), safeSort);
+        } else {
+            return repo.findAll(safeSort);
+        }
     }
 }
