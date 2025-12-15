@@ -28,12 +28,19 @@ public class LuggageController {
         this.mapper = mapper;
     }
 
+    // LIST + SORT + FILTRE (INDEX)
     @GetMapping
     public String index(
+            Model model,
+            // NOU: Parametrii de filtrare
+            @RequestParam(required = false) String filterTicketId,
+            @RequestParam(required = false) LuggageStatus filterStatus,
+            @RequestParam(required = false) LuggageSize filterSize,
+
             @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "asc") String dir,
-            Model model
+            @RequestParam(defaultValue = "asc") String dir
     ) {
+        // 1. Whitelisting și pregătirea Sort
         String sortProperty = switch (sort) {
             case "id" -> "id";
             case "ticket" -> "ticket.id";
@@ -49,10 +56,22 @@ public class LuggageController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        model.addAttribute("luggages", luggageService.findAll(sortObj));
+        // 2. FILTRARE + SORTARE (Apel la metoda search)
+        model.addAttribute("luggages", luggageService.search(filterTicketId, filterStatus, filterSize, sortObj));
+
+        // 3. Variabile pentru UI
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
+        // NOU: Păstrarea valorilor filtrului în form
+        model.addAttribute("filterTicketId", filterTicketId);
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("filterSize", filterSize);
+
+        // Pentru select-uri (Enum-uri)
+        model.addAttribute("statuses", LuggageStatus.values());
+        model.addAttribute("sizes", LuggageSize.values());
 
         return "luggage/index";
     }

@@ -28,16 +28,22 @@ public class FlightAssignmentController {
         this.mapper = mapper;
     }
 
+    // LIST + SORT + FILTRE (INDEX)
     @GetMapping
     public String index(
+            Model model,
+            // NOU: Parametrii de filtrare
+            @RequestParam(required = false) String filterFlightId,
+            @RequestParam(required = false) String filterEmployeeId,
+
             @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "asc") String dir,
-            Model model
+            @RequestParam(defaultValue = "asc") String dir
     ) {
+        // 1. Whitelisting și pregătirea Sort
         String sortProperty = switch (sort) {
             case "id" -> "id";
-            case "flight" -> "flight.id";
-            case "employee" -> "airlineEmployee.id";
+            case "flight" -> "flight.id"; // Sortare pe relație
+            case "employee" -> "airlineEmployee.id"; // Sortare pe relație
             default -> "id";
         };
 
@@ -48,15 +54,22 @@ public class FlightAssignmentController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        model.addAttribute("assignments", service.findAll(sortObj));
+        // 2. FILTRARE + SORTARE (Apel la metoda search din Service)
+        model.addAttribute("assignments", service.search(filterFlightId, filterEmployeeId, sortObj));
+
+        // 3. Variabile pentru UI (păstrarea stării + toggle sort)
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
+        // NOU: Păstrarea valorilor filtrului în form
+        model.addAttribute("filterFlightId", filterFlightId);
+        model.addAttribute("filterEmployeeId", filterEmployeeId);
+
         return "flightassignments/index";
     }
 
-
+    // CREATE - form
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("assignmentForm")) {
@@ -65,6 +78,7 @@ public class FlightAssignmentController {
         return "flightassignments/new";
     }
 
+    // CREATE - submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("assignmentForm") FlightAssignmentForm form,
@@ -72,16 +86,10 @@ public class FlightAssignmentController {
             RedirectAttributes ra,
             Model model
     ) {
-        // 1) Bean Validation
-        if (result.hasErrors()) {
-            return "flightassignments/new";
-        }
+        if (result.hasErrors()) { return "flightassignments/new"; }
 
         try {
-            // 2) DTO -> Entity
             FlightAssignment a = mapper.toEntity(form);
-
-            // 3) Service (include validator)
             service.save(a);
 
             ra.addFlashAttribute("success", "Assignment created.");
@@ -89,8 +97,6 @@ public class FlightAssignmentController {
 
         } catch (IllegalArgumentException | IllegalStateException ex) {
             String msg = ex.getMessage() != null ? ex.getMessage() : "Could not create assignment.";
-
-            // mapăm mesajul pe câmpul corect, dacă putem
             if (msg.contains("id already exists") || msg.contains("Flight assignment id")) {
                 result.rejectValue("id", "duplicate", msg);
             } else if (msg.contains("Flight not found") || msg.contains("Flight id")) {
@@ -98,16 +104,15 @@ public class FlightAssignmentController {
             } else if (msg.contains("Airline employee not found") || msg.contains("employee id")) {
                 result.rejectValue("airlineEmployeeId", "notFound", msg);
             } else if (msg.contains("already assigned")) {
-                // conflict pereche flight+employee – poate fi global
                 result.reject("globalError", msg);
             } else {
                 result.reject("globalError", msg);
             }
-
             return "flightassignments/new";
         }
     }
 
+    // EDIT - form
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {
@@ -122,6 +127,7 @@ public class FlightAssignmentController {
         }
     }
 
+    // EDIT - submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -130,7 +136,6 @@ public class FlightAssignmentController {
             RedirectAttributes ra,
             Model model
     ) {
-        // 1) Bean Validation
         if (result.hasErrors()) {
             FlightAssignment a = service.findById(id).orElseThrow();
             model.addAttribute("assignmentId", id);
@@ -139,13 +144,8 @@ public class FlightAssignmentController {
         }
 
         try {
-            // 2) luăm entitatea existentă
             FlightAssignment existing = service.findById(id).orElseThrow();
-
-            // 3) actualizăm din form
             mapper.updateEntityFromForm(existing, form);
-
-            // 4) service (validator inside)
             service.update(id, existing);
 
             ra.addFlashAttribute("success", "Assignment updated.");
@@ -153,7 +153,6 @@ public class FlightAssignmentController {
 
         } catch (IllegalArgumentException | IllegalStateException ex) {
             String msg = ex.getMessage() != null ? ex.getMessage() : "Could not update assignment.";
-
             if (msg.contains("Flight not found") || msg.contains("Flight id")) {
                 result.rejectValue("flightId", "notFound", msg);
             } else if (msg.contains("Airline employee not found") || msg.contains("employee id")) {
@@ -172,6 +171,7 @@ public class FlightAssignmentController {
         }
     }
 
+    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
@@ -187,6 +187,7 @@ public class FlightAssignmentController {
         return "redirect:/flightassignments";
     }
 
+    // VIEW
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {

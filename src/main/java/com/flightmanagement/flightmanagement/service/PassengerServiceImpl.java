@@ -26,12 +26,14 @@ public class PassengerServiceImpl implements PassengerService {
         this.ticketService = ticketService;
     }
 
+    // ---------------- CREATE ----------------
     @Override
     public Passenger save(Passenger passenger) {
         passengerValidator.assertIdUnique(passenger.getId());
         return passengerRepository.save(passenger);
     }
 
+    // ---------------- UPDATE ----------------
     @Override
     public Passenger update(String id, Passenger updated) {
         Passenger existing = passengerValidator.requireExisting(id);
@@ -40,6 +42,7 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerRepository.save(existing);
     }
 
+    // ---------------- DELETE ----------------
     @Override
     public boolean delete(String id) {
         passengerValidator.requireExisting(id);
@@ -48,13 +51,13 @@ public class PassengerServiceImpl implements PassengerService {
         return true;
     }
 
+    // ---------------- READ / SORT ----------------
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> findAll() {
-        return passengerRepository.findAll();
+        return passengerRepository.findAll(Sort.by(Sort.Direction.ASC, "name")); // Sortare implicită
     }
 
-    // 🔥 SORT
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> findAll(Sort sort) {
@@ -71,6 +74,39 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerValidator.requireExisting(id);
     }
 
+    // ---------------- SEARCH + SORT (NOU) ----------------
+    @Override
+    @Transactional(readOnly = true)
+    public List<Passenger> search(String name, String currency, Sort sort) {
+
+        Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.ASC, "name");
+
+        boolean hasName = name != null && !name.trim().isBlank();
+        boolean hasCurrency = currency != null && !currency.trim().isBlank();
+
+        String trimmedName = hasName ? name.trim() : null;
+        String trimmedCurrency = hasCurrency ? currency.trim() : null;
+
+        // Cazul 1: Filtrare pe ambele criterii
+        if (hasName && hasCurrency) {
+            return passengerRepository.findByNameContainingIgnoreCaseAndCurrencyContainingIgnoreCase(trimmedName, trimmedCurrency, safeSort);
+        }
+
+        // Cazul 2: Filtrare doar după Nume
+        if (hasName) {
+            return passengerRepository.findByNameContainingIgnoreCase(trimmedName, safeSort);
+        }
+
+        // Cazul 3: Filtrare doar după Monedă
+        if (hasCurrency) {
+            return passengerRepository.findByCurrencyContainingIgnoreCase(trimmedCurrency, safeSort);
+        }
+
+        // Cazul 4: Fără filtre (doar sortare)
+        return passengerRepository.findAll(safeSort);
+    }
+
+    // ---------------- HELPERS ----------------
     @Override
     public List<Passenger> findByName(String name) {
         return passengerRepository.findByNameIgnoreCase(name);

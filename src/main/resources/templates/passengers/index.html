@@ -11,19 +11,48 @@
 
     <h1>All Passengers</h1>
 
-    <!-- ERROR MESSAGE -->
     <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-    <!-- SUCCESS MESSAGE -->
     <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-    <!-- TOP BAR -->
     <div class="page-actions">
         <a th:href="@{/passengers/new}" class="btn">Add New Passenger</a>
     </div>
 
-    <!-- SORT FORM -->
+    <form th:action="@{/passengers}" method="get" class="sort-form mt-4 form-grid">
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
+
+        <div>
+            <label for="filterName">Filter by Name:</label>
+            <input id="filterName"
+                   name="filterName"
+                   type="text"
+                   class="input-sm"
+                   placeholder="e.g. John"
+                   th:value="${filterName}" />
+        </div>
+
+        <div>
+            <label for="filterCurrency">Filter by Currency:</label>
+            <input id="filterCurrency"
+                   name="filterCurrency"
+                   type="text"
+                   class="input-sm"
+                   placeholder="e.g. USD"
+                   th:value="${filterCurrency}" />
+        </div>
+
+        <div class="form-actions" style="grid-column: 1 / -1; justify-content: flex-start;">
+            <button type="submit" class="btn btn-sm">Filter</button>
+            <a class="btn btn-sm secondary" th:href="@{/passengers}">Reset Filter</a>
+        </div>
+    </form>
+
     <form th:action="@{/passengers}" method="get" class="sort-form mt-4">
+        <input type="hidden" name="filterName" th:value="${filterName}" />
+        <input type="hidden" name="filterCurrency" th:value="${filterCurrency}" />
+
         <label for="sort">Sort by:</label>
 
         <select id="sort" name="sort" class="input-sm">
@@ -46,21 +75,36 @@
             <tr>
                 <th>
                     <a class="th-link"
-                       th:href="@{/passengers(sort='id', dir=${sort=='id' ? reverseDir : 'asc'})}">
+                       th:href="@{/passengers(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            filterName=${filterName},
+                            filterCurrency=${filterCurrency}
+                        )}">
                         ID <span th:if="${sort=='id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/passengers(sort='name', dir=${sort=='name' ? reverseDir : 'asc'})}">
+                       th:href="@{/passengers(
+                            sort='name',
+                            dir=${sort=='name' ? reverseDir : 'asc'},
+                            filterName=${filterName},
+                            filterCurrency=${filterCurrency}
+                        )}">
                         Name <span th:if="${sort=='name'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/passengers(sort='currency', dir=${sort=='currency' ? reverseDir : 'asc'})}">
+                       th:href="@{/passengers(
+                            sort='currency',
+                            dir=${sort=='currency' ? reverseDir : 'asc'},
+                            filterName=${filterName},
+                            filterCurrency=${filterCurrency}
+                        )}">
                         Currency <span th:if="${sort=='currency'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
@@ -87,16 +131,15 @@
                     </span>
                 </td>
 
-                <!-- ACTIONS -->
                 <td class="actions">
-                    <a th:href="@{'/passengers/' + ${p.id}}" class="btn btn-sm">View</a>
-                    <a th:href="@{'/passengers/' + ${p.id} + '/edit'}" class="btn btn-sm">Edit</a>
+                    <a th:href="@{'/passengers/' + ${p.id}}" class="btn btn-sm action">View</a>
+                    <a th:href="@{'/passengers/' + ${p.id} + '/edit'}" class="btn btn-sm action">Edit</a>
 
                     <form th:action="@{'/passengers/' + ${p.id} + '/delete'}"
                           method="post"
                           class="inline-form"
                           onsubmit="return confirm('Delete this passenger?');">
-                        <button type="submit" class="btn btn-sm danger">Delete</button>
+                        <button type="submit" class="btn btn-sm action-danger danger">Delete</button>
                     </form>
                 </td>
             </tr>

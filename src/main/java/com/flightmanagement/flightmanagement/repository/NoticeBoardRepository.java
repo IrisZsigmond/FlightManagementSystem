@@ -2,6 +2,7 @@ package com.flightmanagement.flightmanagement.repository;
 
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +13,13 @@ import java.util.List;
 @Primary
 public interface NoticeBoardRepository extends JpaRepository<NoticeBoard, String> {
 
+    // 1. METODĂ EXISTENTĂ (Folosită de Validator - FĂRĂ Sort)
     List<NoticeBoard> findByDate(LocalDate date);
 
-    boolean existsByDate(LocalDate date);
+    // 2. METODE PENTRU SEARCH (CU Sort)
+    // Căutare după dată exactă + Sortare
+    List<NoticeBoard> findByDate(LocalDate date, Sort sort);
 
+    boolean existsByDate(LocalDate date);
     boolean existsByDateAndIdNot(LocalDate date, String id);
 }

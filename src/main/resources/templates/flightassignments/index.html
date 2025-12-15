@@ -11,25 +11,54 @@
 
     <h1>All Flight Assignments</h1>
 
-    <!-- ERROR -->
     <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-    <!-- SUCCESS -->
     <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-    <!-- TOP BAR -->
     <div class="page-actions">
         <a th:href="@{/flightassignments/new}" class="btn">Add New Assignment</a>
     </div>
 
-    <!-- SORT FORM -->
+    <form th:action="@{/flightassignments}" method="get" class="sort-form mt-4 form-grid">
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
+
+        <div>
+            <label for="filterFlightId">Filter by Flight ID:</label>
+            <input id="filterFlightId"
+                   name="filterFlightId"
+                   type="text"
+                   class="input-sm"
+                   placeholder="e.g., F001"
+                   th:value="${filterFlightId}" />
+        </div>
+
+        <div>
+            <label for="filterEmployeeId">Filter by Employee ID:</label>
+            <input id="filterEmployeeId"
+                   name="filterEmployeeId"
+                   type="text"
+                   class="input-sm"
+                   placeholder="e.g., S001"
+                   th:value="${filterEmployeeId}" />
+        </div>
+
+        <div class="form-actions" style="grid-column: 1 / -1; justify-content: flex-start;">
+            <button type="submit" class="btn btn-sm">Filter</button>
+            <a class="btn btn-sm secondary" th:href="@{/flightassignments}">Reset Filter</a>
+        </div>
+    </form>
+
     <form th:action="@{/flightassignments}" method="get" class="sort-form mt-4">
+        <input type="hidden" name="filterFlightId" th:value="${filterFlightId}" />
+        <input type="hidden" name="filterEmployeeId" th:value="${filterEmployeeId}" />
+
         <label for="sort">Sort by:</label>
 
         <select id="sort" name="sort" class="input-sm">
             <option value="id" th:selected="${sort=='id'}">ID</option>
-            <option value="flight.id" th:selected="${sort=='flight.id'}">Flight</option>
-            <option value="airlineEmployee.id" th:selected="${sort=='airlineEmployee.id'}">Employee</option>
+            <option value="flight" th:selected="${sort=='flight'}">Flight ID</option>
+            <option value="employee" th:selected="${sort=='employee'}">Employee ID</option>
         </select>
 
         <select id="dir" name="dir" class="input-sm">
@@ -40,28 +69,44 @@
         <button type="submit" class="btn btn-sm">Sort</button>
     </form>
 
+
     <div class="table-wrap mt-4">
-        <table>
+        <table class="data-table">
             <thead>
             <tr>
                 <th>
                     <a class="th-link"
-                       th:href="@{/flightassignments(sort='id', dir=${sort=='id' ? reverseDir : 'asc'})}">
+                       th:href="@{/flightassignments(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            filterFlightId=${filterFlightId},
+                            filterEmployeeId=${filterEmployeeId}
+                        )}">
                         ID <span th:if="${sort=='id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/flightassignments(sort='flight.id', dir=${sort=='flight.id' ? reverseDir : 'asc'})}">
-                        Flight <span th:if="${sort=='flight.id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                       th:href="@{/flightassignments(
+                            sort='flight',
+                            dir=${sort=='flight' ? reverseDir : 'asc'},
+                            filterFlightId=${filterFlightId},
+                            filterEmployeeId=${filterEmployeeId}
+                        )}">
+                        Flight <span th:if="${sort=='flight'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
                 <th>
                     <a class="th-link"
-                       th:href="@{/flightassignments(sort='airlineEmployee.id', dir=${sort=='airlineEmployee.id' ? reverseDir : 'asc'})}">
-                        Employee <span th:if="${sort=='airlineEmployee.id'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                       th:href="@{/flightassignments(
+                            sort='employee',
+                            dir=${sort=='employee' ? reverseDir : 'asc'},
+                            filterFlightId=${filterFlightId},
+                            filterEmployeeId=${filterEmployeeId}
+                        )}">
+                        Employee <span th:if="${sort=='employee'}" th:text="${dir=='asc' ? '▲' : '▼'}"></span>
                     </a>
                 </th>
 
@@ -76,13 +121,15 @@
                 <td th:text="${a.airlineEmployee != null ? a.airlineEmployee.id : 'N/A'}">Employee</td>
 
                 <td class="actions">
-                    <a th:href="@{'/flightassignments/' + ${a.id}}" class="btn btn-sm">View</a>
+                    <a th:href="@{'/flightassignments/' + ${a.id}}" class="btn btn-sm action">View</a>
+                    <a th:href="@{'/flightassignments/' + ${a.id} + '/edit'}" class="btn btn-sm action">Edit</a>
+
 
                     <form th:action="@{'/flightassignments/' + ${a.id} + '/delete'}"
                           method="post"
                           class="inline-form"
                           onsubmit="return confirm('Delete this assignment?');">
-                        <button type="submit" class="btn btn-sm danger">Delete</button>
+                        <button type="submit" class="btn btn-sm action-danger danger">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -93,7 +140,6 @@
             </tbody>
         </table>
     </div>
-
 </div>
 </body>
 </html>

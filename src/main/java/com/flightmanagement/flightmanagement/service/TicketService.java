@@ -27,4 +27,7 @@ public interface TicketService {
     List<Ticket> findByCategory(TicketCategory category);
 
     double calculateTotalPriceForPassenger(String passengerId);
+
+    // NOU: Metoda de căutare/filtrare combinată
+    List<Ticket> search(Double minPrice, Double maxPrice, TicketCategory category, Sort sort);
 }

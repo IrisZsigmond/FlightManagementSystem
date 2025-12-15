@@ -5,10 +5,9 @@ import com.flightmanagement.flightmanagement.model.Flight;
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
 import com.flightmanagement.flightmanagement.repository.FlightAssignmentRepository;
 import com.flightmanagement.flightmanagement.validations.FlightAssignmentValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Sort;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -20,47 +19,55 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
     private final FlightAssignmentRepository repo;
     private final FlightAssignmentValidator validator;
 
-    public FlightAssignmentServiceImpl(FlightAssignmentRepository repo,
-                                       FlightAssignmentValidator validator) {
+    public FlightAssignmentServiceImpl(
+            FlightAssignmentRepository repo,
+            FlightAssignmentValidator validator
+    ) {
         this.repo = repo;
         this.validator = validator;
     }
 
-    // ---------------- CRUD ----------------
+    // ---------------- CREATE ----------------
 
-    // CREATE
     @Override
     public FlightAssignment save(FlightAssignment assignment) {
         if (assignment == null) {
             throw new IllegalArgumentException("Flight assignment cannot be null");
         }
 
-        // ID unic
         validator.assertIdUnique(assignment.getId());
 
-        // extragem ID-urile din entitate (mapperul trebuie să le seteze)
-        String flightId = assignment.getFlight() != null ? assignment.getFlight().getId() : null;
-        String employeeId = assignment.getAirlineEmployee() != null ? assignment.getAirlineEmployee().getId() : null;
+        String flightId = assignment.getFlight() != null
+                ? assignment.getFlight().getId()
+                : null;
 
-        // existență Flight + Employee
+        String employeeId = assignment.getAirlineEmployee() != null
+                ? assignment.getAirlineEmployee().getId()
+                : null;
+
         Flight flight = validator.requireExistingFlight(flightId);
         AirlineEmployee employee = validator.requireExistingAirlineEmployee(employeeId);
 
-        // unicitate pereche
         validator.assertUniquePairForCreate(flight.getId(), employee.getId());
 
-        // reasociem entity-urile „reale” (managed) pe assignment
         assignment.setFlight(flight);
         assignment.setAirlineEmployee(employee);
 
         return repo.save(assignment);
     }
 
-    // READ
+    // ---------------- READ ----------------
+
     @Override
     @Transactional(readOnly = true)
     public List<FlightAssignment> findAll() {
         return repo.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FlightAssignment> findAll(Sort sort) {
+        return repo.findAll(sort);
     }
 
     @Override
@@ -72,52 +79,86 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         return repo.findById(id);
     }
 
-    // UPDATE
+    // ---------------- UPDATE ----------------
+
     @Override
     public FlightAssignment update(String id, FlightAssignment updated) {
         if (updated == null) {
             throw new IllegalArgumentException("Updated flight assignment cannot be null");
         }
 
-        // asigurăm existența assignment-ului
         FlightAssignment existing = validator.requireExisting(id);
 
-        // extragem ID-urile noii asocieri
-        String flightId = updated.getFlight() != null ? updated.getFlight().getId() : null;
-        String employeeId = updated.getAirlineEmployee() != null ? updated.getAirlineEmployee().getId() : null;
+        String flightId = updated.getFlight() != null
+                ? updated.getFlight().getId()
+                : null;
 
-        // existență Flight + Employee
+        String employeeId = updated.getAirlineEmployee() != null
+                ? updated.getAirlineEmployee().getId()
+                : null;
+
         Flight flight = validator.requireExistingFlight(flightId);
         AirlineEmployee employee = validator.requireExistingAirlineEmployee(employeeId);
 
-        // unicitate pereche (excludem assignment-ul curent)
         validator.assertUniquePairForUpdate(id, flight.getId(), employee.getId());
 
-        // nu schimbăm ID-ul, doar câmpurile
         existing.setFlight(flight);
         existing.setAirlineEmployee(employee);
 
         return repo.save(existing);
     }
 
-    // DELETE
+    // ---------------- DELETE ----------------
+
     @Override
     public boolean delete(String id) {
         if (id == null || id.isBlank()) {
             return false;
         }
 
-        // verificăm existența; aruncă dacă nu există
         validator.requireExisting(id);
-
-        // eventuale reguli extra
         validator.assertCanBeDeleted(id);
 
         repo.deleteById(id);
         return true;
     }
 
-    // ---------------- Custom queries ----------------
+    // ---------------- SEARCH + SORT ----------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FlightAssignment> search(
+            String flightId,
+            String airlineEmployeeId,
+            Sort sort
+    ) {
+        Sort safeSort = (sort != null)
+                ? sort
+                : Sort.by(Sort.Direction.ASC, "id");
+
+        boolean hasFlight = flightId != null && !flightId.isBlank();
+        boolean hasEmployee = airlineEmployeeId != null && !airlineEmployeeId.isBlank();
+
+        if (hasFlight && hasEmployee) {
+            return repo.findByFlight_IdAndAirlineEmployee_Id(
+                    flightId,
+                    airlineEmployeeId,
+                    safeSort
+            );
+        }
+
+        if (hasFlight) {
+            return repo.findByFlight_Id(flightId, safeSort);
+        }
+
+        if (hasEmployee) {
+            return repo.findByAirlineEmployee_Id(airlineEmployeeId, safeSort);
+        }
+
+        return repo.findAll(safeSort);
+    }
+
+    // ---------------- Existing helpers ----------------
 
     @Override
     @Transactional(readOnly = true)
@@ -132,11 +173,4 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         if (employeeId == null || employeeId.isBlank()) return List.of();
         return repo.findByAirlineEmployee_Id(employeeId);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<FlightAssignment> findAll(Sort sort) {
-        return repo.findAll(sort);
-    }
-
 }

@@ -25,21 +25,43 @@ public class PassengerController {
         this.passengerMapper = passengerMapper;
     }
 
-    // LIST
+    // LIST + SORT + FILTRE (INDEX)
     @GetMapping
     public String index(
+            Model model,
+            // NOU: Parametrii de filtrare
+            @RequestParam(required = false) String filterName,
+            @RequestParam(required = false) String filterCurrency,
+
             @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "asc") String dir,
-            Model model
+            @RequestParam(defaultValue = "asc") String dir
     ) {
-        Sort.Direction direction = Sort.Direction.fromString(dir);
+        // 1. Whitelisting
+        String sortProperty = switch(sort) {
+            case "id" -> "id";
+            case "name" -> "name";
+            case "currency" -> "currency";
+            default -> "id";
+        };
 
-        model.addAttribute("passengers",
-                passengerService.findAll(Sort.by(direction, sort)));
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("desc")
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
 
+        Sort sortObj = Sort.by(direction, sortProperty);
+
+        // 2. SEARCH (Filtrare + Sortare)
+        model.addAttribute("passengers", passengerService.search(filterName, filterCurrency, sortObj));
+
+        // 3. UI Variables
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
+        // Păstrare filtre în form
+        model.addAttribute("filterName", filterName);
+        model.addAttribute("filterCurrency", filterCurrency);
 
         return "passengers/index";
     }
@@ -58,7 +80,7 @@ public class PassengerController {
     @PostMapping
     public String create(
             @Valid @ModelAttribute("passengerForm") PassengerForm form,
-            BindingResult result,           // BindingResult captures validation errors triggered by @Valid
+            BindingResult result,
             Model model,
             RedirectAttributes ra
     ) {

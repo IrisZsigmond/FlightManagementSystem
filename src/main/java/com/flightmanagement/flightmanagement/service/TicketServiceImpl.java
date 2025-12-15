@@ -6,11 +6,13 @@ import com.flightmanagement.flightmanagement.repository.TicketRepository;
 import com.flightmanagement.flightmanagement.validations.TicketValidator;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
@@ -22,6 +24,7 @@ public class TicketServiceImpl implements TicketService {
         this.validator = validator;
     }
 
+    // ---------------- CREATE ----------------
     @Override
     public Ticket save(Ticket ticket) {
         validator.assertIdUnique(ticket.getId());
@@ -37,21 +40,26 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(ticket);
     }
 
+    // ---------------- READ / SORT ----------------
     @Override
+    @Transactional(readOnly = true)
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Ticket> findAll(Sort sort) {
         return ticketRepository.findAll(sort);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Ticket> findById(String id) {
         return ticketRepository.findById(id);
     }
 
+    // ---------------- UPDATE ----------------
     @Override
     public Ticket update(String id, Ticket updated) {
         Ticket existing = validator.requireExisting(id);
@@ -69,6 +77,7 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(updated);
     }
 
+    // ---------------- DELETE ----------------
     @Override
     public boolean delete(String id) {
         validator.requireExisting(id);
@@ -77,6 +86,7 @@ public class TicketServiceImpl implements TicketService {
         return true;
     }
 
+    // ---------------- HELPERS ----------------
     @Override
     public List<Ticket> findByPassengerId(String passengerId) {
         return ticketRepository.findByPassenger_Id(passengerId);
@@ -98,5 +108,25 @@ public class TicketServiceImpl implements TicketService {
                 .stream()
                 .mapToDouble(Ticket::getPrice)
                 .sum();
+    }
+
+    // ---------------- SEARCH + SORT (NOU) ----------------
+    @Override
+    @Transactional(readOnly = true)
+    public List<Ticket> search(Double minPrice, Double maxPrice, TicketCategory category, Sort sort) {
+
+        Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.ASC, "id");
+
+        // Tratăm null-urile pentru preț ca fiind interval maxim
+        Double min = (minPrice != null) ? minPrice : 0.0;
+        Double max = (maxPrice != null) ? maxPrice : Double.MAX_VALUE;
+
+        // Cazul 1: Filtrare și după Categorie și după Preț
+        if (category != null) {
+            return ticketRepository.findByCategoryAndPriceBetween(category, min, max, safeSort);
+        }
+
+        // Cazul 2: Filtrare doar după Preț (Categorie e null, deci "Toate categoriile")
+        return ticketRepository.findByPriceBetween(min, max, safeSort);
     }
 }

@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.mapper.NoticeBoardMapper;
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
 import com.flightmanagement.flightmanagement.service.NoticeBoardService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/noticeboards")
@@ -26,24 +28,38 @@ public class NoticeBoardController {
         this.mapper = mapper;
     }
 
+    // LIST + SORT + FILTRE (INDEX)
     @GetMapping
     public String index(
+            Model model,
+            // MODIFICAT: O singură dată pentru filtrare
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate filterDate,
+
             @RequestParam(defaultValue = "date") String sort,
-            @RequestParam(defaultValue = "asc") String dir,
-            Model model
+            @RequestParam(defaultValue = "asc") String dir
     ) {
+
+        String sortProperty = (sort.equals("id") || sort.equals("date")) ? sort : "date";
 
         Sort.Direction direction =
                 dir.equalsIgnoreCase("desc")
                         ? Sort.Direction.DESC
                         : Sort.Direction.ASC;
 
-        Sort sortObj = Sort.by(direction, sort);
+        Sort sortObj = Sort.by(direction, sortProperty);
 
-        model.addAttribute("noticeboards", noticeBoardService.findAll(sortObj));
+        // Apel search cu o singură dată
+        model.addAttribute("noticeboards", noticeBoardService.search(filterDate, sortObj));
+
+        // Variabile UI
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
+
+        // Păstrăm filtrul
+        model.addAttribute("filterDate", filterDate);
 
         return "noticeboards/index";
     }
@@ -74,25 +90,17 @@ public class NoticeBoardController {
             return "redirect:/noticeboards";
 
         } catch (IllegalArgumentException | IllegalStateException ex) {
-
             String msg = ex.getMessage() != null ? ex.getMessage() : "Cannot create NoticeBoard.";
-
             if (msg.contains("ID")) {
                 result.rejectValue("id", "duplicate", msg);
-            }
-            else if (msg.toLowerCase().contains("date")) {   // <-- FIX
+            } else if (msg.toLowerCase().contains("date")) {
                 result.rejectValue("date", "duplicate", msg);
-            }
-            else {
+            } else {
                 result.reject("globalError", msg);
             }
-
             return "noticeboards/new";
         }
     }
-
-
-
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
@@ -125,28 +133,19 @@ public class NoticeBoardController {
             return "redirect:/noticeboards";
 
         } catch (IllegalArgumentException | IllegalStateException ex) {
-
             String msg = ex.getMessage();
-
-            // Dacă e conflict pe ID (deși la update ID e readonly)
             if (msg.contains("ID")) {
                 result.rejectValue("id", "duplicate", msg);
-            }
-            // 🔥 AICI ESTE FIX-UL IMPORTANT
-            else if (msg.toLowerCase().contains("date")) {
+            } else if (msg.toLowerCase().contains("date")) {
                 result.rejectValue("date", "duplicate", msg);
-            }
-            else {
+            } else {
                 result.reject("globalError", msg);
             }
-
             NoticeBoard existing = noticeBoardService.findById(id).orElseThrow();
             model.addAttribute("noticeBoard", existing);
             return "noticeboards/edit";
         }
-
     }
-
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {

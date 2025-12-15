@@ -15,15 +15,18 @@ public interface PassengerService {
     boolean delete(String id);
 
     List<Passenger> findAll();
-    List<Passenger> findAll(Sort sort);   // 🔥 NOU
+    List<Passenger> findAll(Sort sort);
 
     Optional<Passenger> findById(String id);
 
     Passenger getById(String id);
 
+    // Helpers (se păstrează)
     List<Passenger> findByName(String name);
-
     List<Passenger> findByCurrency(String currency);
 
     Optional<Passenger> findWithTickets(String id);
+
+    // NOU: Metoda de căutare/filtrare combinată
+    List<Passenger> search(String name, String currency, Sort sort);
 }

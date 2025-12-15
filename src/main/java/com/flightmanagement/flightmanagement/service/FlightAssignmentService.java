@@ -8,18 +8,29 @@ import java.util.Optional;
 
 public interface FlightAssignmentService {
 
+    // ---------------- CRUD ----------------
+
     FlightAssignment save(FlightAssignment assignment);
-
-    List<FlightAssignment> findAll();
-
-    // ⭐ SORT
-    List<FlightAssignment> findAll(Sort sort);
-
-    Optional<FlightAssignment> findById(String id);
 
     FlightAssignment update(String id, FlightAssignment updated);
 
     boolean delete(String id);
+
+    Optional<FlightAssignment> findById(String id);
+
+    List<FlightAssignment> findAll();
+
+    List<FlightAssignment> findAll(Sort sort);
+
+    // ---------------- SEARCH + SORT ----------------
+
+    List<FlightAssignment> search(
+            String flightId,
+            String airlineEmployeeId,
+            Sort sort
+    );
+
+    // ---------------- Existing ----------------
 
     List<FlightAssignment> findByFlightId(String flightId);
 
