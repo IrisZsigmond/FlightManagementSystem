@@ -29,8 +29,6 @@ public class FlightValidator {
         this.flightAssignmentRepository = flightAssignmentRepository;
     }
 
-    // ---------------------- EXISTENCE ----------------------
-
     public Flight requireExisting(String id) {
         return flightRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Flight not found: " + id));
@@ -45,8 +43,6 @@ public class FlightValidator {
         return noticeBoardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("NoticeBoard not found: " + id));
     }
-
-    // ---------------------- UNICITATE ----------------------
 
     public void assertIdUnique(String id) {
         if (flightRepository.existsById(id)) {
@@ -71,28 +67,8 @@ public class FlightValidator {
         }
     }
 
-    // ---------------------- DELETE RULE ----------------------
-
+    // --- LOGICĂ DELETE: Fără restricții ---
     public void assertCanBeDeleted(String id) {
-
-        boolean hasTickets = !flightRepository.findById(id)
-                .orElseThrow()
-                .getTickets()
-                .isEmpty();
-
-        boolean hasAssignments =
-                !flightAssignmentRepository.findByFlight_Id(id).isEmpty();
-
-        if (hasTickets) {
-            throw new IllegalStateException(
-                    "Cannot delete flight '" + id + "' because it has assigned tickets."
-            );
-        }
-
-        if (hasAssignments) {
-            throw new IllegalStateException(
-                    "Cannot delete flight '" + id + "' because it has flight assignments."
-            );
-        }
+        // Ștergerea este gestionată în cascadă de Service.
     }
 }

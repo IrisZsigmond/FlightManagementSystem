@@ -1,12 +1,17 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
+import com.flightmanagement.flightmanagement.model.Ticket;
+import com.flightmanagement.flightmanagement.model.Luggage;
 import com.flightmanagement.flightmanagement.repository.PassengerRepository;
+import com.flightmanagement.flightmanagement.repository.TicketRepository;
+import com.flightmanagement.flightmanagement.repository.LuggageRepository;
 import com.flightmanagement.flightmanagement.validations.PassengerValidator;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +22,20 @@ public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerValidator passengerValidator;
     private final TicketService ticketService;
+    private final TicketRepository ticketRepository; // Adăugat pentru ștergere în cascadă
+    private final LuggageRepository luggageRepository; // Adăugat pentru ștergere în cascadă
 
+    // CONSTRUCTOR ACTUALIZAT
     public PassengerServiceImpl(PassengerRepository passengerRepository,
                                 PassengerValidator passengerValidator,
-                                TicketService ticketService) {
+                                TicketService ticketService,
+                                TicketRepository ticketRepository,
+                                LuggageRepository luggageRepository) {
         this.passengerRepository = passengerRepository;
         this.passengerValidator = passengerValidator;
         this.ticketService = ticketService;
+        this.ticketRepository = ticketRepository;
+        this.luggageRepository = luggageRepository;
     }
 
     // ---------------- CREATE ----------------
@@ -42,12 +54,35 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerRepository.save(existing);
     }
 
-    // ---------------- DELETE ----------------
+    // ---------------- DELETE (MODIFICAT - CASCADE ROBUST) ----------------
     @Override
     public boolean delete(String id) {
-        passengerValidator.requireExisting(id);
+        // 1. Validare (verifică existența și timpul zborurilor)
+        Passenger passenger = passengerValidator.requireExisting(id);
         passengerValidator.assertCanBeDeleted(id);
-        passengerRepository.deleteById(id);
+
+        // 2. Cascade: Găsim biletele și lucrăm pe o copie
+        List<Ticket> tickets = new ArrayList<>(ticketRepository.findByPassenger_Id(id));
+
+        for (Ticket t : tickets) {
+            // 2.1 Ștergem bagajele asociate (FIX: adăugăm Sort.unsorted())
+            List<Luggage> luggages = luggageRepository.findByTicket_Id(t.getId(), Sort.unsorted());
+            luggageRepository.deleteAll(luggages);
+
+            // 2.2 FIX: Rupem referința bidirecțională (previne TransientObjectException)
+            t.setPassenger(null);
+        }
+
+        // 3. Ștergem biletele
+        ticketRepository.deleteAll(tickets);
+
+        // 4. Curățăm colecția din obiectul Passenger (pentru consistența memoriei)
+        if (passenger.getTickets() != null) {
+            passenger.getTickets().clear();
+        }
+
+        // 5. Ștergem Pasagerul
+        passengerRepository.delete(passenger);
         return true;
     }
 
@@ -55,7 +90,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> findAll() {
-        return passengerRepository.findAll(Sort.by(Sort.Direction.ASC, "name")); // Sortare implicită
+        return passengerRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     @Override
@@ -74,7 +109,7 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerValidator.requireExisting(id);
     }
 
-    // ---------------- SEARCH + SORT (NOU) ----------------
+    // ---------------- SEARCH + SORT ----------------
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> search(String name, String currency, Sort sort) {
@@ -87,22 +122,18 @@ public class PassengerServiceImpl implements PassengerService {
         String trimmedName = hasName ? name.trim() : null;
         String trimmedCurrency = hasCurrency ? currency.trim() : null;
 
-        // Cazul 1: Filtrare pe ambele criterii
         if (hasName && hasCurrency) {
             return passengerRepository.findByNameContainingIgnoreCaseAndCurrencyContainingIgnoreCase(trimmedName, trimmedCurrency, safeSort);
         }
 
-        // Cazul 2: Filtrare doar după Nume
         if (hasName) {
             return passengerRepository.findByNameContainingIgnoreCase(trimmedName, safeSort);
         }
 
-        // Cazul 3: Filtrare doar după Monedă
         if (hasCurrency) {
             return passengerRepository.findByCurrencyContainingIgnoreCase(trimmedCurrency, safeSort);
         }
 
-        // Cazul 4: Fără filtre (doar sortare)
         return passengerRepository.findAll(safeSort);
     }
 

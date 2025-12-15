@@ -9,6 +9,8 @@ import com.flightmanagement.flightmanagement.repository.PassengerRepository;
 import com.flightmanagement.flightmanagement.repository.TicketRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class TicketValidator {
 
@@ -37,42 +39,44 @@ public class TicketValidator {
 
     public Ticket requireExisting(String id) {
         return ticketRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Ticket not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Ticket not found: " + id));
     }
 
-    public Passenger requireExistingPassenger(String id) {
-        return passengerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Passenger not found: " + id));
+    public void requireExistingPassenger(String id) {
+        if (!passengerRepository.existsById(id)) {
+            throw new IllegalArgumentException("Passenger not found: " + id);
+        }
     }
 
-    public Flight requireExistingFlight(String id) {
-        return flightRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Flight not found: " + id));
+    public void requireExistingFlight(String id) {
+        if (!flightRepository.existsById(id)) {
+            throw new IllegalArgumentException("Flight not found: " + id);
+        }
     }
 
     public void assertSeatAvailable(String flightId, String seatNumber, String excludeTicketId) {
         ticketRepository.findByFlight_Id(flightId).forEach(t -> {
             if (t.getSeatNumber().equalsIgnoreCase(seatNumber)
                     && !t.getId().equals(excludeTicketId)) {
-                throw new IllegalStateException(
-                        "Seat " + seatNumber + " is already taken on flight " + flightId);
+                throw new IllegalStateException("Seat " + seatNumber + " is already taken on flight " + flightId);
             }
         });
     }
 
-    // --- NU poți șterge un ticket dacă are luggages ---
+    // --- LOGICĂ DELETE: Corectat getter-ul de timp ---
     public void assertCanBeDeleted(String id) {
         Ticket ticket = requireExisting(id);
+        Flight flight = ticket.getFlight();
 
-        if (ticket.getLuggages() != null && !ticket.getLuggages().isEmpty()) {
-            throw new IllegalStateException(
-                    "Cannot delete ticket '" + id + "' because it has assigned luggage."
+        if (flight != null && flight.getNoticeBoard() != null) {
+            LocalDateTime flightDateTime = LocalDateTime.of(
+                    flight.getNoticeBoard().getDate(),
+                    flight.getDepartureTime() // FIX: getDepartureTime()
             );
+
+            if (flightDateTime.isAfter(LocalDateTime.now())) {
+                throw new IllegalStateException("Cannot delete ticket because the flight is upcoming (future).");
+            }
         }
     }
-
-
 }

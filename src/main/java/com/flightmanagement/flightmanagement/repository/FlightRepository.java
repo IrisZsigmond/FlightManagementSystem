@@ -25,4 +25,7 @@ public interface FlightRepository extends JpaRepository<Flight, String> {
     boolean existsByName(String name);
 
     List<Flight> findByAirplane_Id(String airplaneId);
+
+    // --- FIX: Metoda lipsă adăugată ---
+    List<Flight> findByNoticeBoard_Id(String noticeBoardId);
 }
