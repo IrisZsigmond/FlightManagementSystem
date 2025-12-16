@@ -1,0 +1,12 @@
+[
+  { "id": "FA1",  "staffId": "AE1", "flightId": "FL1" },
+  { "id": "FA2",  "staffId": "AE2", "flightId": "FL1" },
+  { "id": "FA3",  "staffId": "AE3", "flightId": "FL1" },
+  { "id": "FA4",  "staffId": "AE3", "flightId": "FL2" },
+  { "id": "FA5",  "staffId": "AE4", "flightId": "FL3" },
+  { "id": "FA6",  "staffId": "AE5", "flightId": "FL3" },
+  { "id": "FA7",  "staffId": "AE6", "flightId": "FL5" },
+  { "id": "FA8",  "staffId": "AE7", "flightId": "FL7" },
+  { "id": "FA9",  "staffId": "AE8", "flightId": "FL8" },
+  { "id": "FA10", "staffId": "AE9", "flightId": "FL9" }
+]

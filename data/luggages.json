@@ -1,0 +1,12 @@
+[
+{ "id": "L1",  "ticketId": "T1",  "status": "CHECKED_IN", "size": "MEDIUM" },
+{ "id": "L2",  "ticketId": "T1",  "status": "LOADED",     "size": "SMALL"  },
+{ "id": "L3",  "ticketId": "T2",  "status": "CHECKED_IN", "size": "LARGE"  },
+{ "id": "L4",  "ticketId": "T3",  "status": "DELIVERED",  "size": "MEDIUM" },
+{ "id": "L5",  "ticketId": "T4",  "status": "LOADED",     "size": "SMALL"  },
+{ "id": "L6",  "ticketId": "T5",  "status": "CHECKED_IN", "size": "LARGE"  },
+{ "id": "L7",  "ticketId": "T6",  "status": "LOADED",     "size": "MEDIUM" },
+{ "id": "L8",  "ticketId": "T7",  "status": "DELIVERED",  "size": "SMALL"  },
+{ "id": "L9",  "ticketId": "T8",  "status": "CHECKED_IN", "size": "LARGE"  },
+{ "id": "L10", "ticketId": "T9",  "status": "DELIVERED",  "size": "MEDIUM" }
+]

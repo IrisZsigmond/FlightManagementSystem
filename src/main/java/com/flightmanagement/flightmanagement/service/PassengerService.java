@@ -1,34 +1,32 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Passenger;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Service interface for managing Passenger entities.
- */
-public interface PassengerService extends BaseService<Passenger, String> {
+public interface PassengerService {
 
-    /**
-     * Finds all passengers that have the given name.
-     *
-     * @param name the passenger name
-     * @return list of matching passengers
-     */
+    Passenger save(Passenger passenger);
+
+    Passenger update(String id, Passenger updated);
+
+    boolean delete(String id);
+
+    List<Passenger> findAll();
+    List<Passenger> findAll(Sort sort);
+
+    Optional<Passenger> findById(String id);
+
+    Passenger getById(String id);
+
+    // Helpers (se păstrează)
     List<Passenger> findByName(String name);
-
-    /**
-     * Finds all passengers that use the specified currency.
-     *
-     * @param currency the currency code
-     * @return list of matching passengers
-     */
     List<Passenger> findByCurrency(String currency);
 
-    /**
-     * Returns the number of tickets associated with a given passenger.
-     *
-     * @param passengerId the passenger identifier
-     * @return number of tickets
-     */
-    int countTickets(String passengerId);
+    Optional<Passenger> findWithTickets(String id);
+
+    // NOU: Metoda de căutare/filtrare combinată
+    List<Passenger> search(String name, String currency, Sort sort);
 }

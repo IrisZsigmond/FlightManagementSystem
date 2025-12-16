@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Flight</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+<h1>Edit Flight</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{'/flights/' + ${flightForm.id}}"
+          th:object="${flightForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- ID (read-only) -->
+        <div>
+            <label>ID:</label>
+            <input type="text" th:field="*{id}" disabled />
+            <input type="hidden" th:field="*{id}" />
+        </div>
+
+        <!-- NAME -->
+        <div>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" />
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <!-- DEPARTURE TIME -->
+        <div>
+            <label>Departure Time (HH:mm):</label>
+            <input type="text" th:field="*{departureTime}" placeholder="10:45" />
+            <div class="error" th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}"></div>
+        </div>
+
+        <!-- NOTICEBOARD -->
+        <div>
+            <label>Notice Board:</label>
+            <select th:field="*{noticeBoardId}">
+                <option value="" disabled>Select notice board</option>
+                <option th:each="nb : ${noticeBoards}"
+                        th:value="${nb.id}"
+                        th:text="${'(' + nb.id + ') ' + nb.date}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('noticeBoardId')}" th:errors="*{noticeBoardId}"></div>
+        </div>
+
+        <!-- AIRPLANE -->
+        <div>
+            <label>Airplane:</label>
+            <select th:field="*{airplaneId}">
+                <option value="" disabled>Select airplane</option>
+                <option th:each="a : ${airplanes}"
+                        th:value="${a.id}"
+                        th:text="${a.id + ' (no. ' + a.number + ')'}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('airplaneId')}" th:errors="*{airplaneId}"></div>
+        </div>
+
+        <!-- TICKETS -->
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Assigned Tickets</h3>
+            <ul class="mt-2">
+                <li th:each="t : ${flight.tickets}"
+                    th:text="${t.id + ' - ' + t.category}">
+                </li>
+                <li th:if="${#lists.isEmpty(flight.tickets)}">No tickets assigned.</li>
+            </ul>
+        </div>
+
+        <!-- STAFF -->
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Assigned Staff</h3>
+            <ul class="mt-2">
+                <li th:each="a : ${flight.flightAssignments}"
+                    th:text="${a.id + ' - ' + a.airlineEmployee.name}">
+                </li>
+                <li th:if="${#lists.isEmpty(flight.flightAssignments)}">No staff assignments.</li>
+            </ul>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/flights}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -2,42 +2,32 @@ package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.Ticket;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Service interface for managing Ticket entities.
- */
-public interface TicketService extends BaseService<Ticket, String> {
+public interface TicketService {
 
-    /**
-     * Finds all tickets belonging to a specific passenger.
-     *
-     * @param passengerId the passenger identifier
-     * @return list of matching tickets
-     */
+    Ticket save(Ticket ticket);
+
+    List<Ticket> findAll();
+    List<Ticket> findAll(Sort sort);
+
+    Optional<Ticket> findById(String id);
+
+    Ticket update(String id, Ticket updated);
+
+    boolean delete(String id);
+
     List<Ticket> findByPassengerId(String passengerId);
 
-    /**
-     * Finds all tickets associated with a specific flight.
-     *
-     * @param flightId the flight identifier
-     * @return list of matching tickets
-     */
     List<Ticket> findByFlightId(String flightId);
 
-    /**
-     * Finds all tickets in the given category.
-     *
-     * @param category the ticket category
-     * @return list of matching tickets
-     */
     List<Ticket> findByCategory(TicketCategory category);
 
-    /**
-     * Calculates the total price of all tickets for a given passenger.
-     *
-     * @param passengerId the passenger identifier
-     * @return accumulated ticket price
-     */
     double calculateTotalPriceForPassenger(String passengerId);
+
+    // NOU: Metoda de căutare/filtrare combinată
+    List<Ticket> search(Double minPrice, Double maxPrice, TicketCategory category, Sort sort);
 }

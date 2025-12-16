@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Assignment Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Flight Assignment Details</h1>
+
+<div class="card mt-4 details-card">
+
+    <p>
+        <strong>ID:</strong>
+        <span th:text="${assignment.id}">FA1</span>
+    </p>
+
+    <p>
+        <strong>Flight:</strong>
+        <span th:text="${assignment.flight != null ? assignment.flight.id : 'N/A'}">F01</span>
+    </p>
+
+    <p>
+        <strong>Airline Employee:</strong>
+        <span th:text="${assignment.airlineEmployee != null
+                        ? assignment.airlineEmployee.id + ' - ' + assignment.airlineEmployee.name
+                        : 'N/A'}">
+        </span>
+    </p>
+
+</div>
+
+<div class="form-actions mt-3">
+    <a th:href="@{/flightassignments}" class="btn">Back</a>
+
+    <a th:href="@{'/flightassignments/' + ${assignment.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/flightassignments/' + ${assignment.id} + '/delete'}"
+          method="post"
+          class="inline-form"
+          onsubmit="return confirm('Delete this assignment?');">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

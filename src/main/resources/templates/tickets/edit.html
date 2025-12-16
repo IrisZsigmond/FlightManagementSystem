@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Ticket</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{'/tickets/' + ${ticketForm.id}}"
+          th:object="${ticketForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- ID (read-only) -->
+        <div>
+            <label for="id">ID:</label>
+            <input id="id" type="text" th:field="*{id}" disabled />
+            <input type="hidden" th:field="*{id}" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- Passenger ID (read-only) -->
+        <div>
+            <label for="passengerId">Passenger ID:</label>
+            <input id="passengerId" type="text" th:field="*{passengerId}" disabled />
+            <input type="hidden" th:field="*{passengerId}" />
+            <div class="error" th:if="${#fields.hasErrors('passengerId')}" th:errors="*{passengerId}"></div>
+        </div>
+
+        <!-- Flight ID (read-only) -->
+        <div>
+            <label for="flightId">Flight ID:</label>
+            <input id="flightId" type="text" th:field="*{flightId}" disabled />
+            <input type="hidden" th:field="*{flightId}" />
+            <div class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></div>
+        </div>
+
+        <!-- Category -->
+        <div>
+            <label for="category">Category:</label>
+            <select id="category" th:field="*{category}">
+                <option th:each="c : ${categories}"
+                        th:value="${c}"
+                        th:text="${c}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+        </div>
+
+        <!-- Price -->
+        <div>
+            <label for="price">Price:</label>
+            <input id="price" type="text" th:field="*{price}" />
+            <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <!-- Seat Number -->
+        <div>
+            <label for="seatNumber">Seat Number:</label>
+            <input id="seatNumber" type="text" th:field="*{seatNumber}" />
+            <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div>
+        </div>
+
+        <!-- Luggages -->
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Luggages</h3>
+            <ul class="mt-2">
+                <li th:each="l : ${ticket.luggages}"
+                    th:text="${l.id + ' (' + l.status + ', ' + l.size + ')'}">
+                </li>
+                <li th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">
+                    No luggages for this ticket.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/tickets}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

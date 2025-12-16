@@ -1,91 +1,152 @@
 package com.flightmanagement.flightmanagement.service;
 
-import com.flightmanagement.flightmanagement.model.Flight;
-import com.flightmanagement.flightmanagement.repository.AbstractRepository;
-import jakarta.annotation.PostConstruct;
+import com.flightmanagement.flightmanagement.model.*;
+import com.flightmanagement.flightmanagement.repository.*;
+import com.flightmanagement.flightmanagement.validations.FlightValidator;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class FlightServiceImpl extends BaseServiceImpl<Flight, String> implements FlightService {
+@Transactional
+public class FlightServiceImpl implements FlightService {
 
-    public FlightServiceImpl(AbstractRepository<Flight, String> repository) {
-        super(repository);
+    private final FlightRepository flightRepository;
+    private final FlightAssignmentRepository flightAssignmentRepository;
+    private final TicketRepository ticketRepository;
+    private final LuggageRepository luggageRepository;
+    private final FlightValidator validator;
+
+    public FlightServiceImpl(
+            FlightRepository flightRepository,
+            FlightAssignmentRepository flightAssignmentRepository,
+            TicketRepository ticketRepository,
+            LuggageRepository luggageRepository,
+            FlightValidator validator
+    ) {
+        this.flightRepository = flightRepository;
+        this.flightAssignmentRepository = flightAssignmentRepository;
+        this.ticketRepository = ticketRepository;
+        this.luggageRepository = luggageRepository;
+        this.validator = validator;
     }
 
-    /**
-     * Preloads sample Flight objects when the application starts.
-     * Runs automatically once after bean creation, thanks to @PostConstruct.
-     */
-    @PostConstruct
-    public void initData() {
-        repo().save(new Flight("F001", "Morning Express", LocalTime.of(6, 30), 9, "A01", "NB01"));
-        repo().save(new Flight("F002", "Sunset Cruiser", LocalTime.of(18, 45), 8, "A02", "NB02"));
-        repo().save(new Flight("F003", "Night Owl", LocalTime.of(22, 0), 10, "A03", "NB03"));
+    // --- METODĂ CREATE (Presupusă funcțională) ---
+    @Override
+    public Flight save(Flight flight) {
+        if (flight == null) {
+            throw new IllegalArgumentException("Flight cannot be null");
+        }
+        validator.assertIdUnique(flight.getId());
+        validator.assertNameUnique(flight.getName());
+
+        String airplaneId = flight.getAirplane() != null ? flight.getAirplane().getId() : null;
+        validator.requireExistingAirplane(airplaneId);
+
+        String boardId = flight.getNoticeBoard() != null ? flight.getNoticeBoard().getId() : null;
+        validator.requireExistingNoticeBoard(boardId);
+
+        return flightRepository.save(flight);
     }
 
-    /// -------- Flight-specific methods --------
+    // --- METODĂ UPDATE ---
+    @Override
+    public Flight update(String id, Flight updated) {
+        Flight existing = validator.requireExisting(id);
+        updated.setId(id);
+
+        if (updated.getName() != null) {
+            validator.assertNameUniqueForUpdate(updated.getName(), id);
+        }
+
+        validator.requireExistingAirplane(updated.getAirplane().getId());
+        validator.requireExistingNoticeBoard(updated.getNoticeBoard().getId());
+
+        existing.setName(updated.getName());
+        existing.setDepartureTime(updated.getDepartureTime());
+        existing.setAirplane(updated.getAirplane());
+        existing.setNoticeBoard(updated.getNoticeBoard());
+
+        return flightRepository.save(existing);
+    }
+
+    // --- DELETE FORȚAT ÎN CASCADĂ TOTALĂ (Corectat argumentul) ---
+    @Override
+    public boolean delete(String id) {
+        validator.requireExisting(id);
+
+        // 1. Ștergem Assignările
+        List<FlightAssignment> assignments = flightAssignmentRepository.findByFlight_Id(id);
+        flightAssignmentRepository.deleteAll(assignments);
+
+        // 2. Ștergem Biletele și Bagajele
+        List<Ticket> tickets = ticketRepository.findByFlight_Id(id);
+        for (Ticket t : tickets) {
+            // --- FIX: Adăugat Sort.unsorted() ---
+            List<Luggage> luggages = luggageRepository.findByTicket_Id(t.getId(), Sort.unsorted());
+            luggageRepository.deleteAll(luggages);
+        }
+        ticketRepository.deleteAll(tickets);
+
+        // 3. Ștergem Zborul
+        flightRepository.deleteById(id);
+        return true;
+    }
+
+    // --- HELPERS ȘI CITIRE ---
 
     @Override
-    public List<Flight> findByAirplaneId(String airplaneId) {
-        if (airplaneId == null || airplaneId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(f -> airplaneId.equalsIgnoreCase(f.getAirplaneId()))
-                .collect(Collectors.toList());
+    public List<Flight> findAll() { return flightRepository.findAll(); }
+
+    @Override
+    public List<Flight> findAll(Sort sort) { return flightRepository.findAll(sort); }
+
+    @Override
+    public List<Flight> findByNameContainingIgnoreCase(String name, Sort sort) {
+        return flightRepository.findByNameContainingIgnoreCase(name, sort);
     }
 
+    @Override
+    public List<Flight> findByDepartureTimeBetween(LocalTime startTime, LocalTime endTime, Sort sort) {
+        return flightRepository.findByDepartureTimeBetween(startTime, endTime, sort);
+    }
+
+    @Override
+    public List<Flight> findByNameContainingIgnoreCaseAndDepartureTimeBetween(String name, LocalTime startTime, LocalTime endTime, Sort sort) {
+        return flightRepository.findByNameContainingIgnoreCaseAndDepartureTimeBetween(name, startTime, endTime, sort);
+    }
+
+    @Override
+    public List<Flight> search(String name, LocalTime startTime, LocalTime endTime, Sort sort) {
+        Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.ASC, "id");
+        boolean hasName = name != null && !name.trim().isBlank();
+        boolean hasstartTime = startTime != null;
+        boolean hasendTime = endTime != null;
+
+        if (hasName && hasstartTime && hasendTime) {
+            return flightRepository.findByNameContainingIgnoreCaseAndDepartureTimeBetween(name, startTime, endTime, safeSort);
+        } else if (hasName) {
+            return flightRepository.findByNameContainingIgnoreCase(name, safeSort);
+        } else if (hasstartTime && hasendTime) {
+            return flightRepository.findByDepartureTimeBetween(startTime, endTime, safeSort);
+        } else {
+            return flightRepository.findAll(safeSort);
+        }
+    }
+
+    @Override
+    public Optional<Flight> findById(String id) { return flightRepository.findById(id); }
+
+    // --- FIX: Metoda este acum disponibilă în repo ---
     @Override
     public List<Flight> findByNoticeBoardId(String noticeBoardId) {
-        if (noticeBoardId == null || noticeBoardId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(f -> noticeBoardId.equalsIgnoreCase(f.getNoticeBoardId()))
-                .collect(Collectors.toList());
+        return flightRepository.findByNoticeBoard_Id(noticeBoardId);
     }
 
     @Override
-    public List<Flight> findByNameContains(String term) {
-        if (term == null || term.isBlank()) return List.of();
-        String needle = term.toLowerCase();
-        return repo().findAll().stream()
-                .filter(f -> f.getName() != null && f.getName().toLowerCase().contains(needle))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Flight> findByDepartureBetween(LocalTime from, LocalTime to) {
-        if (from == null || to == null) throw new IllegalArgumentException("Times must not be null");
-        return repo().findAll().stream()
-                .filter(f -> f.getDepartureTime() != null
-                        && !f.getDepartureTime().isBefore(from)
-                        && f.getDepartureTime().isBefore(to))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Flight> topRated(int minScore) {
-        return repo().findAll().stream()
-                .filter(f -> f.getFeedbackScore() >= minScore)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Flight> findByTicketId(String ticketId) {
-        if (ticketId == null || ticketId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(f -> f.getTickets() != null &&
-                        f.getTickets().stream().anyMatch(t -> t != null && ticketId.equals(t.getId())))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Flight> findByStaffId(String staffId) {
-        if (staffId == null || staffId.isBlank()) return List.of();
-        return repo().findAll().stream()
-                .filter(f -> f.getFlightAssignments() != null &&
-                        f.getFlightAssignments().stream().anyMatch(a -> a != null && staffId.equals(a.getStaffId())))
-                .collect(Collectors.toList());
-    }
+    public Flight getById(String id) { return validator.requireExisting(id); }
 }

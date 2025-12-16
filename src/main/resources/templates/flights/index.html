@@ -1,86 +1,174 @@
 <!DOCTYPE html>
-<!-- The standard HTML5 document declaration -->
 <html xmlns:th="http://www.thymeleaf.org">
-<!-- "xmlns:th" defines the Thymeleaf XML namespace.
-     It allows us to use all Thymeleaf attributes starting with 'th:' (like th:text, th:each, th:href, etc.) -->
-
 <head>
     <meta charset="UTF-8">
-    <title>Flights List</title>
-
-    <!-- Link to a CSS stylesheet located under: src/main/resources/static/css/style.css -->
-    <!-- The @{} syntax in th:href dynamically builds the correct path according to your application's context root -->
+    <title>Flights</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
 <body>
-<h1>All Flights</h1>
 
-<!-- ========================================== -->
-<!-- 1. Link to create a new Flight -->
-<!-- ========================================== -->
-<!-- 'th:href' dynamically generates the correct link URL.
-     @{/flights/new} corresponds to the controller mapping @GetMapping("/new") in FlightController.form() -->
-<a th:href="@{/flights/new}">Add New Flight</a>
+<div class="container">
 
-<!-- ========================================== -->
-<!-- 2. Table displaying all flights -->
-<!-- ========================================== -->
-<!-- The controller method 'index()' puts a list of Flight objects into the model with key "flights"
-     -> model.addAttribute("flights", flights.findAll());
-     Thymeleaf accesses this list using ${flights} -->
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <!-- Table headers for each flight attribute -->
-        <th>ID</th>
-        <th>Name</th>
-        <th>Departure Time</th>
-        <th>Feedback Score</th>
-        <th>Airplane ID</th>
-        <th>Notice Board ID</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <h1>Flights</h1>
 
-    <tbody>
-    <!-- ========================================== -->
-    <!-- 3. th:each — The looping mechanism -->
-    <!-- ========================================== -->
-    <!-- This line means: "For each element in the list 'flights', assign it to a local variable named 'flight'." -->
-    <!-- It works like a Java for-each loop: for (Flight flight : flights) -->
-    <tr th:each="flight : ${flights}">
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
-        <!-- ========================================== -->
-        <!-- 4. Displaying flight attributes -->
-        <!-- ========================================== -->
-        <!-- th:text replaces the inner text of this tag with the actual value -->
-        <!-- Example: th:text="${flight.id}" -> prints the value of flight.getId() -->
-        <td th:text="${flight.id}">ID</td>
-        <td th:text="${flight.name}">Name</td>
-        <td th:text="${flight.departureTime}">Departure Time</td>
-        <td th:text="${flight.feedbackScore}">Feedback Score</td>
-        <td th:text="${flight.airplaneId}">Airplane ID</td>
-        <td th:text="${flight.noticeBoardId}">Notice Board ID</td>
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
 
-        <!-- ========================================== -->
-        <!-- 5. Action column: Delete button -->
-        <!-- ========================================== -->
-        <td>
-            <!-- Small form for deleting a flight -->
-            <!-- 'th:action' dynamically generates the URL for each flight’s delete endpoint -->
-            <!-- It builds a URL like /flights/123/delete for a flight whose id = 123 -->
-            <form th:action="@{'/flights/' + ${flight.id} + '/delete'}" method="post">
-                <!-- This form submits an HTTP POST to the delete() method in your controller:
-                     @PostMapping("/{id}/delete")
-                     The @PathVariable String id in the controller receives this flight.id -->
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    <!-- The <tr> block repeats once per flight in the list -->
-    </tbody>
-</table>
+    <div class="page-actions">
+        <a th:href="@{/}" class="btn btn-secondary">Home</a>
+
+        <a th:href="@{/flights/new}" class="btn">Add New Flight</a>
+    </div>
+
+    <form th:action="@{/flights}" method="get" class="sort-form mt-4">
+        <input type="hidden" name="sort" th:value="${sort}" />
+        <input type="hidden" name="dir" th:value="${dir}" />
+
+        <label for="name">Flight Name:</label>
+        <input id="name"
+               name="name"
+               type="text"
+               class="input-sm"
+               placeholder="e.g. LH123"
+               th:value="${filterName}" />
+
+        <label for="startTime">Departure from:</label>
+        <input id="startTime"
+               name="startTime"
+               type="time"
+               class="input-sm"
+               th:value="${filterStartTime}" />
+
+        <label for="endTime">to:</label>
+        <input id="endTime"
+               name="endTime"
+               type="time"
+               class="input-sm"
+               th:value="${filterEndTime}" />
+
+        <button type="submit" class="btn btn-sm">Filter</button>
+
+        <a class="btn btn-sm btn-secondary" th:href="@{/flights}">Reset</a>
+    </form>
+
+    <form th:action="@{/flights}" method="get" class="sort-form mt-4">
+        <input type="hidden" name="name" th:value="${filterName}" />
+        <input type="hidden" name="startTime" th:value="${filterStartTime}" />
+        <input type="hidden" name="endTime" th:value="${filterEndTime}" />
+
+        <label for="sort">Sortieren nach:</label>
+
+        <select id="sort" name="sort" class="input-sm">
+            <option value="id" th:selected="${sort=='id'}">ID</option>
+            <option value="name" th:selected="${sort=='name'}">Name</option>
+            <option value="departureTime" th:selected="${sort=='departureTime'}">
+                Departure Time
+            </option>
+        </select>
+
+        <select id="dir" name="dir" class="input-sm">
+            <option value="asc" th:selected="${dir=='asc'}">Aufsteigend</option>
+            <option value="desc" th:selected="${dir=='desc'}">Absteigend</option>
+        </select>
+
+        <button type="submit" class="btn btn-sm">Sortieren</button>
+    </form>
+
+    <div class="table-wrap mt-4">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th class="sticky-col">
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='id',
+                            dir=${sort=='id' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        ID <span th:if="${sort=='id'}"
+                                 th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='name',
+                            dir=${sort=='name' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        Name <span th:if="${sort=='name'}"
+                                   th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>
+                    <a class="th-link"
+                       th:href="@{/flights(
+                            sort='departureTime',
+                            dir=${sort=='departureTime' ? reverseDir : 'asc'},
+                            name=${filterName},
+                            startTime=${filterStartTime},
+                            endTime=${filterEndTime}
+                       )}">
+                        Departure Time
+                        <span th:if="${sort=='departureTime'}"
+                              th:text="${dir=='asc' ? '▲' : '▼'}"></span>
+                    </a>
+                </th>
+
+                <th>Airplane</th>
+                <th>Notice Board</th>
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="flight : ${flights}">
+                <td class="sticky-col" th:text="${flight.id}">ID</td>
+                <td th:text="${flight.name}">Name</td>
+                <td th:text="${flight.departureTime}">Time</td>
+
+                <td th:text="${flight.airplane != null ? flight.airplane.id : 'N/A'}">
+                    Airplane
+                </td>
+
+                <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : 'N/A'}">
+                    Notice Board
+                </td>
+
+                <td class="actions">
+                    <a th:href="@{'/flights/' + ${flight.id}}"
+                       class="btn btn-sm action">View</a>
+
+                    <a th:href="@{'/flights/' + ${flight.id} + '/edit'}"
+                       class="btn btn-sm action">Edit</a>
+
+                    <form th:action="@{'/flights/' + ${flight.id} + '/delete'}"
+                          class="inline-form"
+                          method="post"
+                          onsubmit="return confirm('Delete this flight?');">
+                        <button type="submit"
+                                class="btn btn-sm action-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(flights)}">
+                <td colspan="6">No flights yet.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
 
 </body>
 </html>

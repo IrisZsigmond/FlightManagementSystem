@@ -1,15 +1,24 @@
 package com.flightmanagement.flightmanagement.model;
 
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
-/** Represents an airplane used in the flight management system.
- * Contains details such as model, capacity, and related flights */
-
+@Entity
+@Table(name = "airplanes")
 public class Airplane {
 
+    @Id
     private String id;
+
     private int number;
+
     private int capacity;
+
+    // One airplane has many flights
+    @OneToMany(mappedBy = "airplane")
+    @JsonIgnore
     private List<Flight> flights;
 
     public Airplane() {}
@@ -36,7 +45,7 @@ public class Airplane {
     @Override
     public String toString() {
         return "Airplane{" +
-                "flights=" + flights +
+                "id='" + id + '\'' +
                 ", number=" + number +
                 ", capacity=" + capacity +
                 '}';

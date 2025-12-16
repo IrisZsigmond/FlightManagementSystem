@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Ticket</h1>
+
+<!-- am adăugat edit-card aici -->
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{/tickets}" th:object="${ticketForm}" method="post" class="form-grid">
+
+        <!-- ID -->
+        <div>
+            <label for="id">ID (T***):</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="T001" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- Passenger ID -->
+        <div>
+            <label for="passengerId">Passenger ID (P***):</label>
+            <input id="passengerId" type="text" th:field="*{passengerId}" placeholder="P001" />
+            <div class="error" th:if="${#fields.hasErrors('passengerId')}" th:errors="*{passengerId}"></div>
+        </div>
+
+        <!-- Flight ID -->
+        <div>
+            <label for="flightId">Flight ID (F***):</label>
+            <input id="flightId" type="text" th:field="*{flightId}" placeholder="F001" />
+            <div class="error" th:if="${#fields.hasErrors('flightId')}" th:errors="*{flightId}"></div>
+        </div>
+
+        <!-- Category -->
+        <div>
+            <label for="category">Category:</label>
+            <select id="category" th:field="*{category}">
+                <option th:each="c : ${categories}"
+                        th:value="${c}"
+                        th:text="${c}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+        </div>
+
+        <!-- Price -->
+        <div>
+            <label for="price">Price:</label>
+            <input id="price" type="text" th:field="*{price}" />
+            <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <!-- Seat Number -->
+        <div>
+            <label for="seatNumber">Seat Number:</label>
+            <input id="seatNumber" type="text" th:field="*{seatNumber}" placeholder="12A" />
+            <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Create</button>
+            <a th:href="@{/tickets}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

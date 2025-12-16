@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airplane</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+<h1>Edit Airplane</h1>
+
+<form th:action="@{'/airplanes/' + ${airplaneId}}"
+      th:object="${airplaneForm}"
+      method="post">
+
+    <!-- GLOBAL ERROR (ex: from service) -->
+    <div class="error global-error" th:if="${error}" th:text="${error}"></div>
+
+    <!-- ==================================== -->
+    <!-- ID (readonly)                        -->
+    <!-- ==================================== -->
+
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" disabled />
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="error" th:if="${#fields.hasErrors('id')}"
+         th:errors="*{id}"></div>
+
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- NUMBER                                -->
+    <!-- ==================================== -->
+
+    <label>Number:</label>
+    <input type="number" th:field="*{number}" />
+
+    <div class="error" th:if="${#fields.hasErrors('number')}"
+         th:errors="*{number}"></div>
+
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- CAPACITY                              -->
+    <!-- ==================================== -->
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" />
+
+    <div class="error" th:if="${#fields.hasErrors('capacity')}"
+         th:errors="*{capacity}"></div>
+
+    <br/>
+
+    <!-- ==================================== -->
+    <!-- ASSIGNED FLIGHTS                      -->
+    <!-- ==================================== -->
+
+    <h3>Assigned Flights</h3>
+    <ul>
+        <li th:each="f : ${airplane.flights}">
+            <span th:text="${f.id + ' - ' + (f.name != null ? f.name : 'Unknown')}"></span>
+        </li>
+
+        <li th:if="${#lists.isEmpty(airplane.flights)}">
+            No flights assigned.
+        </li>
+    </ul>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+
+        <a th:href="@{/airplanes}" class="btn secondary" style="margin-left:10px;">
+            Cancel
+        </a>
+    </div>
+
+</form>
+
+</body>
+</html>

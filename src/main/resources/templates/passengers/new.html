@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Passenger</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Passenger</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{/passengers}"
+          th:object="${passengerForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- ID -->
+        <div>
+            <label for="id">ID (P***):</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="P001" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- Name -->
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" type="text" th:field="*{name}" placeholder="John Doe" />
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <!-- Currency -->
+        <div>
+            <label for="currency">Currency:</label>
+            <input id="currency" type="text" th:field="*{currency}" placeholder="USD" />
+            <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button class="btn" type="submit">Create</button>
+            <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

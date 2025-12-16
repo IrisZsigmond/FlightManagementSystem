@@ -35,11 +35,6 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
     }
 
     @Override
-    public Optional<T> findById(ID id) {
-        return repository.findById(id);
-    }
-
-    @Override
     public T update(ID id, T updatedEntity) {
         if (updatedEntity == null || id == null)
             throw new IllegalArgumentException("Updated entity and id must not be null");
@@ -53,6 +48,11 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
     @Override
     public boolean delete(ID id) {
         return repository.delete(id);
+    }
+
+    @Override
+    public Optional<T> findById(ID id) {
+        return repository.findById(id);
     }
 
     @Override

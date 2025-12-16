@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Notice Board</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Create Notice Board</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{/noticeboards}"
+          th:object="${noticeBoardForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- ID -->
+        <div>
+            <label for="id">ID (N***):</label>
+            <input id="id" type="text" th:field="*{id}" placeholder="N001" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- DATE -->
+        <div>
+            <label for="date">Date (yyyy-MM-dd):</label>
+            <input id="date" type="text" th:field="*{date}" placeholder="2025-11-18" />
+            <div class="error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+            <p>Flights of the day will automatically attach by noticeBoardId.</p>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button class="btn" type="submit">Create</button>
+            <a th:href="@{/noticeboards}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

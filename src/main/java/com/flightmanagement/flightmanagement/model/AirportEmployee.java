@@ -1,10 +1,12 @@
 package com.flightmanagement.flightmanagement.model;
 
-/** Represents an airport employee in the flight management system.
- * Inherits common attributes from Staff (such as ID and name)
- * and adds specific details like designation and department. */
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "airport_employee")
+@DiscriminatorValue("AIRPORT")
 public class AirportEmployee extends Staff {
+
     private String designation;
     private String department;
 
@@ -12,8 +14,8 @@ public class AirportEmployee extends Staff {
         super();
     }
 
-    public AirportEmployee(String Id, String name, String designation, String department) {
-        super(Id, name);
+    public AirportEmployee(String id, String name, String designation, String department) {
+        super(id, name);
         this.designation = designation;
         this.department = department;
     }
@@ -34,8 +36,9 @@ public class AirportEmployee extends Staff {
 
     @Override
     public String toString() {
-        return "AirportEmplyees{" +
-                " name='" + getName() + '\'' +
+        return "AirportEmployee{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
                 ", designation='" + designation + '\'' +
                 ", department='" + department + '\'' +
                 '}';

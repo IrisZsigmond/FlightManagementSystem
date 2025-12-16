@@ -1,23 +1,38 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.FlightAssignment;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface FlightAssignmentService extends BaseService<FlightAssignment, String> {
-    /**
-     * Finds all assignments linked to a specific flight.
-     *
-     * @param flightId the ID of the flight
-     * @return list of matching flight assignments
-     */
+public interface FlightAssignmentService {
+
+    // ---------------- CRUD ----------------
+
+    FlightAssignment save(FlightAssignment assignment);
+
+    FlightAssignment update(String id, FlightAssignment updated);
+
+    boolean delete(String id);
+
+    Optional<FlightAssignment> findById(String id);
+
+    List<FlightAssignment> findAll();
+
+    List<FlightAssignment> findAll(Sort sort);
+
+    // ---------------- SEARCH + SORT ----------------
+
+    List<FlightAssignment> search(
+            String flightId,
+            String airlineEmployeeId,
+            Sort sort
+    );
+
+    // ---------------- Existing ----------------
+
     List<FlightAssignment> findByFlightId(String flightId);
 
-    /**
-     * Finds all assignments belonging to a specific staff member.
-     *
-     * @param staffId the ID of the staff member
-     * @return list of matching flight assignments
-     */
-    List<FlightAssignment> findByStaffId(String staffId);
+    List<FlightAssignment> findByAirlineEmployeeId(String employeeId);
 }

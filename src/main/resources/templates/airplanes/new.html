@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Airplane</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+<h1>Create Airplane</h1>
+
+<form th:action="@{/airplanes}"
+      th:object="${airplaneForm}"
+      method="post">
+
+    <!-- EROARE GLOBALĂ (dacă folosim result.reject("globalError", ...)) -->
+    <div th:if="${#fields.hasGlobalErrors()}" class="error global-error">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
+
+    <!-- ID -->
+    <div>
+        <label for="id">ID (format A***):</label>
+        <input id="id" type="text" th:field="*{id}" placeholder="A001" />
+        <div class="error"
+             th:if="${#fields.hasErrors('id')}"
+             th:errors="*{id}">
+        </div>
+    </div>
+
+    <!-- NUMBER -->
+    <div>
+        <label for="number">Number:</label>
+        <input id="number" type="number" th:field="*{number}" />
+        <div class="error"
+             th:if="${#fields.hasErrors('number')}"
+             th:errors="*{number}">
+        </div>
+    </div>
+
+    <!-- CAPACITY -->
+    <div>
+        <label for="capacity">Capacity:</label>
+        <input id="capacity" type="number" th:field="*{capacity}" />
+        <div class="error"
+             th:if="${#fields.hasErrors('capacity')}"
+             th:errors="*{capacity}">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Create</button>
+        <a th:href="@{/airplanes}" class="btn secondary">Cancel</a>
+    </div>
+
+</form>
+
+</body>
+</html>

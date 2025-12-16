@@ -1,0 +1,41 @@
+[ {
+  "id" : "AP1",
+  "number" : 1001,
+  "capacity" : 180
+}, {
+  "id" : "AP2",
+  "number" : 1002,
+  "capacity" : 160
+}, {
+  "id" : "AP3",
+  "number" : 1003,
+  "capacity" : 200
+}, {
+  "id" : "AP4",
+  "number" : 1004,
+  "capacity" : 190
+}, {
+  "id" : "AP5",
+  "number" : 1005,
+  "capacity" : 210
+}, {
+  "id" : "AP6",
+  "number" : 1006,
+  "capacity" : 150
+}, {
+  "id" : "AP7",
+  "number" : 1007,
+  "capacity" : 175
+}, {
+  "id" : "AP8",
+  "number" : 1008,
+  "capacity" : 220
+}, {
+  "id" : "AP9",
+  "number" : 1009,
+  "capacity" : 230
+}, {
+  "id" : "AP10",
+  "number" : 1010,
+  "capacity" : 240
+} ]

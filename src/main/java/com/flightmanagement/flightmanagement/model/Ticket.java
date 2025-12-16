@@ -1,30 +1,52 @@
 package com.flightmanagement.flightmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flightmanagement.flightmanagement.model.enums.TicketCategory;
+import jakarta.persistence.*;
 
 import java.util.List;
 
-/**Represents a ticket in the management system.
- * Contains details such as passenger, flight ID,
- * category, price, seat number, and luggage */
-
+@Entity
+@Table(name = "tickets")
 public class Ticket {
 
+    @Id
     private String id;
+
+    // Many tickets belong to one passenger
+    @ManyToOne
+    @JoinColumn(name = "passenger_id")
     private Passenger passenger;
-    private String flightId;
+
+    // Many tickets belong to one flight
+    @ManyToOne
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    @Enumerated(EnumType.STRING)
     private TicketCategory category;
+
     private double price;
+
     private String seatNumber;
+
+    // One ticket has many luggages
+    @OneToMany(mappedBy = "ticket")
+    @JsonIgnore
     private List<Luggage> luggages;
 
     public Ticket() {}
 
-    public Ticket(String id, Passenger passenger, String flightId, TicketCategory category,
-                  double price, String seatNumber, List<Luggage> luggages) {
+    public Ticket(String id,
+                  Passenger passenger,
+                  Flight flight,
+                  TicketCategory category,
+                  double price,
+                  String seatNumber,
+                  List<Luggage> luggages) {
         this.id = id;
         this.passenger = passenger;
-        this.flightId = flightId;
+        this.flight = flight;
         this.category = category;
         this.price = price;
         this.seatNumber = seatNumber;
@@ -37,8 +59,8 @@ public class Ticket {
     public Passenger getPassenger() { return passenger; }
     public void setPassenger(Passenger passenger) { this.passenger = passenger; }
 
-    public String getFlightId() { return flightId; }
-    public void setFlightId(String flightId) { this.flightId = flightId; }
+    public Flight getFlight() { return flight; }
+    public void setFlight(Flight flight) { this.flight = flight; }
 
     public TicketCategory getCategory() { return category; }
     public void setCategory(TicketCategory category) { this.category = category; }
@@ -55,12 +77,12 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "passenger=" + passenger +
-                ", flightId='" + flightId + '\'' +
+                "id='" + id + '\'' +
+                ", passenger=" + (passenger != null ? passenger.getId() : null) +
+                ", flight=" + (flight != null ? flight.getId() : null) +
                 ", category=" + category +
                 ", price=" + price +
                 ", seatNumber='" + seatNumber + '\'' +
-                ", luggages=" + luggages +
                 '}';
     }
 }

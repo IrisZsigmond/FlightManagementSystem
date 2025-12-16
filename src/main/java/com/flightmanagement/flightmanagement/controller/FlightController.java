@@ -1,109 +1,236 @@
 package com.flightmanagement.flightmanagement.controller;
 
+import com.flightmanagement.flightmanagement.dto.FlightForm;
+import com.flightmanagement.flightmanagement.mapper.FlightMapper;
 import com.flightmanagement.flightmanagement.model.Flight;
+import com.flightmanagement.flightmanagement.service.AirplaneService;
 import com.flightmanagement.flightmanagement.service.FlightService;
+import com.flightmanagement.flightmanagement.service.NoticeBoardService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * This class handles all web requests related to "flights".
- *
- * It is a Spring MVC (Model-View-Controller software design pattern) Controller responsible for:
- * - Receiving HTTP requests (GET/POST) from the browser
- * - Calling the appropriate methods in the FlightService (the business layer)
- * - Passing data to the view (HTML templates) using the Model
- * - Returning the logical name of the Thymeleaf template to render
- */
-@Controller // Singleton Bean: Marks this class as a Spring MVC Controller
-@RequestMapping("/flights") // All methods in this class will start with URL path "/flights"
+import java.time.LocalTime;
+
+@Controller
+@RequestMapping("/flights")
 public class FlightController {
 
-    // A reference to the service layer that manages Flight objects
-    private final FlightService flights;
+    private final FlightService flightService;
+    private final FlightMapper mapper;
+    private final NoticeBoardService noticeBoardService;
+    private final AirplaneService airplaneService;
 
-    /**
-     * Constructor-based dependency injection.
-     * Spring automatically provides (injects) a FlightService instance here when creating this controller.
-     *
-     * @param flights the FlightService bean provided by Spring
-     */
-    public FlightController(FlightService flights) {
-        this.flights = flights;
+    public FlightController(FlightService flightService,
+                            FlightMapper mapper,
+                            NoticeBoardService noticeBoardService,
+                            AirplaneService airplaneService) {
+        this.flightService = flightService;
+        this.mapper = mapper;
+        this.noticeBoardService = noticeBoardService;
+        this.airplaneService = airplaneService;
     }
 
-    /**
-     * Displays a list of all flights.
-     *
-     * This method handles GET requests to "/flights".
-     * It retrieves all flights from the service and adds them to the Model so they can be displayed in the view.
-     *
-     * @param model a Spring-provided container for passing data to the view
-     * @return the name of the Thymeleaf template to render ("flights/index")
-     */
-    @GetMapping // Handles HTTP GET requests to "/flights"
-    public String index(Model model) {
-        // Add a list of all flights to the model under the key "flights"
-        model.addAttribute("flights", flights.findAll());
+    // INDEX
+    @GetMapping
+    public String index(Model model,
+                        @RequestParam(required = false) String name,
+                        @RequestParam(required = false) String startTime,
+                        @RequestParam(required = false) String endTime,
+                        @RequestParam(defaultValue = "id") String sort,
+                        @RequestParam(defaultValue = "asc") String dir
+    ) {
 
-        // Return the logical name of the template to display: templates/flights/index.html
+        /* ================= SORT WHITELIST ================= */
+        if (!sort.equals("id")
+                && !sort.equals("name")
+                && !sort.equals("departureTime")) {
+            sort = "id";
+        }
+
+        if (!dir.equalsIgnoreCase("asc") && !dir.equalsIgnoreCase("desc")) {
+            dir = "asc";
+        }
+
+        Sort.Direction direction =
+                dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort springSort = Sort.by(direction, sort);
+
+        /* ================= TIME PARSING (SAFE) ================= */
+        LocalTime start = null;
+        LocalTime end = null;
+
+        if (startTime != null && !startTime.isBlank()) {
+            try {
+                start = LocalTime.parse(startTime); // expects HH:mm
+            } catch (Exception ex) {
+                model.addAttribute("error", "Start time must be in format HH:mm.");
+            }
+        }
+
+        if (endTime != null && !endTime.isBlank()) {
+            try {
+                end = LocalTime.parse(endTime);
+            } catch (Exception ex) {
+                model.addAttribute("error", "End time must be in format HH:mm.");
+            }
+        }
+
+        /* ================= FILTER + SORT ================= */
+        model.addAttribute(
+                "flights",
+                flightService.search(name, start, end, springSort)
+        );
+
+        /* ================= UI STATE ================= */
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("reverseDir",
+                dir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        model.addAttribute("filterName", name);
+        model.addAttribute("filterStartTime", startTime);
+        model.addAttribute("filterEndTime", endTime);
+
         return "flights/index";
     }
 
-    /**
-     * Displays a form for creating a new Flight.
-     *
-     * This method handles GET requests to "/flights/new".
-     * It prepares an empty Flight object that the form can bind its input fields to.
-     *
-     * @param model a Spring-provided container for data passed to the view
-     * @return the name of the Thymeleaf template to render ("flights/form")
-     */
-    @GetMapping("/new") // Handles GET requests to "/flights/new"
+
+    // CREATE form
+    @GetMapping("/new")
     public String form(Model model) {
-        // Create an empty Flight object with default (null or 0) values.
-        // This allows Thymeleaf to bind form fields like th:field="*{name}" without errors.
-        model.addAttribute("flight", new Flight(null, null, null, 0, null, null));
-
-        // Return the logical view name: templates/flights/form.html
-        return "flights/form";
+        model.addAttribute("flightForm", new FlightForm());
+        model.addAttribute("noticeBoards", noticeBoardService.findAll());
+        model.addAttribute("airplanes", airplaneService.findAll());
+        return "flights/new";
     }
 
-    /**
-     * Processes the submitted flight creation form.
-     *
-     * This method handles POST requests to "/flights".
-     * Spring automatically binds the form fields to a new Flight object using @ModelAttribute.
-     *
-     * After saving the new flight via the service, it redirects back to the flight list.
-     *
-     * @param flight the Flight object built automatically from form input
-     * @return redirect instruction to "/flights" (list page)
-     */
-    @PostMapping // Handles HTTP POST requests to "/flights"
-    public String create(@ModelAttribute Flight flight) {
-        // Delegate saving logic to the FlightService
-        flights.save(flight);
+    // CREATE submit
+    @PostMapping
+    public String create(
+            @Valid @ModelAttribute("flightForm") FlightForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
 
-        // Redirect to the list page to avoid resubmitting the form on browser refresh
+        if (result.hasErrors()) {
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+            return "flights/new";
+        }
+
+        try {
+            Flight f = mapper.toEntity(form);
+            flightService.save(f);
+            ra.addFlashAttribute("success", "Flight created.");
+            return "redirect:/flights";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("ID")) {
+                result.rejectValue("id", "duplicate", msg);
+            } else if (msg.contains("name")) {
+                result.rejectValue("name", "duplicate", msg);
+            } else if (msg.contains("Airplane")) {
+                result.rejectValue("airplaneId", "invalid", msg);
+            } else if (msg.contains("NoticeBoard")) {
+                result.rejectValue("noticeBoardId", "invalid", msg);
+            } else {
+                result.reject("globalError", msg);
+            }
+
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+            return "flights/new";
+        }
+    }
+
+    // DELETE
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id, RedirectAttributes ra) {
+        try {
+            flightService.delete(id);
+            ra.addFlashAttribute("success", "Flight deleted.");
+
+        } catch (IllegalStateException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
         return "redirect:/flights";
     }
 
-    /**
-     * Deletes an existing flight.
-     *
-     * This method handles POST requests to "/flights/{id}/delete".
-     * The {id} part of the URL is extracted using @PathVariable and used to identify which flight to remove.
-     *
-     * @param id the unique identifier of the flight to delete
-     * @return redirect instruction to "/flights" (list page)
-     */
-    @PostMapping("/{id}/delete") // Handles POST requests like "/flights/ABC123/delete"
-    public String delete(@PathVariable String id) {
-        // Delegate the deletion to the service layer
-        flights.delete(id);
+    // EDIT form
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
 
-        // Redirect back to the list of flights
-        return "redirect:/flights";
+        Flight flight = flightService.findById(id).orElseThrow();
+        FlightForm form = mapper.toForm(flight);
+
+        model.addAttribute("flightForm", form);
+        model.addAttribute("flight", flight);
+
+        model.addAttribute("noticeBoards", noticeBoardService.findAll());
+        model.addAttribute("airplanes", airplaneService.findAll());
+
+        return "flights/edit";
+    }
+
+    // UPDATE submit
+    @PostMapping("/{id}")
+    public String update(
+            @PathVariable String id,
+            @Valid @ModelAttribute("flightForm") FlightForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes ra
+    ) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("flight", flightService.findById(id).orElseThrow());
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+            return "flights/edit";
+        }
+
+        try {
+            Flight existing = flightService.findById(id).orElseThrow();
+            mapper.updateEntityFromForm(existing, form);
+            flightService.update(id, existing);
+
+            ra.addFlashAttribute("success", "Flight updated.");
+            return "redirect:/flights";
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+
+            String msg = ex.getMessage();
+
+            if (msg.contains("name")) {
+                result.rejectValue("name", "duplicate", msg);
+            } else if (msg.contains("Airplane")) {
+                result.rejectValue("airplaneId", "invalid", msg);
+            } else if (msg.contains("NoticeBoard")) {
+                result.rejectValue("noticeBoardId", "invalid", msg);
+            } else {
+                result.reject("globalError", msg);
+            }
+
+            model.addAttribute("flight", flightService.findById(id).orElseThrow());
+            model.addAttribute("noticeBoards", noticeBoardService.findAll());
+            model.addAttribute("airplanes", airplaneService.findAll());
+
+            return "flights/edit";
+        }
+    }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable String id, Model model) {
+        model.addAttribute("flight", flightService.findById(id).orElseThrow());
+        return "flights/view";
     }
 }

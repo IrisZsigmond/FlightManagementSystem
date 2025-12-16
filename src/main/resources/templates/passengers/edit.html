@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Passenger</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Passenger</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{'/passengers/' + ${passengerForm.id}}"
+          th:object="${passengerForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- ID (read-only) -->
+        <div>
+            <label for="id">ID:</label>
+            <input id="id" type="text" th:field="*{id}" disabled />
+            <input type="hidden" th:field="*{id}" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- NAME -->
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" type="text" th:field="*{name}" />
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <!-- CURRENCY -->
+        <div>
+            <label for="currency">Currency:</label>
+            <input id="currency" type="text" th:field="*{currency}" />
+            <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
+        </div>
+
+        <!-- TICKETS LIST -->
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Tickets</h3>
+
+            <ul class="mt-2">
+                <li th:each="t : ${passenger.tickets}">
+                    <strong th:text="${t.id}">T001</strong>
+                    – Price: <span th:text="${t.price}">100</span>,
+                    Seat: <span th:text="${t.seatNumber}">12A</span>
+                </li>
+
+                <li th:if="${passenger.tickets == null or #lists.isEmpty(passenger.tickets)}">
+                    This passenger has no tickets.
+                </li>
+            </ul>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/passengers}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

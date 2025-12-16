@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airport Employee</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Airport Employee</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{'/airportemployees/' + ${employeeId}}"
+          th:object="${airportEmployeeForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- GLOBAL ERRORS -->
+        <div style="grid-column: 1 / -1;">
+            <div th:if="${#fields.hasGlobalErrors()}" class="error">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
+        </div>
+
+        <!-- ID (readonly) -->
+        <div>
+            <label>ID:</label>
+            <input type="text" th:field="*{id}" disabled />
+            <input type="hidden" th:field="*{id}" />
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- NAME -->
+        <div>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" />
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <!-- DESIGNATION -->
+        <div>
+            <label>Designation:</label>
+            <input type="text" th:field="*{designation}" />
+            <div class="error" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></div>
+        </div>
+
+        <!-- DEPARTMENT -->
+        <div>
+            <label>Department:</label>
+            <input type="text" th:field="*{department}" />
+            <div class="error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/airportemployees}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

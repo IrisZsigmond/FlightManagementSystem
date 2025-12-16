@@ -1,23 +1,26 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.AirportEmployee;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface AirportEmployeeService extends BaseService<AirportEmployee, String> {
-    /**
-     * Finds all employees working in the given department.
-     *
-     * @param department the department name (e.g., "Operations", "Security")
-     * @return list of employees belonging to that department
-     */
-    List<AirportEmployee> findByDepartment(String department);
+public interface AirportEmployeeService {
+    /// CRUD
+    AirportEmployee save(AirportEmployee employee);
 
-    /**
-     * Finds all employees with the given designation.
-     *
-     * @param designation the job title (e.g., "Manager", "Technician")
-     * @return list of employees with that designation
-     */
-    List<AirportEmployee> findByDesignation(String designation);
+    List<AirportEmployee> findAll();
+
+    AirportEmployee update(String id, AirportEmployee updated);
+
+    boolean delete(String id);
+
+    /// Sorting and Searching
+    List<AirportEmployee> findAll(Sort sort);
+
+    List<AirportEmployee> search(String name, String department, String designation, Sort sort);
+
+    /// Other Queries
+    Optional<AirportEmployee> findById(String id);
 }

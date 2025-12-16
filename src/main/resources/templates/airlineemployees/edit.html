@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airline Employee</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Edit Airline Employee</h1>
+
+<div class="card mt-4 edit-card">
+
+    <form th:action="@{'/airlineemployees/' + ${employeeId}}"
+          th:object="${employeeForm}"
+          method="post"
+          class="form-grid">
+
+        <!-- GLOBAL ERRORS -->
+        <div style="grid-column: 1 / -1;">
+            <div th:if="${#fields.hasGlobalErrors()}" class="error">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
+        </div>
+
+        <!-- ID -->
+        <div>
+            <label>ID:</label>
+            <input type="text" th:field="*{id}" disabled/>
+            <input type="hidden" th:field="*{id}"/>
+            <div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+        </div>
+
+        <!-- NAME -->
+        <div>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}"/>
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <!-- ROLE -->
+        <div>
+            <label>Role:</label>
+            <select th:field="*{role}">
+                <option value="" disabled>Select role</option>
+                <option th:each="r : ${roles}"
+                        th:value="${r}"
+                        th:text="${r}">
+                </option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+        </div>
+
+        <!-- ASSIGNMENTS LIST -->
+        <div style="grid-column: 1 / -1;">
+            <h3 class="mt-2">Assignments</h3>
+
+            <ul class="mt-2">
+                <li th:each="a : ${employee.assignments}">
+                    <strong th:text="${a.id}">FA1</strong>
+                    –
+                    Flight:
+                    <span th:text="${a.flight != null ? a.flight.id : 'N/A'}">F01</span>
+                </li>
+
+                <li th:if="${employee.assignments == null or #lists.isEmpty(employee.assignments)}">
+                    No assignments for this employee.
+                </li>
+            </ul>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="btn">Save</button>
+            <a th:href="@{/airlineemployees}" class="btn secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

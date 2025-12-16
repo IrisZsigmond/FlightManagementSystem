@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Management System - Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title mb-4">✈️ Application Dashboard</h1>
+
+    <div class="entity-cards-grid mt-6">
+
+        <a th:href="@{/flights}" class="card entity-link-card primary-border-left">
+            <h3>Flights</h3>
+            <p>Manage flight schedules and details.</p>
+        </a>
+
+        <a th:href="@{/passengers}" class="card entity-link-card primary-border-left">
+            <h3>Passengers</h3>
+            <p>Manage passenger records and details.</p>
+        </a>
+
+        <a th:href="@{/tickets}" class="card entity-link-card primary-border-left">
+            <h3>Tickets</h3>
+            <p>Manage ticket inventory and booking details.</p>
+        </a>
+
+        <a th:href="@{/airplanes}" class="card entity-link-card primary-border-left">
+            <h3>Airplanes</h3>
+            <p>Manage aircraft fleet information and capacity.</p>
+        </a>
+
+        <a th:href="@{/luggages}" class="card entity-link-card primary-border-left">
+            <h3>Luggage</h3>
+            <p>Manage baggage records and tracking status.</p>
+        </a>
+
+        <a th:href="@{/noticeboards}" class="card entity-link-card primary-border-left">
+            <h3>Notice Boards</h3>
+            <p>Manage departure announcements and scheduling.</p>
+        </a>
+
+        <a th:href="@{/airlineemployees}" class="card entity-link-card primary-border-left">
+            <h3>Airline Staff</h3>
+            <p>Manage pilot, co-pilot, and attendant records.</p>
+        </a>
+
+        <a th:href="@{/airportemployees}" class="card entity-link-card primary-border-left">
+            <h3>Airport Staff</h3>
+            <p>Manage ground personnel records and departments.</p>
+        </a>
+
+        <a th:href="@{/flightassignments}" class="card entity-link-card primary-border-left">
+            <h3>Assignments</h3>
+            <p>Manage staff allocation to specific flights.</p>
+        </a>
+
+    </div>
+
+    <div class="app-info-footer mt-6">
+        <p>Flight Management System</p>
+    </div>
+</div>
+
+</body>
+</html>

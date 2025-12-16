@@ -1,26 +1,31 @@
 package com.flightmanagement.flightmanagement.service;
 
 import com.flightmanagement.flightmanagement.model.NoticeBoard;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Sort;
 
-/**
- * Service interface for managing NoticeBoard entities.
- */
-public interface NoticeBoardService extends BaseService<NoticeBoard, String> {
+public interface NoticeBoardService {
 
-    /**
-     * Finds all notice boards that match the specified date.
-     *
-     * @param date the target date
-     * @return list of notice boards for that date
-     */
+    NoticeBoard save(NoticeBoard noticeBoard);
+
+    List<NoticeBoard> findAll();
+    List<NoticeBoard> findAll(Sort sort);
+
+    Optional<NoticeBoard> findById(String id);
+
+    NoticeBoard update(String id, NoticeBoard updated);
+
+    boolean delete(String id);
+
     List<NoticeBoard> findByDate(LocalDate date);
 
-    /**
-     * Returns the notice board for the current day.
-     *
-     * @return today's notice board
-     */
     NoticeBoard getCurrentDayBoard();
+
+    Optional<NoticeBoard> findWithFlights(String id);
+
+    // NOU: Metoda de căutare (o singură dată)
+    List<NoticeBoard> search(LocalDate date, Sort sort);
 }

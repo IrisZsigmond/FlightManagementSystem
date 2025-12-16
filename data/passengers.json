@@ -1,0 +1,37 @@
+[ {
+  "id" : "P2",
+  "name" : "Bogdan Ionescu",
+  "currency" : "EUR"
+}, {
+  "id" : "P3",
+  "name" : "Carmen Marinescu",
+  "currency" : "USD"
+}, {
+  "id" : "P4",
+  "name" : "Dan Georgescu",
+  "currency" : "RON"
+}, {
+  "id" : "P5",
+  "name" : "Elena Dumitru",
+  "currency" : "EUR"
+}, {
+  "id" : "P6",
+  "name" : "Florin Stratan",
+  "currency" : "USD"
+}, {
+  "id" : "P7",
+  "name" : "Gabriela Tudor",
+  "currency" : "EUR"
+}, {
+  "id" : "P8",
+  "name" : "Horia Matei",
+  "currency" : "RON"
+}, {
+  "id" : "P9",
+  "name" : "Irina Stoica",
+  "currency" : "EUR"
+}, {
+  "id" : "P10",
+  "name" : "Julian Constantin",
+  "currency" : "USD"
+} ]

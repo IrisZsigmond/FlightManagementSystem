@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<h1>Ticket Details</h1>
+
+<div class="card mt-4 details-card">
+
+    <p>
+        <strong>ID:</strong>
+        <span th:text="${ticket.id}">T01</span>
+    </p>
+
+    <p>
+        <strong>Passenger:</strong>
+        <span th:text="${ticket.passenger != null ? ticket.passenger.id : 'N/A'}">P1</span>
+        –
+        <span th:text="${ticket.passenger != null ? ticket.passenger.name : 'N/A'}">John Doe</span>
+    </p>
+
+    <p>
+        <strong>Flight:</strong>
+        <span th:text="${ticket.flight != null ? ticket.flight.id : 'N/A'}">FL1</span>
+        –
+        <span th:text="${ticket.flight != null ? ticket.flight.name : 'N/A'}">Flight Name</span>
+    </p>
+
+    <p>
+        <strong>Category:</strong>
+        <span th:text="${ticket.category}">ECONOMY</span>
+    </p>
+
+    <p>
+        <strong>Price:</strong>
+        <span th:text="${ticket.price}">199.99</span>
+    </p>
+
+    <p>
+        <strong>Seat Number:</strong>
+        <span th:text="${ticket.seatNumber}">12A</span>
+    </p>
+
+    <h3 class="mt-3">Luggages</h3>
+
+    <ul class="mt-2">
+        <li th:if="${ticket.luggages == null or #lists.isEmpty(ticket.luggages)}">
+            No luggages for this ticket.
+        </li>
+
+        <li th:each="l : ${ticket.luggages}">
+            <strong th:text="${l.id}">L1</strong>
+            –
+            Status: <span th:text="${l.status}">CHECKED_IN</span>,
+            Size: <span th:text="${l.size}">MEDIUM</span>
+        </li>
+    </ul>
+
+</div>
+
+<div class="form-actions mt-3">
+    <a th:href="@{/tickets}" class="btn">Back</a>
+
+    <a th:href="@{'/tickets/' + ${ticket.id} + '/edit'}" class="btn">Edit</a>
+
+    <form th:action="@{'/tickets/' + ${ticket.id} + '/delete'}"
+          method="post"
+          class="inline-form"
+          onsubmit="return confirm('Delete this ticket?');">
+        <button type="submit" class="btn danger">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>
