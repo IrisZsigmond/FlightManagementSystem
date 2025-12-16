@@ -304,6 +304,101 @@ These enable:
 
 ---
 
+---
+
+# Sorting & Filtering Architecture
+
+## Purpose of Sorting and Filtering
+
+Sorting and filtering are implemented to allow users to:
+
+- efficiently explore large datasets  
+- refine results based on meaningful criteria  
+- control result ordering without modifying database state  
+
+All sorting and filtering logic is implemented in a **read-only, non-invasive manner**, preserving data integrity.
+
+---
+
+## Architectural Principles
+
+Sorting and filtering follow these strict rules:
+
+- **Controllers handle request parsing and validation**
+- **Services contain the selection logic**
+- **Repositories execute optimized database queries**
+- **Entities remain unaware of filtering concerns**
+- **UI only provides input mechanisms**
+
+This ensures full separation of concerns.
+
+---
+
+## Sorting: Design and Flow
+
+### Why Spring Data `Sort` Is Used
+
+Spring Data `Sort` provides:
+
+- type-safe sorting
+- database-level ordering
+- no in-memory sorting overhead
+- clean integration with `JpaRepository`
+
+Sorting is always delegated to the database using `ORDER BY`.
+
+---
+
+### Sorting Flow (End-to-End)
+
+1. **UI**
+   - User selects a sort field and direction
+   - Or clicks on a sortable table header
+
+2. **Controller**
+   - Receives `sort` and `dir` as request parameters
+   - Applies a **whitelist** to prevent invalid fields
+   - Constructs a `Sort` object:
+     ```java
+     Sort.by(direction, sortField)
+     ```
+
+3. **Service**
+   - Accepts `Sort` as a parameter
+   - Forwards it to the repository
+   - Provides a fallback sort if `null`
+
+4. **Repository**
+   - Executes database-level sorting via Spring Data JPA
+
+---
+
+# Filtering Architecture
+
+## Purpose of Filtering
+
+Filtering allows users to narrow down result sets based on domain-specific criteria without modifying persisted data.
+
+Filtering is optional, composable, and executed at database level.
+
+---
+
+## Filtering Responsibilities by Layer
+
+- **UI**  
+  Collects user input through constrained form fields.
+
+- **Controller**  
+  Parses and validates filter parameters, converting them into domain-safe types.
+
+- **Service**  
+  Decides which filters are active and selects the appropriate query logic.
+
+- **Repository**  
+  Executes optimized database queries using Spring Data JPA.
+
+---
+
 # Project Structure Overview
 ```
 src/main/java
