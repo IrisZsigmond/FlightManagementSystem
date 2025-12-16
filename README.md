@@ -416,3 +416,15 @@ src/main/resources
 ```
 
 This enforces strict architectural layering and maintainability.
+
+# Design Patterns Used
+
+- **Layered Architecture** – Controller, Service, Repository separation
+- **Repository Pattern** – Spring Data `JpaRepository`
+- **Service Layer Pattern** – `*Service` / `*ServiceImpl`
+- **DTO Pattern** – Form objects for user input
+- **Mapper Pattern** – DTO ↔ Entity conversion
+- **Validator Pattern** – Domain and business rule validation
+- **Strategy Pattern (implicit)** – Sorting via Spring Data `Sort`
+- **Template Method Pattern** – CRUD flow in Spring Data JPA
+- **Front Controller Pattern** – Spring MVC `DispatcherServlet`
