@@ -26,7 +26,7 @@ public class AirportEmployeeController {
         this.mapper = mapper;
     }
 
-    // LIST + SORT + FILTER
+    // list + sort + filter
     @GetMapping
     public String index(
             Model model,
@@ -50,12 +50,12 @@ public class AirportEmployeeController {
         // FILTER + SORT together (through service)
         model.addAttribute("employees", service.search(name, department, designation, springSort));
 
-        // pentru toggle/pfeile de sort
+        // Logic for sorting toggles/arrows
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equalsIgnoreCase("asc") ? "desc" : "asc");
 
-        // pentru a păstra valorile în form după filtrare
+        // Retain filter values in the form after submission
         model.addAttribute("filterName", name);
         model.addAttribute("filterDepartment", department);
         model.addAttribute("filterDesignation", designation);
@@ -63,7 +63,7 @@ public class AirportEmployeeController {
         return "airportemployees/index";
     }
 
-    // CREATE - form
+    // create form
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("airportEmployeeForm")) {
@@ -72,7 +72,7 @@ public class AirportEmployeeController {
         return "airportemployees/new";
     }
 
-    // CREATE - submit
+    // create submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("airportEmployeeForm") AirportEmployeeForm form,
@@ -98,7 +98,7 @@ public class AirportEmployeeController {
         } catch (IllegalArgumentException | IllegalStateException ex) {
             String msg = ex.getMessage() != null ? ex.getMessage() : "Could not create airport employee.";
 
-            // mapare pe câmpuri, dacă putem
+            // mapping on fields if possible
             if (msg.contains("id already exists") || msg.contains("Airport employee id")) {
                 result.rejectValue("id", "duplicate", msg);
             } else {
@@ -109,7 +109,7 @@ public class AirportEmployeeController {
         }
     }
 
-    // EDIT - form
+    // edit form
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id,
                        Model model,
@@ -129,7 +129,7 @@ public class AirportEmployeeController {
         }
     }
 
-    // EDIT - submit
+    // edit submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,

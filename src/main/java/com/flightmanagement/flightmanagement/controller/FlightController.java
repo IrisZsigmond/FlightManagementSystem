@@ -35,7 +35,6 @@ public class FlightController {
         this.airplaneService = airplaneService;
     }
 
-    // INDEX
     @GetMapping
     public String index(Model model,
                         @RequestParam(required = false) String name,
@@ -45,7 +44,7 @@ public class FlightController {
                         @RequestParam(defaultValue = "asc") String dir
     ) {
 
-        /* ================= SORT WHITELIST ================= */
+        // sort whitelist
         if (!sort.equals("id")
                 && !sort.equals("name")
                 && !sort.equals("departureTime")) {
@@ -60,7 +59,7 @@ public class FlightController {
                 dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort springSort = Sort.by(direction, sort);
 
-        /* ================= TIME PARSING (SAFE) ================= */
+        // time parsing (safe)
         LocalTime start = null;
         LocalTime end = null;
 
@@ -80,13 +79,13 @@ public class FlightController {
             }
         }
 
-        /* ================= FILTER + SORT ================= */
+        // filter + sort
         model.addAttribute(
                 "flights",
                 flightService.search(name, start, end, springSort)
         );
 
-        /* ================= UI STATE ================= */
+        // UI state
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir",
@@ -100,7 +99,7 @@ public class FlightController {
     }
 
 
-    // CREATE form
+    // create form
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("flightForm", new FlightForm());
@@ -109,7 +108,7 @@ public class FlightController {
         return "flights/new";
     }
 
-    // CREATE submit
+    // create submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("flightForm") FlightForm form,
@@ -152,7 +151,7 @@ public class FlightController {
         }
     }
 
-    // DELETE
+    // delete
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
@@ -165,7 +164,7 @@ public class FlightController {
         return "redirect:/flights";
     }
 
-    // EDIT form
+    // edit form
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
 
@@ -181,7 +180,7 @@ public class FlightController {
         return "flights/edit";
     }
 
-    // UPDATE submit
+    // update submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,

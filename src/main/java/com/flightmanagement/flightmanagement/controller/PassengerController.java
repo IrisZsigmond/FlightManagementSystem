@@ -25,18 +25,16 @@ public class PassengerController {
         this.passengerMapper = passengerMapper;
     }
 
-    // LIST + SORT + FILTRE (INDEX)
+    // list + sort + filter
     @GetMapping
     public String index(
             Model model,
-            // NOU: Parametrii de filtrare
             @RequestParam(required = false) String filterName,
             @RequestParam(required = false) String filterCurrency,
 
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
-        // 1. Whitelisting
         String sortProperty = switch(sort) {
             case "id" -> "id";
             case "name" -> "name";
@@ -51,15 +49,12 @@ public class PassengerController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        // 2. SEARCH (Filtrare + Sortare)
         model.addAttribute("passengers", passengerService.search(filterName, filterCurrency, sortObj));
 
-        // 3. UI Variables
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
-        // Păstrare filtre în form
         model.addAttribute("filterName", filterName);
         model.addAttribute("filterCurrency", filterCurrency);
 
@@ -67,7 +62,6 @@ public class PassengerController {
     }
 
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("passengerForm")) {
@@ -76,7 +70,6 @@ public class PassengerController {
         return "passengers/new";
     }
 
-    // CREATE SUBMIT
     @PostMapping
     public String create(
             @Valid @ModelAttribute("passengerForm") PassengerForm form,
@@ -101,7 +94,6 @@ public class PassengerController {
         }
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id,
                        Model model,
@@ -121,7 +113,6 @@ public class PassengerController {
         }
     }
 
-    // EDIT SUBMIT
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -153,7 +144,6 @@ public class PassengerController {
         }
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id,
                          RedirectAttributes ra) {
@@ -173,7 +163,6 @@ public class PassengerController {
         return "redirect:/passengers";
     }
 
-    // VIEW DETAILS
     @GetMapping("/{id}")
     public String view(@PathVariable String id,
                        Model model,

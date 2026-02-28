@@ -26,9 +26,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-             LIST + SORT + FILTER
-       =================================== */
+    // list + sort + filter
 
     @GetMapping
     public String index(Model model,
@@ -37,7 +35,7 @@ public class AirplaneController {
                         @RequestParam(defaultValue = "id") String sort,
                         @RequestParam(defaultValue = "asc") String dir
     ) {
-        // ---------------- SORT WHITELIST ----------------
+        // sort whitelist
         if (!sort.equals("id") && !sort.equals("number") && !sort.equals("capacity")) {
             sort = "id";
         }
@@ -49,7 +47,7 @@ public class AirplaneController {
                 dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort springSort = Sort.by(direction, sort);
 
-        // ---------------- FILTER PARSING (SAFE) ----------------
+        // filter parsing (safe)
         Integer numberValue = null;
         Integer capacityValue = null;
 
@@ -69,13 +67,13 @@ public class AirplaneController {
             }
         }
 
-        // ---------------- FILTER + SORT ----------------
+        // filter + sort
         model.addAttribute(
                 "airplanes",
                 airplaneService.search(numberValue, capacityValue, springSort)
         );
 
-        // ---------------- UI STATE ----------------
+        // UI state
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir",
@@ -89,9 +87,7 @@ public class AirplaneController {
 
 
 
-    /* ===================================
-                CREATE FORM
-       =================================== */
+    // create form
 
     @GetMapping("/new")
     public String form(Model model) {
@@ -102,9 +98,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-                CREATE SUBMIT
-       =================================== */
+    // create submit
 
     @PostMapping
     public String create(
@@ -140,9 +134,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-                EDIT FORM
-       =================================== */
+    // edit form
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id,
@@ -165,9 +157,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-                UPDATE SUBMIT
-       =================================== */
+    // update submit
 
     @PostMapping("/{id}")
     public String update(
@@ -177,7 +167,7 @@ public class AirplaneController {
             Model model,
             RedirectAttributes ra
     ) {
-        /* --- Bean validation errors (DTO-level) --- */
+        // Bean validation errors (DTO-level)
         if (result.hasErrors()) {
             model.addAttribute("airplaneId", id);
             model.addAttribute("airplane", airplaneService.getById(id));
@@ -215,9 +205,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-                DELETE
-       =================================== */
+    // delete
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
@@ -238,9 +226,7 @@ public class AirplaneController {
     }
 
 
-    /* ===================================
-                VIEW DETAILS
-       =================================== */
+    // view details
 
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model, RedirectAttributes ra) {

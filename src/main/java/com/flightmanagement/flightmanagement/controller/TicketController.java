@@ -26,20 +26,16 @@ public class TicketController {
         this.mapper = mapper;
     }
 
-    // LIST + SORT + FILTER (INDEX)
     @GetMapping
     public String index(
             Model model,
-            // Parametrii de filtrare
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) TicketCategory category,
 
-            // Parametrii de sortare
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
-        // 1. Whitelist Sort
         String sortProperty = switch (sort) {
             case "id" -> "id";
             case "category" -> "category";
@@ -57,26 +53,21 @@ public class TicketController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        // 2. Apel Service Search
         model.addAttribute("tickets", ticketService.search(minPrice, maxPrice, category, sortObj));
 
-        // 3. UI Variables
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
-        // Păstrare filtre
         model.addAttribute("filterMinPrice", minPrice);
         model.addAttribute("filterMaxPrice", maxPrice);
         model.addAttribute("filterCategory", category);
 
-        // Pentru dropdown-ul de categorii
         model.addAttribute("categories", TicketCategory.values());
 
         return "tickets/index";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("ticketForm")) {
@@ -86,7 +77,6 @@ public class TicketController {
         return "tickets/new";
     }
 
-    // CREATE SUBMIT
     @PostMapping
     public String create(
             @Valid @ModelAttribute("ticketForm") TicketForm form,
@@ -123,7 +113,6 @@ public class TicketController {
         }
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {
@@ -138,7 +127,6 @@ public class TicketController {
         }
     }
 
-    // EDIT SUBMIT
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -181,7 +169,6 @@ public class TicketController {
         }
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
@@ -193,7 +180,6 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
-    // VIEW
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {
