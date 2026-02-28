@@ -14,17 +14,16 @@ import java.util.List;
 @Primary
 public interface LuggageRepository extends JpaRepository<Luggage, String> {
 
-    // Existing (extins pentru Sort)
     List<Luggage> findByTicket_Id(String ticketId, Sort sort);
     List<Luggage> findByStatus(LuggageStatus status, Sort sort);
     List<Luggage> findBySize(LuggageSize size, Sort sort);
 
-    // Filtrare combinată (2 criterii)
+    // Combined filtering (2 criteria)
     List<Luggage> findByStatusAndSize(LuggageStatus status, LuggageSize size, Sort sort);
     List<Luggage> findByTicket_IdAndStatus(String ticketId, LuggageStatus status, Sort sort);
     List<Luggage> findByTicket_IdAndSize(String ticketId, LuggageSize size, Sort sort);
 
-    // Filtrare combinată (3 criterii) - CEL MAI COMPLEX
+    // Combined filtering (3 criteria)
     List<Luggage> findByTicket_IdAndStatusAndSize(
             String ticketId,
             LuggageStatus status,

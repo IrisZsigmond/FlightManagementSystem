@@ -16,9 +16,7 @@ public class Flight {
 
     private LocalTime departureTime;
 
-    // ------------------------
-    // RELATIONSHIPS
-    // ------------------------
+    //RELATIONSHIPS
 
     // Many flights can belong to one NoticeBoard
     @ManyToOne
@@ -50,9 +48,7 @@ public class Flight {
         this.airplane = airplane;
     }
 
-    // ------------------------
-    // GETTERS & SETTERS
-    // ------------------------
+   //GETTERS AND SETTERS
 
     public String getId() {
         return id;
