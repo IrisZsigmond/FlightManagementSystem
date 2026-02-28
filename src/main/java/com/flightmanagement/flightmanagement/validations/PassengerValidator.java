@@ -42,7 +42,7 @@ public class PassengerValidator {
             if (f != null && f.getNoticeBoard() != null) {
                 LocalDateTime flightDateTime = LocalDateTime.of(
                         f.getNoticeBoard().getDate(),
-                        f.getDepartureTime() // Folosim getter-ul corect
+                        f.getDepartureTime()
                 );
 
                 if (flightDateTime.isAfter(LocalDateTime.now())) {

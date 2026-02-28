@@ -23,7 +23,6 @@ public class FlightAssignmentValidator {
         this.airlineEmployeeRepository = airlineEmployeeRepository;
     }
 
-    /** 1) Existență assignment */
     public FlightAssignment requireExisting(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Flight assignment id cannot be null or blank");
@@ -34,7 +33,6 @@ public class FlightAssignmentValidator {
                         "Flight assignment not found: " + id));
     }
 
-    /** 2) ID unic – doar la CREATE */
     public void assertIdUnique(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Flight assignment id cannot be null or blank");
@@ -44,7 +42,6 @@ public class FlightAssignmentValidator {
         }
     }
 
-    /** 3) Existență Flight */
     public Flight requireExistingFlight(String flightId) {
         if (flightId == null || flightId.isBlank()) {
             throw new IllegalArgumentException("Flight id cannot be null or blank");
@@ -54,7 +51,6 @@ public class FlightAssignmentValidator {
                         "Flight not found: " + flightId));
     }
 
-    /** 4) Existență AirlineEmployee */
     public AirlineEmployee requireExistingAirlineEmployee(String employeeId) {
         if (employeeId == null || employeeId.isBlank()) {
             throw new IllegalArgumentException("Airline employee id cannot be null or blank");
@@ -64,7 +60,6 @@ public class FlightAssignmentValidator {
                         "Airline employee not found: " + employeeId));
     }
 
-    /** 5a) Unicitate pereche (flight, employee) la CREATE */
     public void assertUniquePairForCreate(String flightId, String employeeId) {
         if (assignmentRepository.existsByFlight_IdAndAirlineEmployee_Id(flightId, employeeId)) {
             throw new IllegalStateException(
@@ -72,7 +67,6 @@ public class FlightAssignmentValidator {
         }
     }
 
-    /** 5b) Unicitate pereche (flight, employee) la UPDATE – excludem assignment-ul curent */
     public void assertUniquePairForUpdate(String id, String flightId, String employeeId) {
         if (assignmentRepository.existsByFlight_IdAndAirlineEmployee_IdAndIdNot(flightId, employeeId, id)) {
             throw new IllegalStateException(
@@ -80,9 +74,7 @@ public class FlightAssignmentValidator {
         }
     }
 
-    /** 6) assertCanBeDeleted – momentan nu avem altă entitate care depinde de assignment,
-     * deci nu blocăm ștergerea. Lăsăm hook-ul pentru viitor. */
     public void assertCanBeDeleted(String id) {
-        // momentan nu facem nimic special
+        // to be implemented if needed
     }
 }

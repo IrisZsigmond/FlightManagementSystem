@@ -19,7 +19,6 @@ public class AirlineEmployeeValidator {
         this.staffValidator = staffValidator;
     }
 
-    /** 1) Existență */
     public AirlineEmployee requireExisting(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Airline employee id cannot be null or blank");
@@ -30,12 +29,10 @@ public class AirlineEmployeeValidator {
                         "Airline employee not found: " + id));
     }
 
-    /** 2) ID unic – DOAR la CREATE */
     public void assertIdUnique(String id) {
         staffValidator.assertStaffIdUnique(id);
     }
 
-    /** 3) Regula de DELETE – nu permite dacă are assignment-uri */
     public void assertCanBeDeleted(String id) {
         if (assignmentRepository.existsByAirlineEmployee_Id(id)) {
             throw new IllegalStateException(
