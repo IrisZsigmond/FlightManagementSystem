@@ -22,10 +22,9 @@ public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerValidator passengerValidator;
     private final TicketService ticketService;
-    private final TicketRepository ticketRepository; // Adăugat pentru ștergere în cascadă
-    private final LuggageRepository luggageRepository; // Adăugat pentru ștergere în cascadă
+    private final TicketRepository ticketRepository;
+    private final LuggageRepository luggageRepository;
 
-    // CONSTRUCTOR ACTUALIZAT
     public PassengerServiceImpl(PassengerRepository passengerRepository,
                                 PassengerValidator passengerValidator,
                                 TicketService ticketService,
@@ -38,14 +37,12 @@ public class PassengerServiceImpl implements PassengerService {
         this.luggageRepository = luggageRepository;
     }
 
-    // ---------------- CREATE ----------------
     @Override
     public Passenger save(Passenger passenger) {
         passengerValidator.assertIdUnique(passenger.getId());
         return passengerRepository.save(passenger);
     }
 
-    // ---------------- UPDATE ----------------
     @Override
     public Passenger update(String id, Passenger updated) {
         Passenger existing = passengerValidator.requireExisting(id);
@@ -54,39 +51,30 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerRepository.save(existing);
     }
 
-    // ---------------- DELETE (MODIFICAT - CASCADE ROBUST) ----------------
     @Override
     public boolean delete(String id) {
-        // 1. Validare (verifică existența și timpul zborurilor)
         Passenger passenger = passengerValidator.requireExisting(id);
         passengerValidator.assertCanBeDeleted(id);
 
-        // 2. Cascade: Găsim biletele și lucrăm pe o copie
         List<Ticket> tickets = new ArrayList<>(ticketRepository.findByPassenger_Id(id));
 
         for (Ticket t : tickets) {
-            // 2.1 Ștergem bagajele asociate (FIX: adăugăm Sort.unsorted())
             List<Luggage> luggages = luggageRepository.findByTicket_Id(t.getId(), Sort.unsorted());
             luggageRepository.deleteAll(luggages);
 
-            // 2.2 FIX: Rupem referința bidirecțională (previne TransientObjectException)
             t.setPassenger(null);
         }
 
-        // 3. Ștergem biletele
         ticketRepository.deleteAll(tickets);
 
-        // 4. Curățăm colecția din obiectul Passenger (pentru consistența memoriei)
         if (passenger.getTickets() != null) {
             passenger.getTickets().clear();
         }
 
-        // 5. Ștergem Pasagerul
         passengerRepository.delete(passenger);
         return true;
     }
 
-    // ---------------- READ / SORT ----------------
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> findAll() {
@@ -109,7 +97,6 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerValidator.requireExisting(id);
     }
 
-    // ---------------- SEARCH + SORT ----------------
     @Override
     @Transactional(readOnly = true)
     public List<Passenger> search(String name, String currency, Sort sort) {
@@ -137,7 +124,6 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerRepository.findAll(safeSort);
     }
 
-    // ---------------- HELPERS ----------------
     @Override
     public List<Passenger> findByName(String name) {
         return passengerRepository.findByNameIgnoreCase(name);

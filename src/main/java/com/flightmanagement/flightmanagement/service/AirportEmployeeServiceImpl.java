@@ -23,7 +23,7 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
         this.validator = validator;
     }
 
-    // ------------ CRUD ------------
+    // CRUD
 
     // CREATE
     @Override
@@ -32,7 +32,6 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
             throw new IllegalArgumentException("Airport employee cannot be null");
         }
 
-        // ID unic la create
         validator.assertIdUnique(employee.getId());
 
         return repo.save(employee);
@@ -66,10 +65,8 @@ public class AirportEmployeeServiceImpl implements AirportEmployeeService {
             throw new IllegalArgumentException("Updated airport employee cannot be null");
         }
 
-        // verificăm că există
         AirportEmployee existing = validator.requireExisting(id);
 
-        // nu schimbăm ID-ul
         existing.setName(updated.getName());
         existing.setDesignation(updated.getDesignation());
         existing.setDepartment(updated.getDepartment());

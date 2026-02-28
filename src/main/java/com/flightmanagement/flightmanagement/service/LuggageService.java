@@ -17,12 +17,10 @@ public interface LuggageService {
     Luggage update(String id, Luggage updated);
     boolean delete(String id);
 
-    // Existing helpers (se păstrează, dar nu sunt folosite direct în Controller)
     List<Luggage> findByTicketId(String ticketId);
     List<Luggage> findByStatus(LuggageStatus status);
     List<Luggage> findBySize(LuggageSize size);
 
-    // NOU: Metoda de căutare/filtrare combinată
     List<Luggage> search(
             String ticketId,
             LuggageStatus status,

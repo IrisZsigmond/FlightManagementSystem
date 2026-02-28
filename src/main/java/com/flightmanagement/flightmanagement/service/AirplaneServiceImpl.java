@@ -24,7 +24,7 @@ public class AirplaneServiceImpl implements AirplaneService {
         this.airplaneValidator = airplaneValidator;
     }
 
-    // ---------------- CRUD ----------------
+    // CRUD
 
     // CREATE
     @Override
@@ -33,10 +33,8 @@ public class AirplaneServiceImpl implements AirplaneService {
             throw new IllegalArgumentException("Airplane cannot be null");
         }
 
-        // ID unic
         airplaneValidator.assertIdUnique(airplane.getId());
 
-        // Number unic - CREATE
         airplaneValidator.assertNumberUniqueForCreate(airplane.getNumber());
 
         return airplaneRepository.save(airplane);
@@ -49,13 +47,10 @@ public class AirplaneServiceImpl implements AirplaneService {
             throw new IllegalArgumentException("Updated airplane cannot be null");
         }
 
-        // există avionul?
         Airplane existing = airplaneValidator.requireExisting(id);
 
-        // verificăm number unic, excluzând avionul curent
         airplaneValidator.assertNumberUniqueForUpdate(updated.getNumber(), id);
 
-        // actualizăm doar câmpurile editabile
         existing.setNumber(updated.getNumber());
         existing.setCapacity(updated.getCapacity());
 

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface FlightAssignmentService {
 
-    // ---------------- CRUD ----------------
+    // CRUD
 
     FlightAssignment save(FlightAssignment assignment);
 
@@ -22,15 +22,13 @@ public interface FlightAssignmentService {
 
     List<FlightAssignment> findAll(Sort sort);
 
-    // ---------------- SEARCH + SORT ----------------
+    // SEARCH + SORT
 
     List<FlightAssignment> search(
             String flightId,
             String airlineEmployeeId,
             Sort sort
     );
-
-    // ---------------- Existing ----------------
 
     List<FlightAssignment> findByFlightId(String flightId);
 

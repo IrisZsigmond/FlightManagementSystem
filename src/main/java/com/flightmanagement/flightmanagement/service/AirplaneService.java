@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AirplaneService {
 
-    // Basic CRUD methods:
+    // CRUD
     Airplane save(Airplane airplane);
 
     List<Airplane> findAll();
@@ -17,7 +17,7 @@ public interface AirplaneService {
 
     boolean delete(String id);
 
-    /// Sorting and Searching
+    // Sorting and Searching
 
     List<Airplane> findAll(Sort sort);
 

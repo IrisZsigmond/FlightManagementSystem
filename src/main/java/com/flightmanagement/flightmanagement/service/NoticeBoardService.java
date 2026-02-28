@@ -26,6 +26,5 @@ public interface NoticeBoardService {
 
     Optional<NoticeBoard> findWithFlights(String id);
 
-    // NOU: Metoda de căutare (o singură dată)
     List<NoticeBoard> search(LocalDate date, Sort sort);
 }

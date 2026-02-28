@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AirportEmployeeService {
-    /// CRUD
+    // CRUD
     AirportEmployee save(AirportEmployee employee);
 
     List<AirportEmployee> findAll();
@@ -16,11 +16,11 @@ public interface AirportEmployeeService {
 
     boolean delete(String id);
 
-    /// Sorting and Searching
+    // Sorting and Searching
     List<AirportEmployee> findAll(Sort sort);
 
     List<AirportEmployee> search(String name, String department, String designation, Sort sort);
 
-    /// Other Queries
+    // Other Queries
     Optional<AirportEmployee> findById(String id);
 }
