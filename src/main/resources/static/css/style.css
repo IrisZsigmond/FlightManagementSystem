@@ -286,11 +286,6 @@ td.actions {
 }
 .inline-form button { margin: 0; }
 
-/* ========================================================= */
-/* === ENTERPRISE UPGRADES: sticky header shadow on scroll   */
-/*     + sticky ID column like Excel                         */
-/* ========================================================= */
-
 .data-table thead th {
     position: sticky;
     top: 0;
@@ -438,10 +433,6 @@ input:focus, select:focus {
         font-size: 0.9rem;
     }
 }
-
-/* ========================================================= */
-/* === STILURI PENTRU HOME PAGE (DASHBOARD) === */
-/* ========================================================= */
 
 .main-title {
     margin-bottom: 24px;

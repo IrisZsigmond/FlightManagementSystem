@@ -15,7 +15,6 @@ public class AirportEmployeeValidator {
         this.staffValidator = staffValidator;
     }
 
-    /** 1) Existență */
     public AirportEmployee requireExisting(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Airport employee id cannot be null or blank");
@@ -26,15 +25,11 @@ public class AirportEmployeeValidator {
                         "Airport employee not found: " + id));
     }
 
-    /** 2) ID unic – doar la CREATE */
     public void assertIdUnique(String id) {
-        // delegăm logica globală către StaffValidator
         staffValidator.assertStaffIdUnique(id);
     }
 
-    /** 3) Reguli pentru DELETE – momentan nu avem FK-uri, dar lăsăm hook-ul */
     public void assertCanBeDeleted(String id) {
-        // dacă în viitor vei avea entități care depind de AirportEmployee,
-        // adaugi aici verificările (existsByAirportEmployee_Id etc.)
+        // if future entities depend on airport employees, implement here
     }
 }

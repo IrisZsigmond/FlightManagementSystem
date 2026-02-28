@@ -26,9 +26,6 @@ public class LuggageServiceImpl implements LuggageService {
         this.validator = validator;
     }
 
-    // ... (Metode CRUD: save, update, delete) ...
-    // Le presupunem în regulă și le lăsăm neschimbate, ne concentrăm pe search.
-
     @Override
     public Luggage save(Luggage luggage) {
         validator.assertIdUnique(luggage.getId());
@@ -55,9 +52,6 @@ public class LuggageServiceImpl implements LuggageService {
         return true;
     }
 
-
-    // ---------------- READ / SORT ----------------
-
     @Override
     @Transactional(readOnly = true)
     public List<Luggage> findAll() {
@@ -76,8 +70,6 @@ public class LuggageServiceImpl implements LuggageService {
         return luggageRepository.findAll(sort);
     }
 
-    // ---------------- Existing Helpers ----------------
-
     @Override
     public List<Luggage> findByTicketId(String ticketId) {
         return luggageRepository.findByTicket_Id(ticketId, Sort.unsorted());
@@ -93,7 +85,6 @@ public class LuggageServiceImpl implements LuggageService {
         return luggageRepository.findBySize(size, Sort.unsorted());
     }
 
-    // ---------------- SEARCH + SORT (NOU) ----------------
 
     @Override
     @Transactional(readOnly = true)
@@ -105,12 +96,10 @@ public class LuggageServiceImpl implements LuggageService {
         boolean hasStatus = status != null;
         boolean hasSize = size != null;
 
-        // Cazul 1: Filtrare pe toate cele 3 criterii
         if (hasTicket && hasStatus && hasSize) {
             return luggageRepository.findByTicket_IdAndStatusAndSize(ticketId.trim(), status, size, safeSort);
         }
 
-        // Cazul 2: 2 criterii
         if (hasTicket && hasStatus) {
             return luggageRepository.findByTicket_IdAndStatus(ticketId.trim(), status, safeSort);
         }
@@ -121,7 +110,6 @@ public class LuggageServiceImpl implements LuggageService {
             return luggageRepository.findByStatusAndSize(status, size, safeSort);
         }
 
-        // Cazul 3: 1 criteriu
         if (hasTicket) {
             return luggageRepository.findByTicket_Id(ticketId.trim(), safeSort);
         }
@@ -132,7 +120,6 @@ public class LuggageServiceImpl implements LuggageService {
             return luggageRepository.findBySize(size, safeSort);
         }
 
-        // Cazul 4: Niciun filtru (doar sortare)
         return luggageRepository.findAll(safeSort);
     }
 }

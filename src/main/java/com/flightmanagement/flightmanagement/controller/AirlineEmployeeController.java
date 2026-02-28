@@ -51,23 +51,23 @@ public class AirlineEmployeeController {
         // FILTER + SORT together (through service)
         model.addAttribute("employees", employeeService.search(name, roles, springSort));
 
-        // pentru toggle/pfeile de sort
+        // Logic for sorting toggles/arrows
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equalsIgnoreCase("asc") ? "desc" : "asc");
 
-        // pentru a păstra valorile în form după filtrare
+        // Retain filter values in the form after submission
         model.addAttribute("filterName", name);
         model.addAttribute("filterRoles", roles == null ? java.util.List.of() : roles);
 
-        // pentru checkbox list în UI
+        // for checkbox list in UI
         model.addAttribute("roles", AirlineRole.values());
 
         return "airlineemployees/index";
     }
 
 
-    // CREATE - form
+    // create form
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("airlineEmployeeForm")) {
@@ -77,7 +77,7 @@ public class AirlineEmployeeController {
         return "airlineemployees/new";
     }
 
-    // CREATE - submit
+    // create submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("airlineEmployeeForm") AirlineEmployeeForm form,
@@ -112,7 +112,7 @@ public class AirlineEmployeeController {
     }
 
 
-    // EDIT - form
+    // edit form
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id,
                        Model model,
@@ -134,7 +134,7 @@ public class AirlineEmployeeController {
         }
     }
 
-    // EDIT - submit
+    // edit submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -174,7 +174,7 @@ public class AirlineEmployeeController {
         }
     }
 
-    // DELETE
+    // delete
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id,
                          RedirectAttributes ra) {
@@ -191,7 +191,7 @@ public class AirlineEmployeeController {
         return "redirect:/airlineemployees";
     }
 
-    // VIEW
+    // view
     @GetMapping("/{id}")
     public String view(@PathVariable String id,
                        Model model,

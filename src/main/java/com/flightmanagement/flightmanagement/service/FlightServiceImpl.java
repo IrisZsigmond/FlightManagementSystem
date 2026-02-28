@@ -35,7 +35,6 @@ public class FlightServiceImpl implements FlightService {
         this.validator = validator;
     }
 
-    // --- METODĂ CREATE (Presupusă funcțională) ---
     @Override
     public Flight save(Flight flight) {
         if (flight == null) {
@@ -53,7 +52,6 @@ public class FlightServiceImpl implements FlightService {
         return flightRepository.save(flight);
     }
 
-    // --- METODĂ UPDATE ---
     @Override
     public Flight update(String id, Flight updated) {
         Flight existing = validator.requireExisting(id);
@@ -74,30 +72,24 @@ public class FlightServiceImpl implements FlightService {
         return flightRepository.save(existing);
     }
 
-    // --- DELETE FORȚAT ÎN CASCADĂ TOTALĂ (Corectat argumentul) ---
     @Override
     public boolean delete(String id) {
         validator.requireExisting(id);
 
-        // 1. Ștergem Assignările
         List<FlightAssignment> assignments = flightAssignmentRepository.findByFlight_Id(id);
         flightAssignmentRepository.deleteAll(assignments);
 
-        // 2. Ștergem Biletele și Bagajele
         List<Ticket> tickets = ticketRepository.findByFlight_Id(id);
         for (Ticket t : tickets) {
-            // --- FIX: Adăugat Sort.unsorted() ---
             List<Luggage> luggages = luggageRepository.findByTicket_Id(t.getId(), Sort.unsorted());
             luggageRepository.deleteAll(luggages);
         }
         ticketRepository.deleteAll(tickets);
 
-        // 3. Ștergem Zborul
         flightRepository.deleteById(id);
         return true;
     }
 
-    // --- HELPERS ȘI CITIRE ---
 
     @Override
     public List<Flight> findAll() { return flightRepository.findAll(); }
@@ -141,7 +133,6 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Optional<Flight> findById(String id) { return flightRepository.findById(id); }
 
-    // --- FIX: Metoda este acum disponibilă în repo ---
     @Override
     public List<Flight> findByNoticeBoardId(String noticeBoardId) {
         return flightRepository.findByNoticeBoard_Id(noticeBoardId);

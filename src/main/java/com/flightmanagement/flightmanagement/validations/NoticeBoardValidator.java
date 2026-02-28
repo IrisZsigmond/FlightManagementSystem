@@ -19,21 +19,21 @@ public class NoticeBoardValidator {
         this.flightService = flightService;
     }
 
-    // 1. Existence
+    // Existence
     public NoticeBoard requireExisting(String id) {
         return noticeBoardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "NoticeBoard not found: " + id));
     }
 
-    // 2. Unique ID (CREATE)
+    // Unique ID (CREATE)
     public void assertIdUnique(String id) {
         if (noticeBoardRepository.existsById(id)) {
             throw new IllegalStateException("NoticeBoard ID already exists: " + id);
         }
     }
 
-    // 3. Unique Date (CREATE)
+    // Unique Date (CREATE)
     public void assertDateUnique(LocalDate date) {
         if (!noticeBoardRepository.findByDate(date).isEmpty()) {
             throw new IllegalStateException(
@@ -42,7 +42,7 @@ public class NoticeBoardValidator {
         }
     }
 
-    // 4. Unique date for UPDATE (exclude own ID)
+    // Unique date for UPDATE (exclude own ID)
     public void assertDateUniqueForUpdate(LocalDate date, String currentId) {
         var existingBoards = noticeBoardRepository.findByDate(date);
         if (!existingBoards.isEmpty() && !existingBoards.get(0).getId().equals(currentId)) {
@@ -52,7 +52,7 @@ public class NoticeBoardValidator {
         }
     }
 
-    // 5. Cannot delete if flights attached
+    // Cannot delete if flights attached
     public void assertCanBeDeleted(String id) {
         if (!flightService.findByNoticeBoardId(id).isEmpty()) {
             throw new IllegalStateException(

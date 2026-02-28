@@ -63,7 +63,6 @@ public class TicketValidator {
         });
     }
 
-    // --- LOGICĂ DELETE: Corectat getter-ul de timp ---
     public void assertCanBeDeleted(String id) {
         Ticket ticket = requireExisting(id);
         Flight flight = ticket.getFlight();

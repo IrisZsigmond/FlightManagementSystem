@@ -27,7 +27,7 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
         this.employeeValidator = employeeValidator;
     }
 
-    // ------------------ CRUD -------------------
+    // CRUD
 
     // CREATE
     @Override
@@ -97,7 +97,7 @@ public class AirlineEmployeeServiceImpl implements AirlineEmployeeService {
         return repo.findById(id);
     }
 
-    // ------------------ Custom queries -------------------
+    // Custom queries
 
     @Override
     @Transactional(readOnly = true)

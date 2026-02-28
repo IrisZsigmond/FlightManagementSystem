@@ -28,11 +28,11 @@ public class LuggageController {
         this.mapper = mapper;
     }
 
-    // LIST + SORT + FILTRE (INDEX)
+    // list + sort + filter
     @GetMapping
     public String index(
             Model model,
-            // NOU: Parametrii de filtrare
+            // filter parameters
             @RequestParam(required = false) String filterTicketId,
             @RequestParam(required = false) LuggageStatus filterStatus,
             @RequestParam(required = false) LuggageSize filterSize,
@@ -40,7 +40,7 @@ public class LuggageController {
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
-        // 1. Whitelisting și pregătirea Sort
+        // sort whitelist
         String sortProperty = switch (sort) {
             case "id" -> "id";
             case "ticket" -> "ticket.id";
@@ -56,20 +56,18 @@ public class LuggageController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        // 2. FILTRARE + SORTARE (Apel la metoda search)
+        // filter + sort
         model.addAttribute("luggages", luggageService.search(filterTicketId, filterStatus, filterSize, sortObj));
 
-        // 3. Variabile pentru UI
+        // UI variables
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
-        // NOU: Păstrarea valorilor filtrului în form
         model.addAttribute("filterTicketId", filterTicketId);
         model.addAttribute("filterStatus", filterStatus);
         model.addAttribute("filterSize", filterSize);
 
-        // Pentru select-uri (Enum-uri)
         model.addAttribute("statuses", LuggageStatus.values());
         model.addAttribute("sizes", LuggageSize.values());
 
@@ -145,10 +143,9 @@ public class LuggageController {
             Model model
     ) {
 
-        // --- VALIDĂRI DE FORM ---
         if (result.hasErrors()) {
 
-            // curățăm câmpurile invalide
+            // cleaning invalid fields
             result.getFieldErrors().forEach(error -> {
                 switch (error.getField()) {
                     case "ticketId" -> form.setTicketId("");
@@ -157,7 +154,7 @@ public class LuggageController {
                 }
             });
 
-            // înlocuim BindingResult-ul
+            // replacing BindingResult
             model.asMap().remove("org.springframework.validation.BindingResult.luggageForm");
 
             BindingResult newResult =
@@ -177,8 +174,6 @@ public class LuggageController {
             return "luggage/edit";
         }
 
-
-        // --- SERVICIUL + VALIDATORUL ---
         try {
 
             Luggage existing = luggageService.findById(id).orElseThrow();

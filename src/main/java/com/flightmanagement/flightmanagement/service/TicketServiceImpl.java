@@ -21,7 +21,6 @@ public class TicketServiceImpl implements TicketService {
     private final LuggageRepository luggageRepository; // Adăugat pentru Cascade Delete
     private final TicketValidator validator;
 
-    // CONSTRUCTOR ACTUALIZAT
     public TicketServiceImpl(TicketRepository ticketRepository,
                              LuggageRepository luggageRepository,
                              TicketValidator validator) {
@@ -30,7 +29,6 @@ public class TicketServiceImpl implements TicketService {
         this.validator = validator;
     }
 
-    // ---------------- CREATE ----------------
     @Override
     public Ticket save(Ticket ticket) {
         validator.assertIdUnique(ticket.getId());
@@ -39,7 +37,6 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(ticket);
     }
 
-    // ---------------- UPDATE ----------------
     @Override
     public Ticket update(String id, Ticket updated) {
         // ... (logica update)
@@ -48,24 +45,17 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(updated);
     }
 
-    // ---------------- DELETE (CASCADE) ----------------
     @Override
     public boolean delete(String id) {
-        // 1. Validare (verifică dacă zborul este în viitor)
         validator.requireExisting(id);
         validator.assertCanBeDeleted(id);
 
-        // 2. CASCADE: Ștergem bagajele asociate (Luggage -> Ticket)
-        // Folosim Sort.unsorted() deoarece metoda din LuggageRepository așteaptă 2 argumente.
         List<Luggage> luggages = luggageRepository.findByTicket_Id(id, Sort.unsorted());
         luggageRepository.deleteAll(luggages);
 
-        // 3. Ștergem biletul
         ticketRepository.deleteById(id);
         return true;
     }
-
-    // ---------------- READ / SORT / HELPERS ----------------
 
     @Override
     @Transactional(readOnly = true)

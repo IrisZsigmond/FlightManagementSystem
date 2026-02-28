@@ -26,6 +26,5 @@ public interface FlightRepository extends JpaRepository<Flight, String> {
 
     List<Flight> findByAirplane_Id(String airplaneId);
 
-    // --- FIX: Metoda lipsă adăugată ---
     List<Flight> findByNoticeBoard_Id(String noticeBoardId);
 }

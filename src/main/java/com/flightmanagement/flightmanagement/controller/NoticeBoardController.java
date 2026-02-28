@@ -28,11 +28,10 @@ public class NoticeBoardController {
         this.mapper = mapper;
     }
 
-    // LIST + SORT + FILTRE (INDEX)
+    // list + sort + filter
     @GetMapping
     public String index(
             Model model,
-            // MODIFICAT: O singură dată pentru filtrare
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate filterDate,
@@ -50,15 +49,12 @@ public class NoticeBoardController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        // Apel search cu o singură dată
         model.addAttribute("noticeboards", noticeBoardService.search(filterDate, sortObj));
 
-        // Variabile UI
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
-        // Păstrăm filtrul
         model.addAttribute("filterDate", filterDate);
 
         return "noticeboards/index";

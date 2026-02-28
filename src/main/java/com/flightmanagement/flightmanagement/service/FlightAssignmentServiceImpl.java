@@ -27,7 +27,6 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         this.validator = validator;
     }
 
-    // ---------------- CREATE ----------------
 
     @Override
     public FlightAssignment save(FlightAssignment assignment) {
@@ -56,8 +55,6 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         return repo.save(assignment);
     }
 
-    // ---------------- READ ----------------
-
     @Override
     @Transactional(readOnly = true)
     public List<FlightAssignment> findAll() {
@@ -78,8 +75,6 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         }
         return repo.findById(id);
     }
-
-    // ---------------- UPDATE ----------------
 
     @Override
     public FlightAssignment update(String id, FlightAssignment updated) {
@@ -108,8 +103,6 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         return repo.save(existing);
     }
 
-    // ---------------- DELETE ----------------
-
     @Override
     public boolean delete(String id) {
         if (id == null || id.isBlank()) {
@@ -123,8 +116,7 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
         return true;
     }
 
-    // ---------------- SEARCH + SORT ----------------
-
+    // SEARCH + SORT
     @Override
     @Transactional(readOnly = true)
     public List<FlightAssignment> search(
@@ -157,8 +149,6 @@ public class FlightAssignmentServiceImpl implements FlightAssignmentService {
 
         return repo.findAll(safeSort);
     }
-
-    // ---------------- Existing helpers ----------------
 
     @Override
     @Transactional(readOnly = true)

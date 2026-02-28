@@ -13,7 +13,6 @@ public class StaffValidator {
         this.staffRepository = staffRepository;
     }
 
-    /** ID unic la nivel de TOȚI staff members (Airline + Airport + orice alt subtip) */
     public void assertStaffIdUnique(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Staff id cannot be null or blank");

@@ -67,8 +67,7 @@ public class FlightValidator {
         }
     }
 
-    // --- LOGICĂ DELETE: Fără restricții ---
     public void assertCanBeDeleted(String id) {
-        // Ștergerea este gestionată în cascadă de Service.
+        // to be implemented if needed
     }
 }

@@ -28,7 +28,7 @@ public class FlightAssignmentController {
         this.mapper = mapper;
     }
 
-    // LIST + SORT + FILTRE (INDEX)
+    // liste + sort + filter (index)
     @GetMapping
     public String index(
             Model model,
@@ -39,7 +39,7 @@ public class FlightAssignmentController {
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String dir
     ) {
-        // 1. Whitelisting și pregătirea Sort
+        // sort whitelist
         String sortProperty = switch (sort) {
             case "id" -> "id";
             case "flight" -> "flight.id"; // Sortare pe relație
@@ -54,22 +54,22 @@ public class FlightAssignmentController {
 
         Sort sortObj = Sort.by(direction, sortProperty);
 
-        // 2. FILTRARE + SORTARE (Apel la metoda search din Service)
+        // filter + sort
         model.addAttribute("assignments", service.search(filterFlightId, filterEmployeeId, sortObj));
 
-        // 3. Variabile pentru UI (păstrarea stării + toggle sort)
+        // Logic for sorting toggles/arrows
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("reverseDir", dir.equals("asc") ? "desc" : "asc");
 
-        // NOU: Păstrarea valorilor filtrului în form
+        // Retain filter values in the form after submission
         model.addAttribute("filterFlightId", filterFlightId);
         model.addAttribute("filterEmployeeId", filterEmployeeId);
 
         return "flightassignments/index";
     }
 
-    // CREATE - form
+    // create form
     @GetMapping("/new")
     public String form(Model model) {
         if (!model.containsAttribute("assignmentForm")) {
@@ -78,7 +78,7 @@ public class FlightAssignmentController {
         return "flightassignments/new";
     }
 
-    // CREATE - submit
+    // create submit
     @PostMapping
     public String create(
             @Valid @ModelAttribute("assignmentForm") FlightAssignmentForm form,
@@ -112,7 +112,7 @@ public class FlightAssignmentController {
         }
     }
 
-    // EDIT - form
+    // edit form
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {
@@ -127,7 +127,7 @@ public class FlightAssignmentController {
         }
     }
 
-    // EDIT - submit
+    // edit submit
     @PostMapping("/{id}")
     public String update(
             @PathVariable String id,
@@ -171,7 +171,7 @@ public class FlightAssignmentController {
         }
     }
 
-    // DELETE
+    // delete
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes ra) {
         try {
@@ -187,7 +187,7 @@ public class FlightAssignmentController {
         return "redirect:/flightassignments";
     }
 
-    // VIEW
+    // view
     @GetMapping("/{id}")
     public String view(@PathVariable String id, Model model, RedirectAttributes ra) {
         try {

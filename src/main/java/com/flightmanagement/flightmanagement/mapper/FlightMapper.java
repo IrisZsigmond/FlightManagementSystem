@@ -16,7 +16,6 @@ public class FlightMapper {
     private final NoticeBoardService noticeBoardService;
     private final AirplaneService airplaneService;
 
-    // format pentru câmpul de timp din form (ex. "10:45")
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public FlightMapper(NoticeBoardService noticeBoardService,
@@ -42,7 +41,6 @@ public class FlightMapper {
             f.setDepartureTime(null);
         }
 
-        // NoticeBoard
         if (form.getNoticeBoardId() != null && !form.getNoticeBoardId().isBlank()) {
             f.setNoticeBoard(
                     noticeBoardService.findById(form.getNoticeBoardId())
@@ -52,7 +50,6 @@ public class FlightMapper {
             f.setNoticeBoard(null);
         }
 
-        // Airplane
         if (form.getAirplaneId() != null && !form.getAirplaneId().isBlank()) {
             f.setAirplane(
                     airplaneService.findById(form.getAirplaneId())

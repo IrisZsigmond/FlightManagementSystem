@@ -12,8 +12,6 @@ import java.util.List;
 @Primary
 public interface FlightAssignmentRepository extends JpaRepository<FlightAssignment, String> {
 
-    // ---------------- Existing ----------------
-
     List<FlightAssignment> findByFlight_Id(String flightId);
 
     List<FlightAssignment> findByAirlineEmployee_Id(String employeeId);
@@ -28,7 +26,7 @@ public interface FlightAssignmentRepository extends JpaRepository<FlightAssignme
             String id
     );
 
-    // ---------------- NEW (search + sort) ----------------
+    // Search + Sort
 
     List<FlightAssignment> findByFlight_Id(String flightId, Sort sort);
 

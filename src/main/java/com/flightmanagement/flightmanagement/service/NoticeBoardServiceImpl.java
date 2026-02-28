@@ -29,7 +29,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         this.flightService = flightService;
     }
 
-    // ---------------- CREATE ----------------
     @Override
     public NoticeBoard save(NoticeBoard noticeBoard) {
         if (noticeBoard == null) {
@@ -41,7 +40,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         return noticeBoardRepository.save(noticeBoard);
     }
 
-    // ---------------- READ ----------------
     @Override
     @Transactional(readOnly = true)
     public List<NoticeBoard> findAll() {
@@ -72,7 +70,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         });
     }
 
-    // ---------------- UPDATE ----------------
     @Override
     public NoticeBoard update(String id, NoticeBoard updated) {
         NoticeBoard existing = validator.requireExisting(id);
@@ -81,7 +78,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         return noticeBoardRepository.save(existing);
     }
 
-    // ---------------- DELETE ----------------
     @Override
     public boolean delete(String id) {
         validator.requireExisting(id);
@@ -90,13 +86,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         return true;
     }
 
-    // ---------------- HELPERS ----------------
     @Override
     @Transactional(readOnly = true)
     public List<NoticeBoard> findByDate(LocalDate date) {
         if (date == null) return List.of();
-        // Folosim metoda fără sortare sau cu sortare implicită, depinde de preferință.
-        // Aici folosim cea simplă din repo (fără param sort)
         return noticeBoardRepository.findByDate(date);
     }
 
@@ -106,7 +99,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         return noticeBoardRepository.findAll(sort);
     }
 
-    // ---------------- SEARCH + SORT (MODIFICAT) ----------------
     @Override
     @Transactional(readOnly = true)
     public List<NoticeBoard> search(LocalDate date, Sort sort) {
@@ -114,11 +106,9 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         Sort safeSort = (sort != null) ? sort : Sort.by(Sort.Direction.DESC, "date");
 
         if (date != null) {
-            // Filtrare exactă după dată
             return noticeBoardRepository.findByDate(date, safeSort);
         }
 
-        // Fără filtru, returnăm tot
         return noticeBoardRepository.findAll(safeSort);
     }
 }

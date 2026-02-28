@@ -18,7 +18,7 @@ public class LuggageValidator {
         this.ticketRepository = ticketRepository;
     }
 
-    // --- EXISTENCE
+    // Existence
     public Luggage requireExisting(String id) {
         return luggageRepository.findById(id)
                 .orElseThrow(() ->
@@ -31,14 +31,14 @@ public class LuggageValidator {
                         new IllegalArgumentException("Ticket not found: " + id));
     }
 
-    // --- UNIQUE ID (CREATE)
+    // Unique ID (Create)
     public void assertIdUnique(String id) {
         if (luggageRepository.existsById(id)) {
             throw new IllegalStateException("Luggage ID already exists: " + id);
         }
     }
 
-    // --- DELETE RESTRICTION
+    // Delete Restriction
     public void assertCanBeDeleted(String id) {
         Luggage l = requireExisting(id);
 
